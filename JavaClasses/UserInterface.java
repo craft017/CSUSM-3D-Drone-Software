@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,41 +17,34 @@ import okio.ByteString;
 
 public class UserInterface extends AppCompatActivity {
     private static final String TAG = "WebSocket";
-    private Button start;
+    private Button start, sendMessage;
     private TextView output;
     private OkHttpClient client;
     private WebSocket webSocket;
+    private EditText inputField;
     private final class EchoWebSocketListener extends WebSocketListener {
-        private static final int NORMAL_CLOSURE_STATUS = 1000;
         @Override
         public void onOpen(WebSocket webSocket, okhttp3.Response response){
-//            webSocket.send("Hello, it's Jayden !");
-//            webSocket.send("Wassssssup!!");
-//            webSocket.send("deadbeat?");
 
-            runOnUiThread(() -> output.setText("Connected to server!"));
+            runOnUiThread(() -> output("Connected to server!"));
             Log.d(TAG, "WebSocket opened");
-//            webSocket.close(NORMAL_CLOSURE_STATUS, "Goodbye !!");
+
         }
 
         @Override
         public void onMessage(WebSocket WebSocket, String text) {
-//            output("recieving: " + text);
-            runOnUiThread(() -> output.setText("Received: " + text));
+            runOnUiThread(() -> output("Received: " + text));
             Log.d(TAG, "Message received: " + text);
         }
         @Override
         public void onMessage(WebSocket WebSocket, ByteString bytes) {
-//            output("recieving bytes: " +bytes.hex());
-            runOnUiThread(() -> output.setText("Received bytes: " + bytes.hex()));
+            runOnUiThread(() -> output("Received bytes: " + bytes.hex()));
             Log.d(TAG, "Byte message received: " + bytes.hex());
         }
 
         @Override
         public void onClosing(WebSocket WebSocket, int code,  String reason){
-//            WebSocket.close(NORMAL_CLOSURE_STATUS, null);
-//            output("Closing: "+ code + " / " + reason);
-            runOnUiThread(() -> output.setText("Connection closed: " + reason));
+            runOnUiThread(() -> output("Connection closed: " + reason));
             Log.d(TAG, "WebSocket closed: " + reason);
         }
 
@@ -67,6 +61,8 @@ public class UserInterface extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         start = (Button) findViewById(R.id.start);
         output = (TextView) findViewById(R.id.output);
+        sendMessage = (Button) findViewById(R.id.send_message); // New button for sending a message
+        inputField = (EditText) findViewById(R.id.input_field); // Input field for the message
         client = new OkHttpClient();
 
         start.setOnClickListener(new View.OnClickListener(){
@@ -76,9 +72,7 @@ public class UserInterface extends AppCompatActivity {
             }
         });
 
-//        Request request = new Request.Builder().url("ws://127.0.0.1:8765").build(); // Replace with your server's IP
-//        webSocket = client.newWebSocket(request, new EchoWebSocketListener());
-
+        sendMessage.setOnClickListener(view -> sendMessage());
     }
 
     private void start(){
@@ -86,21 +80,22 @@ public class UserInterface extends AppCompatActivity {
         if (client == null) {
             client = new OkHttpClient();
         }
-//        Request request = new Request.Builder().url("wss://echo.websocket.org").build();
-//        EchoWebSocketListener Listener = new EchoWebSocketListener();
-//        WebSocket ws = client.newWebSocket(request, Listener);
-//        client.dispatcher().executorService().shutdown();
-
-        Request request = new Request.Builder().url("ws://10.0.2.2:8765").build(); // Replace with your server's IP
+        Request request = new Request.Builder().url("ws://10.0.2.2:8765").build(); // 10.0.2.2 is the host machines IP
         webSocket = client.newWebSocket(request, new EchoWebSocketListener());
     }
 
+    private void sendMessage() {
+        String message = inputField.getText().toString();
+        if (webSocket != null && !message.isEmpty()) {
+            webSocket.send(message);
+            output("Sent: " + message);
+        } else {
+            output("WebSocket is not connected or message is empty.");
+        }
+    }
     private void output(final String txt){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                output.setText(output.getText().toString() + "\n\n" + txt);
-            }
+        runOnUiThread(( ) -> {
+            output.setText(output.getText().toString() + "\n\n" + txt);
         });
     }
 }
