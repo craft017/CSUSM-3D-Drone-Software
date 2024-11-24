@@ -75,8 +75,7 @@ public class UserInterface extends AppCompatActivity {
         sendMessage.setOnClickListener(view -> sendMessage());
     }
 
-    private void start(){
-
+    private void start(){ // Connects us to the python websocket (localhost)
         if (client == null) {
             client = new OkHttpClient();
         }
@@ -84,7 +83,7 @@ public class UserInterface extends AppCompatActivity {
         webSocket = client.newWebSocket(request, new EchoWebSocketListener());
     }
 
-    private void sendMessage() {
+    private void sendMessage() { // sends message from android application to websocket
         String message = inputField.getText().toString();
         if (webSocket != null && !message.isEmpty()) {
             webSocket.send(message);
