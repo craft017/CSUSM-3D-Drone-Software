@@ -1,65 +1,82 @@
-<?xml version="1.0" encoding = "utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    tools:context=".UserInterface">
+    android:orientation="vertical"
+    android:gravity="center">
+
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:text="start!"
-        android:textSize="17sp"
-        android:layout_marginEnd="10dp"
-/>
-
-
-    <EditText
-        android:id="@+id/input_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/start"
-        android:layout_alignTop="@id/start"
-        android:layout_centerVertical="true"
-        android:hint="Enter text"
-        android:layout_marginStart="10dp"
-        android:ems="10" />
-
-    <Button
-        android:id="@+id/send_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:layout_below="@id/start"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true" />
-
-    <ScrollView
-        android:id="@+id/scrollView"
+        android:text="Start WebSocket" />
+    <LinearLayout
+        android:id="@+id/button_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/send_message"
-        android:layout_marginTop="16dp"
-        android:layout_alignParentBottom="true">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-       <TextView
+        <!-- Takeoff and Land Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/takeoff_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Takeoff" />
+
+            <Button
+                android:id="@+id/land_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Land" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left" />
+
+        <Button
+            android:id="@+id/forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forward" />
+
+        <Button
+            android:id="@+id/backward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Backward" />
+
+        <Button
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right" />
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/output"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:scrollbars="vertical"
-        android:text=""
-        />
-    </ScrollView>
-
-</RelativeLayout>
+        android:text="Output will appear here"
+        android:padding="16dp"
+        android:scrollbars="vertical" />
+    </LinearLayout>
+</LinearLayout>

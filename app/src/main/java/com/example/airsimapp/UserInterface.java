@@ -8,6 +8,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONObject;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,11 +20,11 @@ import okio.ByteString;
 
 public class UserInterface extends AppCompatActivity {
     private static final String TAG = "WebSocket";
-    private Button start, sendMessage;
+    private Button start, forward, backward, left, right;
     private TextView output;
     private OkHttpClient client;
     private WebSocket webSocket;
-    private EditText inputField;
+    private boolean isMoving = false;
     private final class EchoWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, okhttp3.Response response){
@@ -35,11 +38,6 @@ public class UserInterface extends AppCompatActivity {
         public void onMessage(WebSocket WebSocket, String text) {
             runOnUiThread(() -> output("Received: " + text));
             Log.d(TAG, "Message received: " + text);
-        }
-        @Override
-        public void onMessage(WebSocket WebSocket, ByteString bytes) {
-            runOnUiThread(() -> output("Received bytes: " + bytes.hex()));
-            Log.d(TAG, "Byte message received: " + bytes.hex());
         }
 
         @Override
@@ -60,9 +58,11 @@ public class UserInterface extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         start = (Button) findViewById(R.id.start);
+        forward = (Button) findViewById(R.id.forward);
+        backward = (Button) findViewById(R.id.backward);
+        left = (Button) findViewById(R.id.left);
+        right = (Button) findViewById(R.id.right);
         output = (TextView) findViewById(R.id.output);
-        sendMessage = (Button) findViewById(R.id.send_message); // New button for sending a message
-        inputField = (EditText) findViewById(R.id.input_field); // Input field for the message
         client = new OkHttpClient();
 
         start.setOnClickListener(new View.OnClickListener(){
@@ -72,10 +72,20 @@ public class UserInterface extends AppCompatActivity {
             }
         });
 
-        sendMessage.setOnClickListener(view -> sendMessage());
+        Button takeoffButton = findViewById(R.id.takeoff_button);
+        takeoffButton.setOnClickListener(v -> sendCommand("takeoff"));
+
+        Button landButton  = findViewById(R.id.land_button);
+        landButton .setOnClickListener(v -> sendCommand("land"));
+
+        // Set up continuous movement buttons
+        setMovementListener(forward, "forward");
+        setMovementListener(backward, "backward");
+        setMovementListener(left, "left");
+        setMovementListener(right, "right");
     }
 
-    private void start(){ // Connects us to the python websocket (localhost)
+    private void start(){ // Connects us to the websocket (localhost)
         if (client == null) {
             client = new OkHttpClient();
         }
@@ -83,15 +93,48 @@ public class UserInterface extends AppCompatActivity {
         webSocket = client.newWebSocket(request, new EchoWebSocketListener());
     }
 
-    private void sendMessage() { // sends message from android application to websocket
-        String message = inputField.getText().toString();
-        if (webSocket != null && !message.isEmpty()) {
-            webSocket.send(message);
-            output("Sent: " + message);
+    private void sendCommand(String action) {
+        if (webSocket != null) {
+            try {
+                JSONObject command = new JSONObject();
+                command.put("action", action);
+                command.put("params", new JSONObject()); // Empty params for now
+                webSocket.send(command.toString());
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to send command", e);
+            }
         } else {
-            output("WebSocket is not connected or message is empty.");
+            output("No websocket connection");
         }
     }
+
+    private void setMovementListener(Button button, String action) {
+        button.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!isMoving) {
+                        isMoving = true;
+                        new Thread(() -> {
+                            while (isMoving) {
+                                sendCommand(action);
+                                try {
+                                    Thread.sleep(200); // Adjust interval for smoother movement
+                                } catch (InterruptedException e) {
+                                    Log.e(TAG, "Movement thread interrupted", e);
+                                }
+                            }
+                        }).start();
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isMoving = false;
+                    break;
+            }
+            return true;
+        });
+    }
+
     private void output(final String txt){
         runOnUiThread(( ) -> {
             output.setText(output.getText().toString() + "\n\n" + txt);
