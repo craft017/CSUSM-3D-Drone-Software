@@ -1,4 +1,6 @@
 package com.example.airsimapp;
 
-public class flightControllerInterface {
+public interface flightControllerInterface {
+    void connect();
+    void sendToWebSocket(String jsonCommand);
 }
