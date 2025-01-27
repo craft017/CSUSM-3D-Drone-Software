@@ -1,0 +1,65 @@
+NOTE: This does not address problem of multiple instructions at once (e.g., going up and forward simultaneously.)
+
+UserInterface
+Variable: String key
+
+Variable: double wayPoint
+
+Variable: int heading
+
+Method: String requestCommandTranslation (String key)
+	Input - Key (string) which is the key associated with what the user pressed (for example user presses 'w', key is stored as KEY_W or something similar
+	Output - Expects a translated command the drone can understand returned from the orchestrator class 
+
+Method: requestWaypointTranslation (double waypoint)
+	Input - waypoint (double) is a GPS coordinate the user inputs manually for now
+	Output - Expects a translated command(s) the drone can understand returned from the orchestrator class
+
+Method: requestWaypointTranslation(int heading)
+	Input - heading (int) is a number in a 360 degree view where the drone can "head", may need to have 3 parameters for x,y,z axis
+	Output - Expects a translated command(s) the drone can understand returned from the orchestrator class
+
+Method: sendToFlightController (String translatedCommand)
+	Input - translatedCommand (String) is a string in the form the drone can understand, this string may be a python command
+	Output - Drone should execute whatever commands it was sent from this method, no direct output in program.
+
+... Further methods implemented here
+Orchestrator Class
+Variable: boolean isAutopilotMode
+
+Method: translateCommand(String key)
+	Input - key (string) is the same key the user pressed 
+	Output - Expects a string command the drone can understand returned from the manual class
+
+Method: translateCommand(double waypoint)
+	Input - wayPoint (double) - Represents a GPS waypoint for the drone to reach.
+	Output - Expects a string command the drone can understand returned from the Autopilot class
+
+Method: translateCommand(int heading)
+	Input - heading (int) - Indicates the drone’s direction in degrees
+	Output - Expects a translated command string that the drone can understand, returned from the Autopilot class (for autopilot mode).
+
+... Further methods implemented here
+
+Manual Class
+Method: String translateCommand(String key) -> Involves switch statement to find what key was pressed!
+	Input - key (String) - Represents a specific user command in manual mode (e.g., "UP", "DOWN", "FORWARD")
+	Output - Returns a translated command string that the drone can directly interpret (e.g., "MOVE_UP" for "UP")
+ 
+... Further methods implemented here
+
+Autopilot Class
+Method: String translateCommand(double wayPoint)
+	Input - wayPoint (double) - Represents a GPS waypoint for the drone to navigate to in autopilot mode
+	Output - Returns a translated command string that instructs the drone to move to the specified waypoint (e.g., "GO_TO_WAYPOINT 123.456")
+
+Method: String translateCommand(int heading)
+	Input - heading (int) - Represents the drone’s desired heading in degrees for autopilot navigation.
+	Output - Returns a translated command string that instructs the drone to adjust its heading to the specified angle (e.g., "ADJUST_HEADING 90")
+
+... Further methods implemented here
+
+FlightControllerInterface
+Method: void executeCommand(String command)
+	Input - command (String) - A fully translated command string that the drone can execute directly, in a format suitable for the drone’s flight controller
+	Output - No output within the program, but this should result in the drone carrying out the command (e.g., moving up, adjusting heading)
