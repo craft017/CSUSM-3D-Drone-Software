@@ -24,6 +24,7 @@ class AirSimWebSocketServer:
         self.client = airsim.MultirotorClient()
         self.client.confirmConnection()
         self.client.enableApiControl(True)
+        self.velocity = 2
 
         # Start the WebSocket server
         server = websockets.serve(partial(self.handle_client), self.host, self.port)
@@ -54,11 +55,13 @@ class AirSimWebSocketServer:
             if action == "takeoff":
                 self.client.armDisarm(True)
                 self.client.takeoffAsync().join()
+                print(self.client.getRotorStates())
                 await websocket.send(json.dumps({"status": "success", "message": "Drone took off"}))
 
             elif action == "land":
                 self.client.landAsync().join()
                 self.client.armDisarm(False)
+                print(self.client.getRotorStates())
                 await websocket.send(json.dumps({"status": "success", "message": "Drone landed"}))
 
             elif action == "moveToPosition":
@@ -68,11 +71,47 @@ class AirSimWebSocketServer:
                 self.client.moveToPositionAsync(x, y, z, velocity=5).join()
                 await websocket.send(json.dumps({"status": "success", "message": f"Moved to position: ({x}, {y}, {z})"}))
 
+            # Continuous movement: Forward
+            elif action == "forward":
+                self.move_relative(0, self.velocity, 0)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
+
+            # Continuous movement: Backward
+            elif action == "backward":
+                self.move_relative(0, -self.velocity, 0)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
+
+            # Continuous movement: Left
+            elif action == "left":
+                self.move_relative(-self.velocity, 0, 0)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
+
+            # Continuous movement: Right
+            elif action == "right":
+                self.move_relative(self.velocity, 0, 0)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
+
+            elif action == "stop":
+                print(self.client.getRotorStates())
+
             else:
                 await websocket.send(json.dumps({"status": "error", "message": "Unknown action"}))
         except Exception as e:
             print(f"Error while processing message: {e}")
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
+
+    def move_relative(self, dx, dy, dz):
+        """
+        Move the drone relative to its current position.
+        """
+        # Get the current position
+        current_position = self.client.getMultirotorState().kinematics_estimated.position
+        new_x = current_position.x_val + dx
+        new_y = current_position.y_val + dy
+        new_z = current_position.z_val + dz
+
+        # Move to the new position
+        self.client.moveToPositionAsync(new_x, new_y, new_z, self.velocity).join()
 
     def cleanup(self):
         """
