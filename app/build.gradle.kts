@@ -39,4 +39,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.okhttp)
+    implementation(libs.appcompat.v161)
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 }

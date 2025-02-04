@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class UserInterface extends AppCompatActivity {
     private static final String TAG = "UserInterface";
-    private Button start, forward, backward, left, right, takeoff, land;
+    private Button start, forward, backward, left, right, takeoff, land, up, down;
     private TextView output;
     private Orchestrator orchestrator;
 
@@ -26,7 +26,9 @@ public class UserInterface extends AppCompatActivity {
         right = findViewById(R.id.right);
         takeoff = findViewById(R.id.takeoff_button);
         land = findViewById(R.id.land_button);
-        output = findViewById(R.id.output);
+        up = findViewById(R.id.go_up);
+        down = findViewById(R.id.go_down);
+
 
         // Initialize Orchestrator
         flightController flightController = new flightController(output);
