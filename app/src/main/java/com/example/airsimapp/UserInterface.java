@@ -1,8 +1,11 @@
 package com.example.airsimapp;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,11 +34,21 @@ public class UserInterface extends AppCompatActivity {
     private Orchestrator orchestrator;
     private PreviewView previewView;
     private ExecutorService cameraExecutor;
+    private Runnable commandRunnable;
+    private Handler commandHandler = new Handler(Looper.getMainLooper());
+    private static final long COMMAND_INTERVAL = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String mode = getIntent().getStringExtra("MODE");
+
+        if ("control_board".equals(mode)) {
+            findViewById(R.id.button_layout).setVisibility(View.GONE); // Hide controller buttons
+        }
 
         // Initialize UI components
         start = findViewById(R.id.start);
@@ -53,9 +66,13 @@ public class UserInterface extends AppCompatActivity {
         orchestrator = new Orchestrator(flightController);
 
         // Set up listeners, this is what the buttons do when clicked/held.
-        start.setOnClickListener(v -> orchestrator.connectToWebSocket());
+        start.setOnClickListener(v -> orchestrator.connectToDrone());
         takeoff.setOnClickListener(v -> orchestrator.processCommand("takeoff", this::sendCommand));
         land.setOnClickListener(v -> orchestrator.processCommand("land", this::sendCommand));
+//        forward.setOnClickListener(v -> orchestrator.processCommand("forward", this::sendCommand));
+//        backward.setOnClickListener(v -> orchestrator.processCommand("backward", this::sendCommand));
+//        left.setOnClickListener(v -> orchestrator.processCommand("left", this::sendCommand));
+//        right.setOnClickListener(v -> orchestrator.processCommand("right", this::sendCommand));
         setMovementListener(forward, "forward");
         setMovementListener(backward, "backward");
         setMovementListener(left, "left");
@@ -74,16 +91,27 @@ public class UserInterface extends AppCompatActivity {
         button.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    orchestrator.processCommand(action, this::sendCommand);
+                    // Start sending commands repeatedly
+                    commandRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            orchestrator.processCommand(action, UserInterface.this::sendCommand);
+                            commandHandler.postDelayed(this, COMMAND_INTERVAL);
+                        }
+                    };
+                    commandHandler.post(commandRunnable);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                    // Stop sending commands
+                    commandHandler.removeCallbacks(commandRunnable);
                     orchestrator.processCommand("stop", this::sendCommand);
                     break;
             }
             return true;
         });
     }
+
 
     // Logic for starting the camera
     private void startCamera() {

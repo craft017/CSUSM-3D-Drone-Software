@@ -5,13 +5,13 @@ import android.widget.TextView;
 
 import okhttp3.*;
 
-public class flightController implements flightControllerInterface {
+public class AirSimflightController implements flightControllerInterface {
     private static final String TAG = "FlightController";
     private WebSocket webSocket;
     private final OkHttpClient client;
     private final TextView output;
 
-    public flightController(TextView output) {
+    public AirSimflightController(TextView output) {
         this.client = new OkHttpClient();
         this.output = output;
     }
@@ -23,7 +23,7 @@ public class flightController implements flightControllerInterface {
     }
 
     @Override
-    public void sendToWebSocket(String jsonCommand) {
+    public void sendToDrone(String jsonCommand) {
         if (webSocket != null) {
             webSocket.send(jsonCommand);
         } else {
