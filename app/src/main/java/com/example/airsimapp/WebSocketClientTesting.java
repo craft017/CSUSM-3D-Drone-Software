@@ -3,20 +3,19 @@ package com.example.airsimapp;
 import android.util.Log;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 import android.os.Handler;
 import android.os.Looper;
 
-    public class WebSocketClient {
+    public class WebSocketClientTesting {
         private static final String TAG = "WebSocketClient";
         private WebSocket webSocket;
         private final OkHttpClient client;
         private final WebSocketListener listener;
 
-        public WebSocketClient(WebSocketListener listener) {
+        public WebSocketClientTesting(WebSocketListener listener) {
             this.client = new OkHttpClient();
             this.listener = listener;
         }

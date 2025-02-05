@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AirSimApp</string>
+    <string name="forward">forward</string>
+    <string name="backward">backward</string>
+    <string name="lturn">lturn</string>
+    <string name="rturn">rturn</string>
+    <string name="up">up</string>
 </resources>
