@@ -11,14 +11,14 @@ public class Orchestrator {
         this.autopilot = new Autopilot();
     }
 
-    public void connectToWebSocket() {
+    public void connectToDrone() {
         flightController.connect();
     }
 
     public void processCommand(String userAction, CommandCallback callback) {
         String command = manual.translateCommand(userAction);
         callback.onCommandReady(command);
-        flightController.sendToWebSocket(command);
+        flightController.sendToDrone(command);
     }
 
     public interface CommandCallback {
