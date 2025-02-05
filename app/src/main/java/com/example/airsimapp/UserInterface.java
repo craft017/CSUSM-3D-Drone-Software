@@ -6,7 +6,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,6 +37,7 @@ public class UserInterface extends AppCompatActivity {
     private Orchestrator orchestrator;
     private PreviewView previewView;
     private ExecutorService cameraExecutor;
+    private Spinner flightControllerSpinner;
     private Runnable commandRunnable;
     private Handler commandHandler = new Handler(Looper.getMainLooper());
     private static final long COMMAND_INTERVAL = 100;
@@ -60,10 +64,35 @@ public class UserInterface extends AppCompatActivity {
         land = findViewById(R.id.land_button);
         output = findViewById(R.id.output);
         previewView = findViewById(R.id.previewView);
+        flightControllerSpinner = findViewById(R.id.flight_controller_spinner);
 
-        // Initialize Orchestrator
-        flightController flightController = new flightController(output);
-        orchestrator = new Orchestrator(flightController);
+        // Set up Spinner (dropdown)
+        String[] controllers = {"AirSim"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, controllers);
+        flightControllerSpinner.setAdapter(adapter);
+
+
+        // Handle dropdown selection
+        flightControllerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedController = (String) parent.getItemAtPosition(position);
+                if (selectedController.equals("AirSim")) {
+                    AirSimFlightController flightController = new AirSimFlightController(output);
+                    orchestrator = new Orchestrator(flightController);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+        // Default Spinner selection
+        flightControllerSpinner.setSelection(0);
+
+        //End of dropdown & spinner logic
+
 
         // Set up listeners, this is what the buttons do when clicked/held.
         start.setOnClickListener(v -> orchestrator.connectToDrone());
