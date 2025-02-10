@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name=".UserInterface"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="orientation|screenSize"
