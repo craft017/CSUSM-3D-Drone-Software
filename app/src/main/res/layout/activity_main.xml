@@ -4,6 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Camera Preview as Background -->
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <!-- Start Button -->
     <Button
         android:id="@+id/start"
@@ -14,7 +21,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <!-- Takeoff Button -->
     <Button
@@ -67,7 +75,8 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.019" />
+            app:layout_constraintVertical_bias="0.019"
+            android:splitMotionEvents="true"/>
 
         <!-- Go Up Button -->
         <Button
@@ -83,7 +92,8 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/right"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.034" />
+            app:layout_constraintVertical_bias="0.034"
+            android:splitMotionEvents="true"/>
 
         <!-- Backward Button -->
         <Button
@@ -95,7 +105,8 @@
             app:layout_constraintEnd_toStartOf="@+id/go_down"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left" />
+            app:layout_constraintTop_toBottomOf="@+id/left"
+            android:splitMotionEvents="true"/>
 
         <!-- Go Down Button -->
         <Button
@@ -109,7 +120,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/right"
-            app:layout_constraintTop_toBottomOf="@+id/button16" />
+            app:layout_constraintTop_toBottomOf="@+id/button16"
+            android:splitMotionEvents="true"/>
 
         <!-- Left Button -->
         <Button
@@ -122,7 +134,8 @@
             app:layout_constraintEnd_toStartOf="@+id/button18"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forward" />
+            app:layout_constraintTop_toBottomOf="@+id/forward"
+            android:splitMotionEvents="true"/>
 
         <!-- Right Button -->
         <Button
@@ -137,7 +150,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/left"
             app:layout_constraintTop_toBottomOf="@+id/forward"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:splitMotionEvents="true"/>
 
         <!-- Button 18 -->
         <Button
@@ -153,7 +167,8 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/go_up"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            android:splitMotionEvents="true"/>
 
         <!-- Button 16 -->
         <Button
@@ -165,33 +180,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.944"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/go_up" />
+            app:layout_constraintTop_toBottomOf="@+id/go_up"
+            android:splitMotionEvents="true"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Output TextView -->
     <TextView
         android:id="@+id/output"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:scrollbars="vertical"
         android:text="Output will appear here"
-        app:layout_constraintTop_toBottomOf="@+id/button_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginTop="16dp" />
+        android:layout_margin="16dp"
+        android:gravity="start"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
-    <!-- PreviewView -->
-    <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/output"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Flight Controller Label -->
     <TextView
