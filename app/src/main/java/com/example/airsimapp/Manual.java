@@ -24,11 +24,11 @@ public class Manual {
             case "forward_right":
                 action = "forward_right";
                 break;
-            case "back_left":
-                action = "back_left";
+            case "backward_left":
+                action = "backward_left";
                 break;
-            case "back_right":
-                action = "back_right";
+            case "backward_right":
+                action = "backward_right";
                 break;
             case "up":
                 action = "up";
@@ -54,11 +54,11 @@ public class Manual {
             case "forward_right_up":
                 action = "forward_right_up";
                 break;
-            case "backwards_left_up":
-                action = "backwards_left_up";
+            case "backward_left_up":
+                action = "backward_left_up";
                 break;
-            case "backwards_right_up":
-                action = "backwards_right_up";
+            case "backward_right_up":
+                action = "backward_right_up";
                 break;
             case "forward_down":
                 action = "forward_down";
@@ -78,11 +78,11 @@ public class Manual {
             case "forward_right_down":
                 action = "forward_right_down";
                 break;
-            case "backwards_left_down":
-                action = "backwards_left_down";
+            case "backward_left_down":
+                action = "backward_left_down";
                 break;
-            case "backwards_right_down":
-                action = "backwards_right_down";
+            case "backward_right_down":
+                action = "backward_right_down";
                 break;
             case "takeoff":
                 action = "takeoff";
