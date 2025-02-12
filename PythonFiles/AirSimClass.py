@@ -73,23 +73,23 @@ class AirSimWebSocketServer:
 
             # Continuous movement: Forward
             elif action == "forward":
-                self.move_relative(0, self.velocity, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
+                self.move(self.client, self.velocity, 0, 0, 1)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
 
             # Continuous movement: Backward
             elif action == "backward":
-                self.move_relative(0, -self.velocity, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
+                self.move(self.client, -self.velocity, 0, 0, 1)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
 
             # Continuous movement: Left
             elif action == "left":
-                self.move_relative(-self.velocity, 0, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
+                self.move(self.client, 0, -self.velocity, 0, 1)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
 
             # Continuous movement: Right
             elif action == "right":
-                self.move_relative(self.velocity, 0, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
+                self.move(self.client, 0, self.velocity, 0, 1)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
 
             elif action == "stop":
                 print(self.client.getRotorStates())
@@ -100,19 +100,9 @@ class AirSimWebSocketServer:
             print(f"Error while processing message: {e}")
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
 
-    def move_relative(self, dx, dy, dz):
-        """
-        Move the drone relative to its current position.
-        """
-        # Get the current position
-        current_position = self.client.getMultirotorState().kinematics_estimated.position
-        new_x = current_position.x_val + dx
-        new_y = current_position.y_val + dy
-        new_z = current_position.z_val + dz
-
+    def move(self, vx, vy, vz, duration):    #CHANGE: client.py has AirSim API, replace with new manual function
         # Move to the new position
-        self.client.moveToPositionAsync(new_x, new_y, new_z, self.velocity).join()
-
+        self.client.moveByVelocityAsync(self, vx, vy, vz, duration).join()
     def cleanup(self):
         """
         Perform cleanup when the server stops.
