@@ -42,7 +42,7 @@
         android:layout_marginStart="68dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="43dp"
-        android:text="Land"
+        android:text="@string/land"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -98,10 +98,10 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:text="@string/backward"
-            app:layout_constraintEnd_toStartOf="@+id/right"
+            app:layout_constraintEnd_toStartOf="@+id/Rright"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/left" />
+            app:layout_constraintTop_toBottomOf="@+id/Rleft" />
 
         <!-- Go Down Button -->
         <Button
@@ -110,15 +110,15 @@
             android:layout_height="66dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="120dp"
-            android:text="down"
+            android:text="@string/down"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/button18"
-            app:layout_constraintTop_toBottomOf="@+id/button16" />
+            app:layout_constraintStart_toEndOf="@+id/left"
+            app:layout_constraintTop_toBottomOf="@+id/right" />
 
         <!-- Left Button -->
         <Button
-            android:id="@+id/left"
+            android:id="@+id/Rleft"
             android:layout_width="83dp"
             android:layout_height="68dp"
             android:layout_marginTop="8dp"
@@ -130,7 +130,7 @@
 
         <!-- Right Button -->
         <Button
-            android:id="@+id/right"
+            android:id="@+id/Rright"
             android:layout_width="83dp"
             android:layout_height="68dp"
             android:layout_marginTop="4dp"
@@ -147,13 +147,13 @@
         <!-- Button 16 -->
 
         <Button
-            android:id="@+id/button18"
+            android:id="@+id/left"
             android:layout_width="83dp"
             android:layout_height="68dp"
             android:layout_marginStart="460dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="84dp"
-            android:text="Left"
+            android:text="@string/left"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/go_up"
             app:layout_constraintHorizontal_bias="1.0"
@@ -161,10 +161,10 @@
             app:layout_constraintTop_toBottomOf="@+id/go_up" />
 
         <Button
-            android:id="@+id/button16"
+            android:id="@+id/right"
             android:layout_width="83dp"
             android:layout_height="68dp"
-            android:text="Right"
+            android:text="@string/right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/go_up"
@@ -176,7 +176,7 @@
     <TextView
         android:id="@+id/output"
         android:layout_width="215dp"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:padding="16dp"
         android:scrollbars="vertical"
         android:maxLines="2"

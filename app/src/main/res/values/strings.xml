@@ -5,4 +5,8 @@
     <string name="lturn">lturn</string>
     <string name="rturn">rturn</string>
     <string name="up">up</string>
+    <string name="down">down</string>
+    <string name="left">left</string>
+    <string name="right">right</string>
+    <string name="land">Land</string>
 </resources>
