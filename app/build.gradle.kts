@@ -46,10 +46,11 @@ dependencies {
     implementation(libs.camera.core.v140alpha04)
     implementation(libs.camera.camera2.v140alpha04)
     // If you want to use the CameraX Lifecycle library
-    implementation(libs.camera.lifecycle.v140alpha04)
-    implementation (libs.androidx.camera.video)
-
-    implementation (libs.androidx.camera.view.v140alpha04)
-    implementation (libs.androidx.camera.extensions)
+    implementation("androidx.camera:camera-core:1.3.0")
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0")
+    implementation("androidx.camera:camera-video:1.3.0")
+    implementation("androidx.camera:camera-extensions:1.3.0")
   //  implementation(libs.quickbirdstudios.opencv.android)
 }
