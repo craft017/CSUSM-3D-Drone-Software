@@ -9,6 +9,7 @@ import os
 import tempfile
 import pprint
 import cv2
+import math
 
 class AirSimWebSocketServer:
     def __init__(self, host="localhost", port=8765):
@@ -73,22 +74,22 @@ class AirSimWebSocketServer:
 
             # Continuous movement: Forward
             elif action == "forward":
-                self.move(self.client, self.velocity, 0, 0, 1)
+                self.move(self.velocity, 0, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
 
             # Continuous movement: Backward
             elif action == "backward":
-                self.move(self.client, -self.velocity, 0, 0, 1)
+                self.move(-self.velocity, 0, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
 
             # Continuous movement: Left
             elif action == "left":
-                self.move(self.client, 0, -self.velocity, 0, 1)
+                self.move(0, -self.velocity, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
 
             # Continuous movement: Right
             elif action == "right":
-                self.move(self.client, 0, self.velocity, 0, 1)
+                self.move(0, self.velocity, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
 
             elif action == "stop":
@@ -100,9 +101,21 @@ class AirSimWebSocketServer:
             print(f"Error while processing message: {e}")
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
 
-    def move(self, vx, vy, vz, duration):    #CHANGE: client.py has AirSim API, replace with new manual function
+    def move(self, vx, vy, vz, duration):
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        yaw = yawFromQuaternion(pose.orientation)
+        # Compute world frame velocity
+        newVX = math.cos(yaw)
+        newVY = math.sin(yaw)
+        newVZ = 0
         # Move to the new position
-        self.client.moveByVelocityAsync(self, vx, vy, vz, duration).join()
+        self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+    def yawFromQuaternion(q):
+        # Convert a quaternion to yaw
+        sin_yaw = 2.0*(q.w*q.z+q.x*q.y)
+        cos_yaw = 2.0*(q.y*q.y+q.z*q.z)
+        return math.atan2(sin_yaw, cos_yaw) # Gets yaw in radians
     def cleanup(self):
         """
         Perform cleanup when the server stops.
