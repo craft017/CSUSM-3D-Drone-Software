@@ -128,17 +128,18 @@ public class UserInterface extends AppCompatActivity {
         button.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    if (activeActions.contains(action)) { // If already active, remove it (toggle off)
-                        activeActions.remove(action);
-                    } else { // If not active, add it (toggle on)
+                    if (!activeActions.contains(action)) {
                         activeActions.add(action);
+                        startCommandLoop(); // Start sending commands continuously
                     }
-                    updateAndSendCommand();
                     break;
 
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    // No need to handle anything here anymore, toggle is handled in ACTION_DOWN
+                    activeActions.remove(action);
+                    if (activeActions.isEmpty()) {
+                        stopCommandLoop(); // Stop sending commands if no buttons are held
+                    }
                     break;
             }
             return true;
@@ -156,11 +157,30 @@ public class UserInterface extends AppCompatActivity {
             List<String> sortedActions = new ArrayList<>(activeActions);
             sortedActions.sort(Comparator.comparingInt(action -> Arrays.asList(correctOrder).indexOf(action)));
             // Combine active actions using underscores (e.g., "forward_right")
-            String combinedAction = String.join("_", activeActions);
+            String combinedAction = String.join("_", sortedActions);
             orchestrator.processCommand(combinedAction, UserInterface.this::sendCommand);
         }
     }
+    private void startCommandLoop() {
+        if (commandRunnable == null) {
+            commandRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateAndSendCommand(); // Send the movement command
+                    commandHandler.postDelayed(this, COMMAND_INTERVAL); // Repeat after delay
+                }
+            };
+            commandHandler.post(commandRunnable); // Start the loop
+        }
+    }
 
+    private void stopCommandLoop() {
+        if (commandRunnable != null) {
+            commandHandler.removeCallbacks(commandRunnable); // Stop sending commands
+            commandRunnable = null;
+            orchestrator.processCommand("stop", UserInterface.this::sendCommand); // Send stop command
+        }
+    }
     // Logic for starting the camera
     private void startCamera() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);

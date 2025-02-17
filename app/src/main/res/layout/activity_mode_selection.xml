@@ -18,14 +18,14 @@
         android:id="@+id/controller_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Controller Mode"
+        android:text="User Phone Selection"
         android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/control_board_mode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Control Board Mode"
+        android:text="Drone Phone Selection"
         android:layout_marginBottom="16dp" />
 
 </LinearLayout>
