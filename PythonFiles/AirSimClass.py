@@ -26,7 +26,7 @@ class AirSimWebSocketServer:
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.velocity = 2
-        self.yawRate = 5
+        self.yawRate = 25
 
         # Start the WebSocket server
         server = websockets.serve(partial(self.handle_client), self.host, self.port)
@@ -95,11 +95,11 @@ class AirSimWebSocketServer:
 
             #Continuous movement: Right Turn
             elif action == "right_turn":
-                self.client.rotateByYawRateAsync(self, self.yawRate, 1)
+                self.client.rotateByYawRateAsync(self.yawRate, 1)
 
             #Continuous movement: Left Turn
             elif action == "left_turn":
-                self.client.rotateByYawRateAsync(self, -self.yawRate, 1)
+                self.client.rotateByYawRateAsync(-self.yawRate, 1)
 
             elif action == "stop":
                 print(self.client.getRotorStates())
@@ -122,7 +122,7 @@ class AirSimWebSocketServer:
         newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
         newVZ = 0
         if(vx<0):   #Check if going backwards
-            self.client.moveByVelocityAsync(-newVX, newVY, newVZ, duration)
+            self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
         else:
             self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
     def moveY(self, vx, vy, vz, duration):
@@ -135,6 +135,11 @@ class AirSimWebSocketServer:
         # Compute world frame velocity
         newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
         newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
+        newVZ = 0
+        if(vy<0):   #Check if going backwards
+            self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
+        else:
+            self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
     def cleanup(self):
         """
         Perform cleanup when the server stops.
