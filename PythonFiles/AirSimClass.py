@@ -27,6 +27,7 @@ class AirSimWebSocketServer:
         self.client.enableApiControl(True)
         self.velocity = 2
         self.yawRate = 25
+        self.commandTime = 0.2  #Every command runs for 200 milliseconds
 
         # Start the WebSocket server
         server = websockets.serve(partial(self.handle_client), self.host, self.port)
@@ -75,31 +76,31 @@ class AirSimWebSocketServer:
 
             # Continuous movement: Forward
             elif action == "forward":
-                self.moveX(self.velocity, 0, 0, 1)
+                self.moveX(self.velocity, 0, 0, self.commandTime)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
 
             # Continuous movement: Backward
             elif action == "backward":
-                self.moveX(-self.velocity, 0, 0, 1)
+                self.moveX(-self.velocity, 0, 0, self.commandTime)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
 
             # Continuous movement: Left
             elif action == "left":
-                self.moveY(0, -self.velocity, 0, 1)
+                self.moveY(0, -self.velocity, 0, self.commandTime)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
 
             # Continuous movement: Right
             elif action == "right":
-                self.moveY(0, self.velocity, 0, 1)
+                self.moveY(0, self.velocity, 0, self.commandTime)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
 
             #Continuous movement: Right Turn
             elif action == "right_turn":
-                self.client.rotateByYawRateAsync(self.yawRate, 1)
+                self.client.rotateByYawRateAsync(self.yawRate, self.commandTime)
 
             #Continuous movement: Left Turn
             elif action == "left_turn":
-                self.client.rotateByYawRateAsync(-self.yawRate, 1)
+                self.client.rotateByYawRateAsync(-self.yawRate, self.commandTime)
 
             elif action == "stop":
                 print(self.client.getRotorStates())
