@@ -102,6 +102,14 @@ class AirSimWebSocketServer:
             elif action == "left_turn":
                 self.client.rotateByYawRateAsync(-self.yawRate, self.commandTime)
 
+            #Continuous movement: Up
+            elif action == "up":
+                self.client.moveByVelocity(0, 0, -self.velocity, self.commandTime)
+
+            #Continuous movement: Down
+            elif action == "down":
+                self.client.moveByVelocity(0, 0, self.velocity, self.commandTime)
+
             elif action == "stop":
                 print(self.client.getRotorStates())
 
