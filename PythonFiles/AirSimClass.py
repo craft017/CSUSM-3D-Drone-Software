@@ -112,8 +112,10 @@ class AirSimWebSocketServer:
         newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
         newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
         newVZ = 0
-        # Move to the new position
-        self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+        if(vx<0):   #Check if going backwards
+            self.client.moveByVelocityAsync(-newVX, newVY, newVZ, duration)
+        else:
+            self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
     def cleanup(self):
         """
         Perform cleanup when the server stops.
