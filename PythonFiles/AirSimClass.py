@@ -26,6 +26,7 @@ class AirSimWebSocketServer:
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.velocity = 2
+        self.yawRate = 5
 
         # Start the WebSocket server
         server = websockets.serve(partial(self.handle_client), self.host, self.port)
@@ -84,13 +85,21 @@ class AirSimWebSocketServer:
 
             # Continuous movement: Left
             elif action == "left":
-                self.move(0, -self.velocity, 0, 1)
+                self.moveY(0, -self.velocity, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
 
             # Continuous movement: Right
             elif action == "right":
-                self.move(0, self.velocity, 0, 1)
+                self.moveY(0, self.velocity, 0, 1)
                 await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
+
+            #Continuous movement: Right Turn
+            elif action == "right_turn":
+                self.client.rotateByYawRateAsync(self, self.yawRate, 1)
+
+            #Continuous movement: Left Turn
+            elif action == "left_turn":
+                self.client.rotateByYawRateAsync(self, -self.yawRate, 1)
 
             elif action == "stop":
                 print(self.client.getRotorStates())
@@ -116,6 +125,16 @@ class AirSimWebSocketServer:
             self.client.moveByVelocityAsync(-newVX, newVY, newVZ, duration)
         else:
             self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+    def moveY(self, vx, vy, vz, duration):
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        #Convert quaternion to yaw angle
+        yaw = airsim.to_eularian_angles(pose.orientation)[2]
+        local_vy = self.velocity    #Velocity in y direction
+        local_vx = 0                #No movement in x direction
+        # Compute world frame velocity
+        newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
+        newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
     def cleanup(self):
         """
         Perform cleanup when the server stops.
