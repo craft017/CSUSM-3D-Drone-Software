@@ -38,7 +38,7 @@ public class UserInterface extends AppCompatActivity {
     private static final String TAG = "UserInterface";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
     private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.CAMERA};
-    private Button start, forward, backward, left, right, takeoff, land, up, down;
+    private Button start, forward, backward, left, right, takeoff, land, up, down, Rleft, Rright;
     private TextView output;
     private Orchestrator orchestrator;
     private PreviewView previewView;
@@ -72,6 +72,8 @@ public class UserInterface extends AppCompatActivity {
         land = findViewById(R.id.land);
         up = findViewById(R.id.go_up);
         down = findViewById(R.id.go_down);
+        Rleft = findViewById(R.id.Rleft);
+        Rright = findViewById(R.id.Rright);
 
         output = findViewById(R.id.output);
         previewView = findViewById(R.id.previewView);
@@ -114,6 +116,8 @@ public class UserInterface extends AppCompatActivity {
         setMovementListener(right, "right");
         setMovementListener(up, "up");
         setMovementListener(down, "down");
+        setMovementListener(Rleft, "left_turn");
+        setMovementListener(Rright, "right_turn");
 
         // Starts Camera
         cameraExecutor = Executors.newSingleThreadExecutor();
@@ -151,7 +155,7 @@ public class UserInterface extends AppCompatActivity {
             orchestrator.processCommand("stop", UserInterface.this::sendCommand);
         } else {
             // Define correct order of actions
-            String[] correctOrder = {"forward", "backward", "left", "right", "up", "down"};
+            String[] correctOrder = {"forward", "backward", "left", "right", "up", "down", "left_turn", "right_turn"};
 
             // Sort activeActions according to the predefined order
             List<String> sortedActions = new ArrayList<>(activeActions);

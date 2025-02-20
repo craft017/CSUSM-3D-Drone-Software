@@ -1,13 +1,11 @@
 package com.example.airsimapp;
 
 public class Orchestrator {
-    private final Manual manual;
     private final Autopilot autopilot;
     private final flightControllerInterface flightController;
 
     public Orchestrator(flightControllerInterface flightController) {
         this.flightController = flightController;
-        this.manual = new Manual();
         this.autopilot = new Autopilot();
     }
 
@@ -16,7 +14,7 @@ public class Orchestrator {
     }
 
     public void processCommand(String userAction, CommandCallback callback) {
-        String command = manual.translateCommand(userAction);
+        String command = autopilot.getManual().translateCommand(userAction);
         callback.onCommandReady(command);
         flightController.sendToDrone(command);
     }
