@@ -84,6 +84,12 @@ public class Manual {
             case "backward_right_down":
                 action = "backward_right_down";
                 break;
+            case "right_turn":
+                action = "right_turn";
+                break;
+            case "left_turn":
+                action = "left_turn";
+                break;
             case "takeoff":
                 action = "takeoff";
                 break;
