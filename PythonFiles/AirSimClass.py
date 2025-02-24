@@ -25,8 +25,8 @@ class AirSimWebSocketServer:
         self.client = airsim.MultirotorClient()
         self.client.confirmConnection()
         self.client.enableApiControl(True)
-        self.velocity = 2
-        self.yawRate = 25
+        self.velocity = 2       #Velocity of the drone
+        self.yawRate = 25       #Degrees per second when turning
         self.commandTime = 0.2  #Every command runs for 200 milliseconds
 
         # Start the WebSocket server
@@ -104,11 +104,11 @@ class AirSimWebSocketServer:
 
             #Continuous movement: Up
             elif action == "up":
-                self.client.moveByVelocity(0, 0, -self.velocity, self.commandTime)
+                self.client.moveByVelocityAsync(0, 0, -self.velocity, self.commandTime)
 
             #Continuous movement: Down
             elif action == "down":
-                self.client.moveByVelocity(0, 0, self.velocity, self.commandTime)
+                self.client.moveByVelocityAsync(0, 0, self.velocity, self.commandTime)
 
             elif action == "stop":
                 print(self.client.getRotorStates())
@@ -119,7 +119,8 @@ class AirSimWebSocketServer:
             print(f"Error while processing message: {e}")
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
 
-    def moveX(self, vx, vy, vz, duration):
+    #Moving in x axis relative to drone perspective
+    def moveX(self, vx, vy, vz, duration): 
         # Get drone orientation
         pose = self.client.simGetVehiclePose()
         #Convert quaternion to yaw angle
@@ -134,6 +135,7 @@ class AirSimWebSocketServer:
             self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
         else:
             self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+    #Moving in y axis relative to drone perspective
     def moveY(self, vx, vy, vz, duration):
         # Get drone orientation
         pose = self.client.simGetVehiclePose()

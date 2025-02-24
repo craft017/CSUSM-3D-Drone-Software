@@ -41,7 +41,7 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 quickbirdstudios-opencv-android = { module = "com.github.quickbirdstudios:opencv-android", version.ref = "opencv-android" }
 socket-socket-io-client = { module = "io.socket:socket.io-client", version.ref = "socketIoClientVersion" }
-
+play-services-location = { module = "com.google.android.gms:play-services-location", version = "21.0.1" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 

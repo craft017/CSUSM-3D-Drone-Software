@@ -50,7 +50,10 @@ dependencies {
     implementation(libs.camera.lifecycle.v140alpha04)
     implementation (libs.androidx.camera.video)
 
+    implementation(libs.play.services.location) //used for mock gps
+
     implementation (libs.androidx.camera.view.v140alpha04)
     implementation (libs.androidx.camera.extensions)
   //  implementation(libs.quickbirdstudios.opencv.android)
+
 }
