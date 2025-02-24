@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/constraintLayout">
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <!-- Camera Preview as Background -->
 
 <!--    <androidx.camera.view.PreviewView-->
@@ -56,9 +61,9 @@
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/takeoff"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/takeoff">
 
         <!-- Forward Button -->
 
@@ -171,17 +176,26 @@
             app:layout_constraintStart_toEndOf="@+id/go_up"
             app:layout_constraintTop_toBottomOf="@+id/go_up" />
 
+        <Button
+            android:id="@+id/switchScreens"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="314dp"
+            android:layout_marginTop="97dp"
+            android:text="SWITCHHHH"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Output TextView -->
     <TextView
         android:id="@+id/output"
-        android:layout_width="215dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:scrollbars="vertical"
-        android:maxLines="2"
-        android:ellipsize="end"
+        android:maxLines="5"
         android:text="Output will appear here"
         android:layout_margin="16dp"
         android:gravity="start"

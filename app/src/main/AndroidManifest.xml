@@ -20,7 +20,7 @@
         >
 
 
-        <activity android:name=".ModeSelectionActivity"
+        <activity android:name=".ModeSelectionFragment"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

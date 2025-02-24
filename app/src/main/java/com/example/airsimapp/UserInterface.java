@@ -3,6 +3,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +39,7 @@ public class UserInterface extends AppCompatActivity {
     private static final String TAG = "UserInterface";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
     private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.CAMERA};
-    private Button start, forward, backward, left, right, takeoff, land, up, down, Rleft, Rright;
+    private Button start, forward, backward, left, right, takeoff, land, up, down, Rleft, Rright, switchScreens;
     private TextView output;
     private Orchestrator orchestrator;
     private PreviewView previewView;
@@ -56,10 +57,11 @@ public class UserInterface extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String mode = getIntent().getStringExtra("MODE");
-
-        if ("control_board".equals(mode)) {
-            findViewById(R.id.button_layout).setVisibility(View.GONE); // Hide controller buttons
+        if (savedInstanceState == null) {
+            // Set the ModeSelectionFragment as the initial fragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ModeSelectionFragment())
+                    .commit();
         }
 
         // Initialize UI components
@@ -74,11 +76,16 @@ public class UserInterface extends AppCompatActivity {
         down = findViewById(R.id.go_down);
         Rleft = findViewById(R.id.Rleft);
         Rright = findViewById(R.id.Rright);
-
+        switchScreens = findViewById(R.id.switchScreens);
         output = findViewById(R.id.output);
+        output.setMovementMethod(new ScrollingMovementMethod());
         previewView = findViewById(R.id.previewView);
         flightControllerSpinner = findViewById(R.id.flight_controller_spinner);
 
+//        switchScreens.setOnClickListener(v -> setContentView(R.layout.activity_mode_selection));
+//        if (switchScreens.hasFocus()){
+//            setContentView(R.layout.activity_mode_selection);
+//        }
         // Set up Spinner (dropdown)
         String[] controllers = {"AirSim"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, controllers);

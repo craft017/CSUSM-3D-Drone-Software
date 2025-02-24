@@ -18,7 +18,7 @@ public class AirSimFlightController implements flightControllerInterface {
 
     @Override
     public void connect() {
-        Request request = new Request.Builder().url("ws://10.0.2.2:8765").build();
+        Request request = new Request.Builder().url("ws://10.0.2.2:8766").build();
         webSocket = client.newWebSocket(request, new EchoWebSocketListener());
     }
 
