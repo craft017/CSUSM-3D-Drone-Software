@@ -5,7 +5,7 @@ public class GPS {
     private float longitude;
     private float altitude;
 
-
+//use getGpsData from client.py
 
     public float getLatitude() {
         return latitude;
