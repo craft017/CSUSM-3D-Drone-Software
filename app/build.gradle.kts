@@ -29,6 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -53,5 +56,11 @@ dependencies {
     implementation("androidx.camera:camera-view:1.3.0")
     implementation("androidx.camera:camera-video:1.3.0")
     implementation("androidx.camera:camera-extensions:1.3.0")
+    implementation(libs.camera.lifecycle.v140alpha04)
+    implementation (libs.androidx.camera.video)
+
+    implementation (libs.androidx.camera.view.v140alpha04)
+    implementation (libs.androidx.camera.extensions)
+    implementation (libs.nanohttpd.websocket)
   //  implementation(libs.quickbirdstudios.opencv.android)
 }
