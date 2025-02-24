@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AndroidLayouts">
-    <shared>
-      <config />
-    </shared>
-    <layouts>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-        <config>
-          <state>Landscape</state>
-          <theme>@style/Theme.AirSimApp</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_mode_selection.xml">
-        <config>
-          <theme>@style/Theme.AirSimApp</theme>
-        </config>
-      </layout>
-    </layouts>
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="24cc48a2-c7a7-48af-9a33-170d4c35653b" name="Changes" comment="Removed toggle from buttons, reverted to press and hold commands.">
+    <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Moved Manual class into Autopilot">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_mode_selection.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_mode_selection.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,29 +15,32 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\jay03\.android\avd\Copy_of_Medium_Phone_API_35.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=D:\Android\.android\avd\Medium_Phone_API_35.avd)]" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="dev" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;craft017&quot;
+    &quot;assignee&quot;: &quot;BMG120&quot;
   }
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/craft017/CSUSM-3D-Drone-Software.git&quot;,
-    &quot;accountId&quot;: &quot;5ce39e5a-1ef6-4076-b5a0-f85ac869207a&quot;
+    &quot;accountId&quot;: &quot;b34bd9c8-4a0b-45d0-b630-a55f0bf81a25&quot;
   }
 }</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
 }</component>
-  <component name="ProjectId" id="2sv1D96zJv4Bh4LJLCL4ZezKodI" />
+  <component name="ProjectId" id="2sryaZzWKAKnA9LtB2eDsy9sJip" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -68,10 +51,9 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev__jayden&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev__jason&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
   }
 }</component>
@@ -151,41 +133,35 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="24cc48a2-c7a7-48af-9a33-170d4c35653b" name="Changes" comment="" />
-      <created>1739321116773</created>
+      <changelist id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="" />
+      <created>1739228053919</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1739321116773</updated>
+      <updated>1739228053919</updated>
     </task>
-    <task id="LOCAL-00001" summary="Removed toggle from buttons, reverted to press and hold commands.">
+    <task id="LOCAL-00001" summary="Changed AirSimClass.py for move by velocity">
       <option name="closed" value="true" />
-      <created>1739764193985</created>
+      <created>1739392973127</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1739764193985</updated>
+      <updated>1739392973127</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Moved Manual class into Autopilot">
+      <option name="closed" value="true" />
+      <created>1739999992144</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1739999992144</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="Changed AirSimClass.py for move by velocity" />
     <MESSAGE value="Removed toggle from buttons, reverted to press and hold commands." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed toggle from buttons, reverted to press and hold commands." />
-  </component>
-  <component name="play_dynamic_filters_status">
-    <option name="appIdToCheckInfo">
-      <map>
-        <entry key="com.example.airsimapp">
-          <value>
-            <CheckInfo lastCheckTimestamp="1739763071764" />
-          </value>
-        </entry>
-        <entry key="com.example.airsimapp.test">
-          <value>
-            <CheckInfo lastCheckTimestamp="1739763071763" />
-          </value>
-        </entry>
-      </map>
-    </option>
+    <MESSAGE value="Moved Manual class into Autopilot" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved Manual class into Autopilot" />
   </component>
 </project>
