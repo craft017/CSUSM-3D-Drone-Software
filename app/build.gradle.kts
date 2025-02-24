@@ -40,9 +40,10 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.okhttp)
     implementation(libs.appcompat.v161)
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(libs.androidx.constraintlayout)
     implementation (libs.socket.socket.io.client)
     implementation (libs.picasso)
+    implementation (libs.androidx.camera.core.v130)
     implementation(libs.camera.core.v140alpha04)
     implementation(libs.camera.camera2.v140alpha04)
     // If you want to use the CameraX Lifecycle library
