@@ -1,6 +1,6 @@
 package com.example.airsimapp;
 
-public class  Autopilot {
+public class  Autopilot  {
     private final Manual manual;
     private GPS gps;
 
