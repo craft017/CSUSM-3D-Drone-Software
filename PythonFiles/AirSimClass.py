@@ -9,6 +9,7 @@ import os
 import tempfile
 import pprint
 import cv2
+import math
 
 class AirSimWebSocketServer:
     def __init__(self, host="localhost", port=8765):
@@ -24,7 +25,9 @@ class AirSimWebSocketServer:
         self.client = airsim.MultirotorClient()
         self.client.confirmConnection()
         self.client.enableApiControl(True)
-        self.velocity = 2
+        self.velocity = 2       #Velocity of the drone
+        self.yawRate = 25       #Degrees per second when turning
+        self.commandTime = 0.2  #Every command runs for 200 milliseconds
 
         # Start the WebSocket server
         server = websockets.serve(partial(self.handle_client), self.host, self.port)
@@ -73,23 +76,39 @@ class AirSimWebSocketServer:
 
             # Continuous movement: Forward
             elif action == "forward":
-                self.move_relative(0, self.velocity, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
+                self.moveX(self.velocity, 0, 0, self.commandTime)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
 
             # Continuous movement: Backward
             elif action == "backward":
-                self.move_relative(0, -self.velocity, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
+                self.moveX(-self.velocity, 0, 0, self.commandTime)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
 
             # Continuous movement: Left
             elif action == "left":
-                self.move_relative(-self.velocity, 0, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving backward"}))
+                self.moveY(0, -self.velocity, 0, self.commandTime)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving left"}))
 
             # Continuous movement: Right
             elif action == "right":
-                self.move_relative(self.velocity, 0, 0)
-                await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
+                self.moveY(0, self.velocity, 0, self.commandTime)
+                await websocket.send(json.dumps({"status": "success", "message": "Moving right"}))
+
+            #Continuous movement: Right Turn
+            elif action == "right_turn":
+                self.client.rotateByYawRateAsync(self.yawRate, self.commandTime)
+
+            #Continuous movement: Left Turn
+            elif action == "left_turn":
+                self.client.rotateByYawRateAsync(-self.yawRate, self.commandTime)
+
+            #Continuous movement: Up
+            elif action == "up":
+                self.client.moveByVelocityAsync(0, 0, -self.velocity, self.commandTime)
+
+            #Continuous movement: Down
+            elif action == "down":
+                self.client.moveByVelocityAsync(0, 0, self.velocity, self.commandTime)
 
             elif action == "stop":
                 print(self.client.getRotorStates())
@@ -100,19 +119,38 @@ class AirSimWebSocketServer:
             print(f"Error while processing message: {e}")
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
 
-    def move_relative(self, dx, dy, dz):
-        """
-        Move the drone relative to its current position.
-        """
-        # Get the current position
-        current_position = self.client.getMultirotorState().kinematics_estimated.position
-        new_x = current_position.x_val + dx
-        new_y = current_position.y_val + dy
-        new_z = current_position.z_val + dz
-
-        # Move to the new position
-        self.client.moveToPositionAsync(new_x, new_y, new_z, self.velocity).join()
-
+    #Moving in x axis relative to drone perspective
+    def moveX(self, vx, vy, vz, duration): 
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        #Convert quaternion to yaw angle
+        yaw = airsim.to_eularian_angles(pose.orientation)[2]
+        local_vx = self.velocity    #Velocity in x direction
+        local_vy = 0                #No movement in y direction
+        # Compute world frame velocity
+        newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
+        newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
+        newVZ = 0
+        if(vx<0):   #Check if going backwards
+            self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
+        else:
+            self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+    #Moving in y axis relative to drone perspective
+    def moveY(self, vx, vy, vz, duration):
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        #Convert quaternion to yaw angle
+        yaw = airsim.to_eularian_angles(pose.orientation)[2]
+        local_vy = self.velocity    #Velocity in y direction
+        local_vx = 0                #No movement in x direction
+        # Compute world frame velocity
+        newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
+        newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
+        newVZ = 0
+        if(vy<0):   #Check if going backwards
+            self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
+        else:
+            self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
     def cleanup(self):
         """
         Perform cleanup when the server stops.

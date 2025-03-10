@@ -6,7 +6,7 @@ import android.widget.TextView;
 import okhttp3.*;
 
 public class AirSimFlightController implements flightControllerInterface {
-    private static final String TAG = "FlightController";
+    private static final String TAG = "AirSimFlightController";
     private WebSocket webSocket;
     private final OkHttpClient client;
     private final TextView output;
@@ -14,6 +14,11 @@ public class AirSimFlightController implements flightControllerInterface {
     public AirSimFlightController(TextView output) {
         this.client = new OkHttpClient();
         this.output = output;
+    }
+
+    public AirSimFlightController(){
+        this.client = new OkHttpClient();
+        output = null;
     }
 
     @Override
@@ -33,27 +38,31 @@ public class AirSimFlightController implements flightControllerInterface {
 
     private class EchoWebSocketListener extends WebSocketListener {
         @Override
-        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
-            appendOutput("Connected to WebSocket");
+        public void onOpen(WebSocket webSocket, Response response) {
+           // appendOutput("Connected to WebSocket");
+            Log.d(TAG, "Connected to WebSocket");
         }
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-            appendOutput("Received message: " + text);
+          //  appendOutput("Sending message: " + text);
+            Log.d(TAG, "Sending message: " + text);
         }
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-            appendOutput("WebSocket closing: " + reason);
+           // appendOutput("WebSocket closing: " + reason);
+            Log.d(TAG, "WebSocket closing: " + reason);
         }
 
         @Override
-        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            appendOutput("WebSocket error: " + t.getMessage());
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+           // appendOutput("WebSocket error: " + t.getMessage());
+            Log.d(TAG, "WebSocket error: " + t.getMessage());
         }
 
-        private void appendOutput(String message) {
-            output.post(() -> output.append("\n" + message));
-        }
+//        private void appendOutput(String message) {
+//            output.post(() -> output.append("\n" + message));
+//        }
     }
 }

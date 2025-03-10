@@ -1,4 +1,4 @@
-package com.example.airsimapp;
+package com.example.airsimapp.Fragments;
 
 import android.Manifest;
 
@@ -11,7 +11,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 
 import android.content.pm.PackageManager;
@@ -25,13 +24,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 
-public class UserPhoneFragment extends Fragment {
-    private static final String TAG = "UserPhoneFragment";
+public class ManualFragment extends Fragment  {
+    private static final String TAG = "ManualFragment";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
     private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.CAMERA};
     private TextView output;
@@ -52,18 +51,16 @@ public class UserPhoneFragment extends Fragment {
     private ExecutorService cameraExecutor;
     private final Set<String> activeActions = new HashSet<>();
     private Runnable commandRunnable;
-    private Orchestrator orchestrator;
+    //private Orchestrator orchestrator;
+
+// These help us loop the commands being sent
     private static final long COMMAND_INTERVAL = 100;
     private final Handler commandHandler = new Handler(Looper.getMainLooper());
-
-    public UserPhoneFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_user_phone, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_manual, container, false);
 
         Button start = rootView.findViewById(R.id.start);
         Button forward = rootView.findViewById(R.id.forward);
@@ -79,26 +76,21 @@ public class UserPhoneFragment extends Fragment {
         Button autoPilotButton = rootView.findViewById(R.id.autoPilotButton);
         output = rootView.findViewById(R.id.output);
         output.setMovementMethod(new ScrollingMovementMethod());
-        //previewView = rootView.findViewById(R.id.previewView);
+        previewView = rootView.findViewById(R.id.previewView);
         // flightControllerSpinner may need to be in dronePhoneFragment
         Spinner flightControllerSpinner = rootView.findViewById(R.id.flight_controller_spinner);
 
         // Set up listeners, this is what the buttons do when clicked/held.
         autoPilotButton.setOnClickListener(v -> {
-            Bundle args = new Bundle();
-            args.putString("button_text", "Manual");  // Set new button text for Autopilot fragment
-
-            AutopilotFragment autopilotFragment = new AutopilotFragment();
-            autopilotFragment.setArguments(args);
-
-            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, autopilotFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-                });
-        start.setOnClickListener(v -> orchestrator.connectToDrone());
-        takeoff.setOnClickListener(v -> orchestrator.processCommand("takeoff", this::sendCommand));
-        land.setOnClickListener(v -> orchestrator.processCommand("land", this::sendCommand));
+            // Ensure the activity is of type UserActivity
+            if (getActivity() instanceof UserActivity) {
+                // Call switchFragment on the activity
+                ((UserActivity) getActivity()).switchFragment(UserActivity.getAutopilotFragment());
+            }
+        });
+        start.setOnClickListener(v -> UserActivity.getOrchestrator().connectToDrone());
+        takeoff.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("takeoff", this::sendCommand));
+        land.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("land", this::sendCommand));
         setMovementListener(forward, "forward");
         setMovementListener(backward, "backward");
         setMovementListener(left, "left");
@@ -108,30 +100,35 @@ public class UserPhoneFragment extends Fragment {
         setMovementListener(rleft, "left_turn");
         setMovementListener(rright, "right_turn");
 
-        // Set up Spinner (dropdown)
-        String[] controllers = {"AirSim"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
-        flightControllerSpinner.setAdapter(adapter);
-
-
-        // Handle dropdown selection
-        flightControllerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedController = (String) parent.getItemAtPosition(position);
-                if (selectedController.equals("AirSim")) {
-                    AirSimFlightController flightController = new AirSimFlightController(output);
-                    orchestrator = new Orchestrator(flightController);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-        // Default Spinner selection
-        flightControllerSpinner.setSelection(0);
+//        // Set up Spinner (dropdown)
+//        String[] controllers = {"AirSim"};
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
+//        flightControllerSpinner.setAdapter(adapter);
+//
+//
+//        // Handle dropdown selection
+//        flightControllerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedController = (String) parent.getItemAtPosition(position);
+//                if (selectedController.equals("AirSim")) {
+//                    AirSimFlightController flightController = new AirSimFlightController(output);
+//                    orchestrator = new Orchestrator(flightController);
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                // Do nothing
+//            }
+//        });
+//        // Default Spinner selection
+//        flightControllerSpinner.setSelection(0);
+        if (allPermissionsGranted()) {
+            startCamera();
+        } else {
+            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+        }
         return rootView;
 
 
@@ -159,7 +156,7 @@ public class UserPhoneFragment extends Fragment {
     }
     private void updateAndSendCommand() {
         if (activeActions.isEmpty()) {
-            orchestrator.processCommand("stop", UserPhoneFragment.this::sendCommand);
+            UserActivity.getOrchestrator().processCommand("stop", ManualFragment.this::sendCommand);
         } else {
             // Define correct order of actions
             String[] correctOrder = {"forward", "backward", "left", "right", "up", "down", "left_turn", "right_turn"};
@@ -169,7 +166,7 @@ public class UserPhoneFragment extends Fragment {
             sortedActions.sort(Comparator.comparingInt(action -> Arrays.asList(correctOrder).indexOf(action)));
             // Combine active actions using underscores (e.g., "forward_right")
             String combinedAction = String.join("_", sortedActions);
-            orchestrator.processCommand(combinedAction, UserPhoneFragment.this::sendCommand);
+            UserActivity.getOrchestrator().processCommand(combinedAction, ManualFragment.this::sendCommand);
         }
     }
     private void startCommandLoop() {
@@ -189,7 +186,7 @@ public class UserPhoneFragment extends Fragment {
         if (commandRunnable != null) {
             commandHandler.removeCallbacks(commandRunnable); // Stop sending commands
             commandRunnable = null;
-            orchestrator.processCommand("stop", UserPhoneFragment.this::sendCommand); // Send stop command
+            UserActivity.getOrchestrator().processCommand("stop", ManualFragment.this::sendCommand); // Send stop command
         }
     }
     private void startCamera() {
@@ -204,7 +201,7 @@ public class UserPhoneFragment extends Fragment {
                 androidx.camera.core.Preview preview = new androidx.camera.core.Preview.Builder().build();
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+                Camera camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
             } catch (Exception e) {
                 Log.e(TAG, "Use case binding failed", e);
             }
@@ -234,11 +231,13 @@ public class UserPhoneFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
+                Log.d(TAG, "Starting camera?");
                 startCamera();
             } else {
                 // Handle permission denial
                 Log.e(TAG, "Permissions not granted by the user.");
                 if (getActivity() != null) {
+                    Log.d(TAG, "Here?");
                     getActivity().finish(); // Close the activity containing the fragment
             }
         }
