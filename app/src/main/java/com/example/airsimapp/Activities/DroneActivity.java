@@ -10,6 +10,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.airsimapp.R;
 
+import okhttp3.OkHttpClient;
+import okhttp3.WebSocket;
+
 public class DroneActivity extends AppCompatActivity {
 
     @Override
@@ -17,10 +20,9 @@ public class DroneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_drone);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+//        private WebSocket webSocket;
+//        private final OkHttpClient client;
+
     }
 }
