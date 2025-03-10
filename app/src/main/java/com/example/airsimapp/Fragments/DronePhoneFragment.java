@@ -1,4 +1,4 @@
-package com.example.airsimapp;
+package com.example.airsimapp.Fragments;
 
 
 import androidx.annotation.NonNull;
@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.airsimapp.R;
 
 
 public class DronePhoneFragment extends Fragment {
