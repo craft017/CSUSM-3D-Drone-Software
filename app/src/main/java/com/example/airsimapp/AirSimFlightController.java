@@ -46,7 +46,8 @@ public class AirSimFlightController implements flightControllerInterface {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
           //  appendOutput("Sending message: " + text);
-            Log.d(TAG, "Sending message: " + text);
+            Log.d(TAG, "Receiving message: " + text);
+
         }
 
         @Override

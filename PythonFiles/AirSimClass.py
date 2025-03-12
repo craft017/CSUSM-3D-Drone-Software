@@ -55,6 +55,8 @@ class AirSimWebSocketServer:
             action = command.get("action")
             params = command.get("params", {})
 
+            #Beginning movement commands ↓-------------------
+
             if action == "takeoff":
                 self.client.armDisarm(True)
                 self.client.takeoffAsync().join()
@@ -112,6 +114,18 @@ class AirSimWebSocketServer:
 
             elif action == "stop":
                 print(self.client.getRotorStates())
+
+            #End movement commands ↑-------------------
+            #Beginning GPS commands ↓-------------------
+
+            elif action == "getGPS":
+                gpsData = self.client.getGpsData()
+                latitude = str(gpsData.GnssReport.GeoPoint.latitude)
+                longitude = str(gpsData.GnssReport.GeoPoint.longitude)
+                altitude = str(gpsData.GnssReport.GeoPoint.altitude)
+                message = latitude + "," + longitude + "," + altitude
+                await websocket.send(json.dumps({"status": "success", message: "Got GPS"}))
+                await websocket.send(json.dumps({message}))
 
             else:
                 await websocket.send(json.dumps({"status": "error", "message": "Unknown action"}))
