@@ -7,14 +7,14 @@
     >
 
     <EditText
-        android:id="@+id/editTextNumber12"
+        android:id="@+id/heading"
         android:layout_width="126dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="184dp"
         android:ems="10"
         android:inputType="number"
-        android:hint="Input here"
+        android:hint="@string/input_here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.015"
         app:layout_constraintStart_toEndOf="@+id/textView10"
@@ -26,7 +26,7 @@
         android:layout_height="46dp"
         android:layout_marginTop="36dp"
         android:fontFamily="times"
-        android:text="pattern"
+        android:text="@string/pattern"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,12 +35,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <Spinner
+        android:id="@+id/pattern"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
-
         android:layout_marginTop="340dp"
-        android:hint="Patterns"
+        android:hint="@string/patterns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView12"
@@ -52,7 +52,7 @@
         android:layout_height="46dp"
         android:layout_marginTop="32dp"
         android:fontFamily="times"
-        android:text="speed"
+        android:text="@string/speed"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <EditText
-        android:id="@+id/editTextNumber10"
+        android:id="@+id/speed"
         android:layout_width="126dp"
         android:layout_height="40dp"
         android:layout_marginTop="260dp"
@@ -112,11 +112,11 @@
         android:text="start"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.795"
-        app:layout_constraintStart_toEndOf="@+id/_dynamic"
+        app:layout_constraintStart_toEndOf="@+id/pattern"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/gpsCord"
         android:layout_width="126dp"
         android:layout_height="40dp"
         android:layout_marginTop="100dp"
@@ -150,7 +150,7 @@
         android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.464"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumber"
+        app:layout_constraintStart_toEndOf="@+id/gpsCord"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
