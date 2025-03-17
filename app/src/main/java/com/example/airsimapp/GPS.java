@@ -1,11 +1,9 @@
 package com.example.airsimapp;
 
-public class GPS {
+public class GPS extends AutopilotCommand{
     private float latitude;
     private float longitude;
     private float altitude;
-
-//use getGpsData from client.py
 
     public float getLatitude() {
         return latitude;

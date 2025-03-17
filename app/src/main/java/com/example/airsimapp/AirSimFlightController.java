@@ -47,7 +47,20 @@ public class AirSimFlightController implements flightControllerInterface {
         public void onMessage(WebSocket webSocket, String text) {
           //  appendOutput("Sending message: " + text);
             Log.d(TAG, "Receiving message: " + text);
-
+            String[] message = text.split(",");
+            switch(message[0]){ //Use action identifier for each type of message
+                case "getGPS":
+                    //TODO display current location
+                    break;
+                case "getSpeed":
+                    //TODO display current speed
+                    break;
+                case "getHeading":
+                    //TODO display current heading
+                    break;
+                default:
+                    Log.e(TAG, "Unknown Message Received");
+            }
         }
 
         @Override

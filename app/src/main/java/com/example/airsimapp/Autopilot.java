@@ -1,19 +1,17 @@
 package com.example.airsimapp;
 
+import java.util.ArrayList;
+
 public class  Autopilot  {
     private final Manual manual;
-    private GPS gps;
+    private ArrayList<AutopilotCommand> commandQueue;
 
     public Autopilot(){
         this.manual = new Manual();
-        this.gps = new GPS();
+        this.commandQueue = new ArrayList<AutopilotCommand>();
     }
 
-    public Manual getManual() {
-        return manual;
-    }
+    public Manual getManual() {return manual;}
 
-    public GPS getGps() {
-        return gps;
-    }
+    public ArrayList<AutopilotCommand> getCommandQueue() {return commandQueue;}
 }
