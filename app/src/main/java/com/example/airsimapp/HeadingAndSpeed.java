@@ -11,4 +11,15 @@ public class HeadingAndSpeed extends AutopilotCommand{
     public float getSpeed() {
         return speed;
     }
+
+    public float convertHeading360(float currentHeading){
+        float heading360 = 0;       //Set heading to 0(forward) as baseline
+        if(currentHeading > 0){
+            return currentHeading;
+        }
+        else{
+            heading360 = (180 + currentHeading) + 180;
+        }
+        return heading360;
+    }
 }
