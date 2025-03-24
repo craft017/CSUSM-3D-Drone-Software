@@ -55,6 +55,8 @@ class AirSimWebSocketServer:
             action = command.get("action")
             params = command.get("params", {})
 
+            #Beginning movement commands ↓-------------------
+
             if action == "takeoff":
                 self.client.armDisarm(True)
                 self.client.takeoffAsync().join()
@@ -112,6 +114,32 @@ class AirSimWebSocketServer:
 
             elif action == "stop":
                 print(self.client.getRotorStates())
+
+            #End movement commands ↑-------------------
+            #Beginning GPS commands ↓-------------------
+
+            elif action == "getGPS":
+                gpsData = self.client.getGpsData()
+                latitude = str(gpsData.gnss.geo_point.latitude)
+                longitude = str(gpsData.gnss.geo_point.longitude)   #Get GPS coordinates
+                altitude = str(gpsData.gnss.geo_point.altitude)
+                message = "getGPS," + latitude + "," + longitude + "," + altitude   #Create gps message
+                await websocket.send(message)
+
+            #End GPS commands ↑-------------------
+            #Beginning Heading/Speed commands ↓-------------------
+
+            elif action == "getSpeed":
+                state = self.client.getMultirotorState()
+                speed = str(state.kinematics_estimated.linear_velocity.get_length())
+                message = "getSpeed," + speed
+                await websocket.send(message)
+
+            elif action == "getHeading":
+                yaw = airsim.to_eularian_angles(state.kinematics_estimated.orientation)[2]
+                yaw_degrees = str(math.degrees(yaw))
+                message = "getHeading," + yaw_degrees
+                await websocket.send(message)
 
             else:
                 await websocket.send(json.dumps({"status": "error", "message": "Unknown action"}))

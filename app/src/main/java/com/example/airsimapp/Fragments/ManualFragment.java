@@ -87,16 +87,16 @@ public class ManualFragment extends Fragment  {
             }
         });
         start.setOnClickListener(v -> UserActivity.getOrchestrator().connectToDrone());
-        takeoff.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("takeoff", this::sendCommand));
-        land.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("land", this::sendCommand));
-        setMovementListener(forward, "forward");
-        setMovementListener(backward, "backward");
-        setMovementListener(left, "left");
-        setMovementListener(right, "right");
-        setMovementListener(up, "up");
-        setMovementListener(down, "down");
-        setMovementListener(rleft, "left_turn");
-        setMovementListener(rright, "right_turn");
+        takeoff.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("manual,takeoff", this::sendCommand));
+        land.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("manual,land", this::sendCommand));
+        setMovementListener(forward, "manual,forward");
+        setMovementListener(backward, "manual,backward");
+        setMovementListener(left, "manual,left");
+        setMovementListener(right, "manual,right");
+        setMovementListener(up, "manual,up");
+        setMovementListener(down, "manual,down");
+        setMovementListener(rleft, "manual,left_turn");
+        setMovementListener(rright, "manual,right_turn");
 
         if (allPermissionsGranted()) {
             startCamera();
@@ -131,10 +131,10 @@ public class ManualFragment extends Fragment  {
     }
     private void updateAndSendCommand() {
         if (activeActions.isEmpty()) {
-            UserActivity.getOrchestrator().processCommand("stop", ManualFragment.this::sendCommand);
+            UserActivity.getOrchestrator().processCommand("manual,stop", ManualFragment.this::sendCommand);
         } else {
             // Define correct order of actions
-            String[] correctOrder = {"forward", "backward", "left", "right", "up", "down", "left_turn", "right_turn"};
+            String[] correctOrder = {"manual,forward", "manual,backward", "manual,left", "manual,right", "manual,up", "manual,down", "manual,left_turn", "manual,right_turn"};
 
             // Sort activeActions according to the predefined order
             List<String> sortedActions = new ArrayList<>(activeActions);

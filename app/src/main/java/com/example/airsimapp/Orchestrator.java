@@ -1,5 +1,7 @@
 package com.example.airsimapp;
 
+import android.util.Log;
+
 import okhttp3.WebSocket;
 
 public class Orchestrator {
@@ -33,6 +35,27 @@ public class Orchestrator {
         webSocket.sendMessage(command);
         callback.onCommandReady(command);
         //flightController.sendToDrone(command); // Send to websocket -> Drone Phone
+
+        String[] message = userAction.split(",");
+        switch(message[0]){ //Use action identifier for each type of message
+            case "manual":
+                String command = autopilot.getManual().translateCommand(userAction);
+                callback.onCommandReady(command);
+                flightController.sendToDrone(command); // Send to websocket -> Drone Phone
+                break;
+            case "getGPS":
+                //TODO display current location
+                break;
+            case "getSpeed":
+                //TODO display current speed
+                break;
+            case "getHeading":
+                //TODO display current heading
+                break;
+            default:
+                Log.e("Orchestrator", "Unknown Message Received, Cannot Process Command");
+        }
+
 
     }
 
