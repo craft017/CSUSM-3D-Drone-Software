@@ -46,7 +46,7 @@ public class ManualFragment extends Fragment  {
     private static final String TAG = "ManualFragment";
     private static final int REQUEST_CODE_PERMISSIONS = 10;
     private static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.CAMERA};
-    private TextView output;
+    //private TextView output;
     private PreviewView previewView;
     private ExecutorService cameraExecutor;
     private final Set<String> activeActions = new HashSet<>();
@@ -74,11 +74,9 @@ public class ManualFragment extends Fragment  {
         Button rleft = rootView.findViewById(R.id.Rleft);
         Button rright = rootView.findViewById(R.id.Rright);
         Button autoPilotButton = rootView.findViewById(R.id.autoPilotButton);
-        output = rootView.findViewById(R.id.output);
-        output.setMovementMethod(new ScrollingMovementMethod());
+
         previewView = rootView.findViewById(R.id.previewView);
         // flightControllerSpinner may need to be in dronePhoneFragment
-        Spinner flightControllerSpinner = rootView.findViewById(R.id.flight_controller_spinner);
 
         // Set up listeners, this is what the buttons do when clicked/held.
         autoPilotButton.setOnClickListener(v -> {
@@ -100,30 +98,6 @@ public class ManualFragment extends Fragment  {
         setMovementListener(rleft, "left_turn");
         setMovementListener(rright, "right_turn");
 
-//        // Set up Spinner (dropdown)
-//        String[] controllers = {"AirSim"};
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
-//        flightControllerSpinner.setAdapter(adapter);
-//
-//
-//        // Handle dropdown selection
-//        flightControllerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                String selectedController = (String) parent.getItemAtPosition(position);
-//                if (selectedController.equals("AirSim")) {
-//                    AirSimFlightController flightController = new AirSimFlightController(output);
-//                    orchestrator = new Orchestrator(flightController);
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // Do nothing
-//            }
-//        });
-//        // Default Spinner selection
-//        flightControllerSpinner.setSelection(0);
         if (allPermissionsGranted()) {
             startCamera();
         } else {
@@ -140,6 +114,7 @@ public class ManualFragment extends Fragment  {
                     if (!activeActions.contains(action)) {
                         activeActions.add(action);
                         startCommandLoop(); // Start sending commands continuously
+
                     }
                     break;
 
@@ -167,6 +142,7 @@ public class ManualFragment extends Fragment  {
             // Combine active actions using underscores (e.g., "forward_right")
             String combinedAction = String.join("_", sortedActions);
             UserActivity.getOrchestrator().processCommand(combinedAction, ManualFragment.this::sendCommand);
+            //output.append("hello");
         }
     }
     private void startCommandLoop() {
@@ -213,6 +189,7 @@ public class ManualFragment extends Fragment  {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        stopCommandLoop();
         cameraExecutor.shutdown();
     }
 

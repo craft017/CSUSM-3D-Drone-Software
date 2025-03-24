@@ -36,6 +36,7 @@ public class AirSimFlightController implements flightControllerInterface {
         }
     }
 
+
     private class EchoWebSocketListener extends WebSocketListener {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
@@ -46,7 +47,7 @@ public class AirSimFlightController implements flightControllerInterface {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
           //  appendOutput("Sending message: " + text);
-            Log.d(TAG, "Sending message: " + text);
+            Log.e(TAG, "Receiving message: " + text);
         }
 
         @Override

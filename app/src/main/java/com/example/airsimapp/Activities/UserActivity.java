@@ -35,8 +35,8 @@ public class UserActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user);
 
-        AirSimFlightController flightController = new AirSimFlightController();
-        orchestrator = new Orchestrator(flightController); // Create here to use in manual and autopilot fragments for now, will be on drone phone later
+        //AirSimFlightController flightController = new AirSimFlightController();
+        orchestrator = new Orchestrator(); // Create here to use in manual and autopilot fragments for now, will be on drone phone later
         // Initialize fragments
         manualFragment = new ManualFragment();
         autopilotFragment = new AutopilotFragment();
