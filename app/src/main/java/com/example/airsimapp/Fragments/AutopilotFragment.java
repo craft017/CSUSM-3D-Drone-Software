@@ -22,6 +22,7 @@ public class AutopilotFragment extends Fragment {
 
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
+        //TextView debugMessages = view.findViewById(R.id.autopilotDebug); //For testing purposes only
 
         // Set the button's click listener to return to the UserPhoneFragment
         manualButton.setOnClickListener(v -> {
@@ -29,8 +30,13 @@ public class AutopilotFragment extends Fragment {
             if (getActivity() instanceof UserActivity) {
                 // Call switchFragment on the activity
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getUserPhoneFragment());
+
             }
         });
         return view;
     }
+    //Testing output function
+    private void appendOutput(String message, TextView debugMessages) {
+              debugMessages.post(() -> debugMessages.append("\n" + message));
+          }
 }
