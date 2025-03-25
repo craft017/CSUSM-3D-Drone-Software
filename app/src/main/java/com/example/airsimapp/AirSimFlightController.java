@@ -10,6 +10,7 @@ public class AirSimFlightController implements flightControllerInterface {
     private WebSocket webSocket;
     private final OkHttpClient client;
     private final TextView output;
+    private String Message;
 
     public AirSimFlightController(TextView output) {
         this.client = new OkHttpClient();
@@ -45,8 +46,13 @@ public class AirSimFlightController implements flightControllerInterface {
 
         @Override
         public void onMessage(WebSocket webSocket, String text) {
-          //  appendOutput("Sending message: " + text);
-            Log.d(TAG, "Sending message: " + text);
+            Log.d(TAG, "Receiving message: " + text);   //For testing purposes
+
+            }
+
+
+        public String getMessage(String message){
+            return message;
         }
 
         @Override

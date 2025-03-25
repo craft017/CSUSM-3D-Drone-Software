@@ -6,97 +6,97 @@ public class Manual {
     public String translateCommand(String userAction) {
         String action = "";
         switch (userAction) {
-            case "forward":
+            case "manual,forward":
                 action = "forward";
                 break;
-            case "backward":
+            case "manual,backward":
                 action = "backward";
                 break;
-            case "left":
+            case "manual,left":
                 action = "left";
                 break;
-            case "right":
+            case "manual,right":
                 action = "right";
                 break;
-            case "forward_left":
+            case "manual,forward_left":
                 action = "forward_left";
                 break;
-            case "forward_right":
+            case "manual,forward_right":
                 action = "forward_right";
                 break;
-            case "backward_left":
+            case "manual,backward_left":
                 action = "backward_left";
                 break;
-            case "backward_right":
+            case "manual,backward_right":
                 action = "backward_right";
                 break;
-            case "up":
+            case "manual,up":
                 action = "up";
                 break;
-            case "down":
+            case "manual,down":
                 action = "down";
                 break;
-            case "forward_up":
+            case "manual,forward_up":
                 action = "forward_up";
                 break;
-            case "backward_up":
+            case "manual,backward_up":
                 action = "backward_up";
                 break;
-            case "left_up":
+            case "manual,left_up":
                 action = "left_up";
                 break;
-            case "right_up":
+            case "manual,right_up":
                 action = "right_up";
                 break;
-            case "forward_left_up":
+            case "manual,forward_left_up":
                 action = "forward_left_up";
                 break;
-            case "forward_right_up":
+            case "manual,forward_right_up":
                 action = "forward_right_up";
                 break;
-            case "backward_left_up":
+            case "manual,backward_left_up":
                 action = "backward_left_up";
                 break;
-            case "backward_right_up":
+            case "manual,backward_right_up":
                 action = "backward_right_up";
                 break;
-            case "forward_down":
+            case "manual,forward_down":
                 action = "forward_down";
                 break;
-            case "backward_down":
+            case "manual,backward_down":
                 action = "backward_down";
                 break;
-            case "left_down":
+            case "manual,left_down":
                 action = "left_down";
                 break;
-            case "right_down":
+            case "manual,right_down":
                 action = "right_down";
                 break;
-            case "forward_left_down":
+            case "manual,forward_left_down":
                 action = "forward_left_down";
                 break;
-            case "forward_right_down":
+            case "manual,forward_right_down":
                 action = "forward_right_down";
                 break;
-            case "backward_left_down":
+            case "manual,backward_left_down":
                 action = "backward_left_down";
                 break;
-            case "backward_right_down":
+            case "manual,backward_right_down":
                 action = "backward_right_down";
                 break;
-            case "right_turn":
+            case "manual,right_turn":
                 action = "right_turn";
                 break;
-            case "left_turn":
+            case "manual,left_turn":
                 action = "left_turn";
                 break;
-            case "takeoff":
+            case "manual,takeoff":
                 action = "takeoff";
                 break;
-            case "land":
+            case "manual,land":
                 action = "land";
                 break;
-            case "stop":
+            case "manual,stop":
                 action = "stop";
                 break;
             default:

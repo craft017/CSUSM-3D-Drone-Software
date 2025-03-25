@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.airsimapp.Activities.UserActivity;
 import com.example.airsimapp.R;
@@ -21,7 +22,6 @@ public class AutopilotFragment extends Fragment {
 
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
-
 
         // Set the button's click listener to return to the UserPhoneFragment
         manualButton.setOnClickListener(v -> {
