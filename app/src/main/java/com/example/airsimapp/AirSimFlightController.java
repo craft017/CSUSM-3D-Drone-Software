@@ -49,7 +49,7 @@ public class AirSimFlightController implements flightControllerInterface {
             Log.d(TAG, "Receiving message: " + text);   //For testing purposes
 
             }
-        }
+
 
         public String getMessage(String message){
             return message;

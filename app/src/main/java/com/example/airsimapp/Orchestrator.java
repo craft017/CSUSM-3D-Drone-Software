@@ -10,6 +10,7 @@ public class Orchestrator {
     private final Autopilot autopilot;
     public WebSocketClientTesting webSocket;
     //private final flightControllerInterface flightController;
+    private String command;
 
     public Orchestrator(flightControllerInterface flightController) {
         //this.flightController = flightController;
@@ -31,7 +32,7 @@ public class Orchestrator {
     } // This can connect to websockets instead of drone directly
 
     public void processCommand(String userAction, CommandCallback callback) {
-        String command = autopilot.getManual().translateCommand(userAction);
+        command = autopilot.getManual().translateCommand(userAction);
         webSocket.sendMessage(command);
         callback.onCommandReady(command);
         //flightController.sendToDrone(command); // Send to websocket -> Drone Phone
@@ -39,9 +40,9 @@ public class Orchestrator {
         String[] message = userAction.split(",");
         switch(message[0]){ //Use action identifier for each type of message
             case "manual":
-                String command = autopilot.getManual().translateCommand(userAction);
+                command = autopilot.getManual().translateCommand(userAction);
                 callback.onCommandReady(command);
-                flightController.sendToDrone(command); // Send to websocket -> Drone Phone
+                webSocket.sendMessage(command); // Send to websocket -> Drone Phone
                 break;
             case "getGPS":
                 //TODO display current location
