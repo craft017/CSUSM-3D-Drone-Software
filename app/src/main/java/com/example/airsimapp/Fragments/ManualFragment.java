@@ -134,15 +134,14 @@ public class ManualFragment extends Fragment  {
             UserActivity.getOrchestrator().processCommand("manual,stop", ManualFragment.this::sendCommand);
         } else {
             // Define correct order of actions
-            String[] correctOrder = {"manual,forward", "manual,backward", "manual,left", "manual,right", "manual,up", "manual,down", "manual,left_turn", "manual,right_turn"};
+            //String[] correctOrder = {"manual,forward", "manual,backward", "manual,left", "manual,right", "manual,up", "manual,down", "manual,left_turn", "manual,right_turn"};
 
             // Sort activeActions according to the predefined order
             List<String> sortedActions = new ArrayList<>(activeActions);
-            sortedActions.sort(Comparator.comparingInt(action -> Arrays.asList(correctOrder).indexOf(action)));
+            //sortedActions.sort(Comparator.comparingInt(action -> Arrays.asList(correctOrder).indexOf(action)));
             // Combine active actions using underscores (e.g., "forward_right")
             String combinedAction = String.join("_", sortedActions);
             UserActivity.getOrchestrator().processCommand(combinedAction, ManualFragment.this::sendCommand);
-            //output.append("hello");
         }
     }
     private void startCommandLoop() {
@@ -162,7 +161,7 @@ public class ManualFragment extends Fragment  {
         if (commandRunnable != null) {
             commandHandler.removeCallbacks(commandRunnable); // Stop sending commands
             commandRunnable = null;
-            UserActivity.getOrchestrator().processCommand("stop", ManualFragment.this::sendCommand); // Send stop command
+            UserActivity.getOrchestrator().processCommand("manual,stop", ManualFragment.this::sendCommand); // Send stop command
         }
     }
     private void startCamera() {

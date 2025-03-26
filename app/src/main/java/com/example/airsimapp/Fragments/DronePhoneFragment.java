@@ -81,13 +81,15 @@ public class DronePhoneFragment extends Fragment {
 
         webSocket.setWebSocketMessageListener(message -> {
             if (output != null) {
+
                 command = message;
-                requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
-                if (flightController != null) {
-                    flightController.sendToDrone(command);
-                } else {
-                    Log.e("DronePhoneFragment", "flightController is null!");
-                }
+
+//                requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
+//                if (flightController != null) {
+//                    flightController.sendToDrone(command);
+//                } else {
+//                    Log.e("DronePhoneFragment", "flightController is null!");
+//                }
             }
         });
 

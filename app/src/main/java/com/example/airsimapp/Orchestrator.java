@@ -31,10 +31,37 @@ public class Orchestrator {
        // flightController.connect();
     } // This can connect to websockets instead of drone directly
 
+    public void recieveCommand(){
+        webSocket.setWebSocketMessageListener(message -> {
+            String[] recievedMessage = message.split(",");
+            switch(recievedMessage[0]) {
+                case "getGPS":
+                    autopilot.getCurrentGPS().setLatitude(Float.parseFloat(recievedMessage[1]));
+                    autopilot.getCurrentGPS().setLongitude(Float.parseFloat(recievedMessage[2]));
+                    autopilot.getCurrentGPS().setAltitude(Float.parseFloat(recievedMessage[3]));
+                    break;
+
+                case "getHeading":
+                    autopilot.setCurrentHeading(Float.parseFloat(recievedMessage[1]));
+                    break;
+
+                case "getSpeed":
+                    autopilot.setCurrentSpeed(Float.parseFloat(recievedMessage[1]));
+                    break;
+            }
+
+//                requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
+//                if (flightController != null) {
+//                    flightController.sendToDrone(command);
+//                } else {
+//                    Log.e("DronePhoneFragment", "flightController is null!");
+//                }
+        });
+    }
     public void processCommand(String userAction, CommandCallback callback) {
-        command = autopilot.getManual().translateCommand(userAction);
-        webSocket.sendMessage(command);
-        callback.onCommandReady(command);
+//        command = autopilot.getManual().translateCommand(userAction);
+//        webSocket.sendMessage(command);
+//        callback.onCommandReady(command);
         //flightController.sendToDrone(command); // Send to websocket -> Drone Phone
 
         String[] message = userAction.split(",");
