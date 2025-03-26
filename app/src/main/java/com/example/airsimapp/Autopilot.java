@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class  Autopilot  {
     private final Manual manual;
+    private float yawRate;
+    private float velocity;
     private ArrayList<AutopilotCommand> commandQueue;
     private GPS currentGPS;
     private float currentHeading;
@@ -15,6 +17,8 @@ public class  Autopilot  {
         this.currentGPS = new GPS(0, 0, 0);
         this.currentHeading = 0;
         this.currentSpeed = 0;
+        this.yawRate = 15;
+        this.velocity = 2;
     }
 
     public Manual getManual() {return manual;}
@@ -27,6 +31,14 @@ public class  Autopilot  {
 
     public float getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    public float getYawRate(){
+        return yawRate;
+    }
+
+    public float getVelocity() {
+        return velocity;
     }
 
     public GPS getCurrentGPS() {

@@ -26,7 +26,7 @@ class AirSimWebSocketServer:
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.velocity = 2       #Velocity of the drone
-        self.yawRate = 25       #Degrees per second when turning
+        self.yawRate = 15       #Degrees per second when turning
         self.commandTime = 0.2  #Every command runs for 200 milliseconds
 
         # Start the WebSocket server
@@ -116,7 +116,7 @@ class AirSimWebSocketServer:
                 print(self.client.getRotorStates())
 
             #End movement commands ↑-------------------
-            #Beginning GPS commands ↓-------------------
+            #Beginning telemetry commands ↓-------------------
 
             elif action == "getGPS":
                 gpsData = self.client.getGpsData()
@@ -125,9 +125,6 @@ class AirSimWebSocketServer:
                 altitude = str(gpsData.gnss.geo_point.altitude)
                 message = "getGPS," + latitude + "," + longitude + "," + altitude   #Create gps message
                 await websocket.send(message)
-
-            #End GPS commands ↑-------------------
-            #Beginning Heading/Speed commands ↓-------------------
 
             elif action == "getSpeed":
                 state = self.client.getMultirotorState()
@@ -140,6 +137,11 @@ class AirSimWebSocketServer:
                 yaw_degrees = str(math.degrees(yaw))
                 message = "getHeading," + yaw_degrees
                 await websocket.send(message)
+
+            #End movement commands ↑-------------------
+            #Beginning autopilot commands ↓-------------------
+
+            
 
             else:
                 await websocket.send(json.dumps({"status": "error", "message": "Unknown action"}))
