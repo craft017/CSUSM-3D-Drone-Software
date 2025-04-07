@@ -7,7 +7,7 @@ import okhttp3.WebSocket;
 public class Orchestrator {
     //TODO add websocket connection here instead of connecting to drone directly, THIS CODE CAN BE USED ON DRONE PHONE
     // TO CONNECT TO DRONE
-    private final Autopilot autopilot;
+    private  Autopilot autopilot;
     public WebSocketClientTesting webSocket;
     //private final flightControllerInterface flightController;
     private String command;
@@ -45,13 +45,16 @@ public class Orchestrator {
                 webSocket.sendMessage(command); // Send to websocket -> Drone Phone
                 break;
             case "getGPS":
-                //TODO display current location
+                GPS gps = new GPS(message[1], message[2], message[3]);
+                autopilot.setCurrentGPS(gps);
                 break;
             case "getSpeed":
-                //TODO display current speed
+                Float speed = Float.parseFloat(message[1]);
+                autopilot.setCurrentSpeed(speed);
                 break;
             case "getHeading":
-                //TODO display current heading
+                Float heading = Float.parseFloat(message[1]);
+                autopilot.setCurrentHeading(heading);
                 break;
             default:
                 Log.e("Orchestrator", "Unknown Message Received, Cannot Process Command");

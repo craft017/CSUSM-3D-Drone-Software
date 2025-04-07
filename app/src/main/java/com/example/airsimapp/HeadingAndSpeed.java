@@ -1,25 +1,35 @@
 package com.example.airsimapp;
+import java.lang.Math;
 
 public class HeadingAndSpeed extends AutopilotCommand{
-    private float heading;
-    private float speed;
+    private float desiredHeading;
+    private float desiredSpeed;
 
-    public float getHeading() {
-        return heading;
+    public HeadingAndSpeed(float heading, float speed){
+        this.desiredHeading = heading;
+        this.desiredSpeed = speed;
     }
 
-    public float getSpeed() {
-        return speed;
+    public float getDesiredHeading() {
+        return desiredHeading;
     }
 
-    public float convertHeading360(float currentHeading){
-        float heading360 = 0;       //Set heading to 0(forward) as baseline
-        if(currentHeading > 0){
-            return currentHeading;
+    public float getDesiredSpeed() {
+        return desiredSpeed;
+    }
+
+    public String calculateCommand(float currentHeading){
+        String commandMessage = "NULL";
+        float distanceToRight = (currentHeading - desiredHeading + 360) % 360;
+        float distanceToLeft = (desiredHeading - currentHeading + 360) % 360;
+        if(distanceToRight < distanceToLeft || distanceToRight == distanceToLeft){
+            //Turning right
+
         }
-        else{
-            heading360 = (180 + currentHeading) + 180;
+        else if(distanceToRight > distanceToLeft){
+            //Turning left
+
         }
-        return heading360;
+        return commandMessage;
     }
 }
