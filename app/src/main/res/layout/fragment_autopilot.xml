@@ -6,17 +6,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
+    <!-- Add autopilot-specific controls here -->
+
     <EditText
-        android:id="@+id/heading"
+        android:id="@+id/patternTime"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="288dp"
+        android:ems="10"
+        android:hint="HHmm"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/gpsTime"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="132dp"
+        android:ems="10"
+        android:hint="HHmm"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.301"
+        app:layout_constraintStart_toEndOf="@+id/gpsCord"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/headingTime"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="212dp"
+        android:ems="10"
+        android:hint="HHmm"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/gpsCord3"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="132dp"
+        android:ems="10"
+        android:hint="Altitude"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.162"
+        app:layout_constraintStart_toEndOf="@+id/gpsCord"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/headingSpeed"
         android:layout_width="126dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="208dp"
         android:ems="10"
+        android:hint="input here"
         android:inputType="number"
-        android:hint="input_here"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.015"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,77 +82,51 @@
         android:id="@+id/textView12"
         android:layout_width="139dp"
         android:layout_height="46dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="44dp"
         android:fontFamily="times"
-        android:text="pattern"
+        android:text="@string/pattern"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintHorizontal_bias="0.021"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <Spinner
         android:id="@+id/pattern"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="340dp"
-        android:hint="patterns"
+        android:layout_marginTop="292dp"
+        android:hint="@string/patterns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="139dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="times"
-        android:text="speed"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-    <EditText
-        android:id="@+id/speed"
-        android:layout_width="126dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="260dp"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="Input here"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/textView10"
         android:layout_width="139dp"
         android:layout_height="46dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="88dp"
         android:fontFamily="times"
-        android:text="heading"
-        android:textSize="25sp"
+        android:text="heading and speed"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintHorizontal_bias="0.021"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_blank_fragment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/manualButton" />
-    <!-- Add autopilot-specific controls here -->
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:text="textview"
+        app:layout_constraintTop_toBottomOf="@id/manualButton"
+        tools:layout_editor_absoluteX="186dp" />
+
     <Button
         android:id="@+id/manualButton"
         android:layout_width="wrap_content"
@@ -118,39 +150,102 @@
 
     <EditText
         android:id="@+id/gpsCord"
-        android:layout_width="126dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="100dp"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="132dp"
         android:ems="10"
+        android:hint="Latittude"
         android:inputType="number"
-        android:hint="Input here"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.043"
-        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.019"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/gpsCord2"
+        android:layout_width="81dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="132dp"
+        android:ems="10"
+        android:hint="Longitude"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintStart_toEndOf="@+id/gpsCord"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="139dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="113dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="times"
         android:text="GPS Cords"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/manualButton" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="415dp"
+        android:layout_width="281dp"
         android:layout_height="275dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/recyclerview_border"
         android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.464"
+        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toEndOf="@+id/gpsCord"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/speedTextView"
+        android:layout_width="95dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/speed_display"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/manualButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addGPS"
+        android:layout_width="102dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="128dp"
+        android:text="ADD"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toEndOf="@+id/gpsCord"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addHeadingSpeed"
+        android:layout_width="98dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="212dp"
+        android:text="ADD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/addPattern"
+        android:layout_width="99dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="288dp"
+        android:text="ADD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
