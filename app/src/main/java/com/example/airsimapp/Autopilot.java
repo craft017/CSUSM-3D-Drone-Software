@@ -1,26 +1,29 @@
 package com.example.airsimapp;
 
-import android.health.connect.datatypes.units.Velocity;
-
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class  Autopilot  {
     private final Manual manual;
     private float yawRate;
     private float velocity;
+    private float commandTime;
     private ArrayList<AutopilotCommand> commandQueue;
     private GPS currentGPS;
     private float currentHeading;
     private float currentSpeed;
+    String currentTime = (Calendar.getInstance().getTime().toString());
 
     public Autopilot(){
         this.manual = new Manual();
         this.commandQueue = new ArrayList<AutopilotCommand>();
         this.currentGPS = new GPS(0, 0, 0);
-        this.yawRate = 15;
-        this.velocity = 2;
         this.currentHeading = 0;
         this.currentSpeed = 0;
+        this.yawRate = 15;
+        this.velocity = 2;
+        this.commandTime = 0.2F;
     }
 
     public Manual getManual() {return manual;}
@@ -34,11 +37,18 @@ public class  Autopilot  {
     public float getCurrentSpeed() {
         return currentSpeed;
     }
-    public float getYawRate() {return yawRate;}
-    public float getVelocity() {return velocity;}
+
+    public float getYawRate(){
+        return yawRate;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public float getCommandTime() {return commandTime;}
 
     public GPS getCurrentGPS() {
-
         return currentGPS;
     }
 

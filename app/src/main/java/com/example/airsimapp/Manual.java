@@ -3,38 +3,38 @@ package com.example.airsimapp;
 import org.json.JSONObject;
 
 public class Manual {
-    public String translateCommand(String userAction) {
+    public String translateCommand(String userAction, float yawRate, float velocity, float commandTime) {
         String action = "";
         switch (userAction) {
             case "manual,forward":
-                action = "forward";
+                action = "forward,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,backward":
-                action = "backward";
+                action = "backward,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,left":
-                action = "left";
+                action = "left,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,right":
-                action = "right";
+                action = "right,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,forward_left":
-                action = "forward_left";
+                action = "forward_left"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,forward_right":
-                action = "forward_right";
+                action = "forward_right"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,backward_left":
-                action = "backward_left";
+                action = "backward_left"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,backward_right":
-                action = "backward_right";
+                action = "backward_right,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,up":
-                action = "up";
+                action = "up,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,down":
-                action = "down";
+                action = "down," + yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,forward_up":
                 action = "forward_up";
@@ -85,31 +85,29 @@ public class Manual {
                 action = "backward_right_down";
                 break;
             case "manual,right_turn":
-                action = "right_turn";
+                action = "right_turn,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,left_turn":
-                action = "left_turn";
+                action = "left_turn,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,takeoff":
-                action = "takeoff";
+                action = "takeoff," + yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,land":
-                action = "land";
+                action = "land,"+ yawRate + "," + velocity + "," + commandTime;
                 break;
             case "manual,stop":
-                action = "stop";
+                action = "stop,"+ yawRate + "," + velocity + "," + commandTime;;
                 break;
             default:
                 action = "unknown";
         }
 
         try {
-            JSONObject command = new JSONObject();
-            command.put("action", action);
-            return command.toString();
+            return action;
         } catch (Exception e) {
             e.printStackTrace();
-            return "{}";
+            return "error";
         }
     }
 }
