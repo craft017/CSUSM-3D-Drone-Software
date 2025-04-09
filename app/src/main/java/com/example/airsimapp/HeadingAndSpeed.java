@@ -23,16 +23,19 @@ public class HeadingAndSpeed extends AutopilotCommand{
     public void calculateCommand(float currentHeading, float yawRate){
         String commandMessage;
         float headingDifference = Math.abs(desiredHeading - currentHeading);
-        float duration = (headingDifference/yawRate);
+        float turnDuration = (headingDifference/yawRate);
         float distanceToRight = (currentHeading - desiredHeading + 360) % 360;
         float distanceToLeft = (desiredHeading - currentHeading + 360) % 360;
         if(distanceToRight < distanceToLeft || distanceToRight == distanceToLeft){
             //Turning right
-
+            commandMessage = "manual,right_turn," + yawRate + "," + desiredSpeed + "," + turnDuration;
+            this.addToManualQueue(commandMessage);
         }
         else if(distanceToRight > distanceToLeft){
             //Turning left
-
+            commandMessage = "manual,left_turn," + yawRate + "," + desiredSpeed + "," + turnDuration;
+            this.addToManualQueue(commandMessage);
         }
+
     }
 }
