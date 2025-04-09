@@ -14,5 +14,7 @@
     <string name="pattern">pattern</string>
     <string name="speed">speed</string>
     <string name="patterns">patterns</string>
-    <string name="speed_display">Speed: %1$.1f mph</string>
+    <string name="speed_display">%1$.1f mph</string>
+    <string name="heading_display">heading_display</string>
+    <string name="gps_display">gps_display</string>
 </resources>
