@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.GPS;
 import com.example.airsimapp.R;
 
+import java.util.Objects;
 import java.util.Timer;
 
 public class AutopilotFragment extends Fragment {
+    private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
     private double currentSpeed = 0.0;
     private Runnable speedUpdateRunnable;
+    public GPS tempGPS;
     private Handler speedUpdateHandler = new Handler(Looper.getMainLooper());
     private static final long UPDATE_INTERVAL = 1000;
     @Override
@@ -43,6 +48,20 @@ public class AutopilotFragment extends Fragment {
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getUserPhoneFragment());
             }
         });
+
+        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
+            String[] strBreakup = message.split(",");
+            if (Objects.equals(strBreakup[0], "getSpeed")) {
+                UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
+                //Log.e(TAG, "TESTING1: ", UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1])));
+            } else if (Objects.equals(strBreakup[0], "getHeading")) {
+                UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+            } else if (Objects.equals(strBreakup[0], "getGPS")){
+                tempGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+                UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(tempGPS);
+            }
+        });
+
         return view;
     }
     @Override
@@ -53,13 +72,13 @@ public class AutopilotFragment extends Fragment {
         speedTextView = view.findViewById(R.id.speedTextView);
         startSpeedUpdates();
     }
+
     private void updateSpeedTextView() {
-        //String speed = UserActivity.getOrchestrator().webSocket
         String speedText = getString(R.string.speed_display, currentSpeed);
         speedTextView.setText(speedText);
     }
     private double getCurrentSpeed() {
-        return (Math.random() * 100);
+        return (UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
     }
     private void startSpeedUpdates() {
         speedUpdateRunnable = new Runnable() {
@@ -82,4 +101,19 @@ public class AutopilotFragment extends Fragment {
         super.onDestroyView();
         stopSpeedUpdates();
     }
+
+    public void onFlightControllerMessage(String message) {
+        if (message.startsWith("getSpeed,")) {
+            try {
+                String[] parts = message.split(",");
+                if (parts.length == 2) {
+                    currentSpeed = Double.parseDouble(parts[1]);
+                    requireActivity().runOnUiThread(this::updateSpeedTextView);
+                }
+            } catch (NumberFormatException e) {
+                Log.e("AutopilotFragment", "Failed to parse speed", e);
+            }
+        }
+    }
+
 }

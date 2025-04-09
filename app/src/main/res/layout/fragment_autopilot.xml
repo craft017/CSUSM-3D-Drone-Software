@@ -119,13 +119,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/textView13"
-        android:layout_width="80dp"
+        android:id="@+id/HeadingViewText"
+        android:layout_width="87dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:text="textview"
-        app:layout_constraintTop_toBottomOf="@id/manualButton"
-        tools:layout_editor_absoluteX="186dp" />
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:text="Heading:"
+        app:layout_constraintStart_toEndOf="@+id/speedTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/manualButton"

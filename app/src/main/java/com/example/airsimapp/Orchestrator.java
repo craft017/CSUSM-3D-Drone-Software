@@ -2,6 +2,8 @@ package com.example.airsimapp;
 
 import android.util.Log;
 
+import com.example.airsimapp.Activities.UserActivity;
+
 import okhttp3.WebSocket;
 
 public class Orchestrator {
@@ -24,15 +26,27 @@ public class Orchestrator {
         this.autopilot = new Autopilot();
     }
 
+    public Autopilot getAutopilot() {
+        return autopilot;
+    }
 
     public void connectToDrone() {
         webSocket.connect("ws://10.0.2.2:8766");
-        webSocket.sendMessage("PLEASE WORK!");
+        webSocket.sendMessage("CONNECTION FROM USER PHONE!");
+//        webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
+//            @Override
+//            public void onMessageReceived(String message) {
+//                UserActivity.getAutopilotFragment().onFlightControllerMessage(message);
+//            }
+//        });
        // flightController.connect();
     } // This can connect to websockets instead of drone directly
 
+    public void recieveCommand(){
+
+    }
     public void processCommand(String userAction, CommandCallback callback) {
-        autopilot.getYawRate();
+
         command = autopilot.getManual().translateCommand(userAction, autopilot.getYawRate(), autopilot.getVelocity(), autopilot.getCommandTime());
         webSocket.sendMessage(command);
         callback.onCommandReady(command);

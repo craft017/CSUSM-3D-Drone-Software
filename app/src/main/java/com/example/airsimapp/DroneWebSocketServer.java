@@ -5,7 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 
 import fi.iki.elonen.NanoWSD;
-
+// FOR TESTING!!!!!!
 public class DroneWebSocketServer extends NanoWSD {
     private static final String TAG = "DroneWebSocketServer";
     private final Orchestrator orchestrator;

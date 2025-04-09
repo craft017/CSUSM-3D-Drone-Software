@@ -8,6 +8,7 @@ import okhttp3.*;
 public class AirSimFlightController implements flightControllerInterface {
     private static final String TAG = "AirSimFlightController";
     private WebSocket webSocket;
+    private MessageListener messageListener;
     private final OkHttpClient client;
     private final TextView output;
     private String Message;
@@ -36,6 +37,10 @@ public class AirSimFlightController implements flightControllerInterface {
             Log.e(TAG, "WebSocket is not connected");
         }
     }
+    @Override
+    public void setMessageListener(MessageListener listener) {
+        this.messageListener = listener;
+    }
 
     private class EchoWebSocketListener extends WebSocketListener {
         @Override
@@ -47,13 +52,15 @@ public class AirSimFlightController implements flightControllerInterface {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             Log.d(TAG, "Receiving message: " + text);   //For testing purposes
+            Message = text;
 
+            if (messageListener != null) {
+                messageListener.onMessage(text);
+            }
             }
 
 
-        public String getMessage(String message){
-            return message;
-        }
+
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
