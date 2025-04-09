@@ -30,6 +30,30 @@ public class  Autopilot  {
 
     public ArrayList<AutopilotCommand> getCommandQueue() {return commandQueue;}
 
+    public void addToCommandQueue(String lat, String lon, String alt, String time){
+        float latitude = Float.parseFloat(lat);
+        float longitude = Float.parseFloat(lon);
+        float altitude = Float.parseFloat(alt);
+        int hour = Integer.parseInt(time.substring(0, 2));
+        int minute = Integer.parseInt(time.substring(2));
+        GPSCommand gps = new GPSCommand(latitude, longitude, altitude, hour, minute);
+        this.commandQueue.add(gps);
+    }
+    public void addToCommandQueue(String heading, String speed, String time){
+        float desiredHeading = Float.parseFloat(heading);
+        float desiredSpeed = Float.parseFloat(speed);
+        int hour = Integer.parseInt(time.substring(0, 2));
+        int minute = Integer.parseInt(time.substring(2));
+        HeadingAndSpeed headingAndSpeed = new HeadingAndSpeed(desiredHeading, desiredSpeed, hour, minute);
+        this.commandQueue.add(headingAndSpeed);
+    }
+    public void addToCommandQueue(String loiterPattern, String time){
+        int hour = Integer.parseInt(time.substring(0, 2));
+        int minute = Integer.parseInt(time.substring(2));
+        LoiterPattern pattern = new LoiterPattern(loiterPattern, hour, minute);
+        this.commandQueue.add(pattern);
+    }
+
     public float getCurrentHeading() {
         return currentHeading;
     }
