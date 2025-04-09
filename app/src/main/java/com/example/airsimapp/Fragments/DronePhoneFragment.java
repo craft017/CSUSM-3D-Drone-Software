@@ -69,6 +69,12 @@ public class DronePhoneFragment extends Fragment {
                 String selectedController = (String) parent.getItemAtPosition(position);
                 if (selectedController.equals("AirSim")) {
                     flightController = new AirSimFlightController();
+                    flightController.setMessageListener(message -> {
+                        if (webSocket != null) {
+                            webSocket.sendMessage(message);
+                            //requireActivity().runOnUiThread(() -> output.setText("Response from drone: " + message));
+                        }
+                    });
                 }
             }
 
@@ -81,7 +87,9 @@ public class DronePhoneFragment extends Fragment {
 
         webSocket.setWebSocketMessageListener(message -> {
             if (output != null) {
+
                 command = message;
+
                 requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
                 if (flightController != null) {
                     flightController.sendToDrone(command);
@@ -90,6 +98,8 @@ public class DronePhoneFragment extends Fragment {
                 }
             }
         });
+
+
 
 
         return rootView;

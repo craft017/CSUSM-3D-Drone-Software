@@ -77,6 +77,7 @@ public class WebSocketClientTesting {
             public void onMessage(WebSocket webSocket, String text) {
                 Log.d(TAG, "Message received: " + text);
                 if (listener != null) {
+
                     postToMainThread(() -> listener.onMessageReceived(text));
                 }
             }
