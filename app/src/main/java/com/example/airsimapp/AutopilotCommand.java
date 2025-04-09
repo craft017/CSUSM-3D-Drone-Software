@@ -5,10 +5,14 @@ import java.util.ArrayList;
 abstract public class AutopilotCommand {
     private String id;
     private ArrayList<String> manualQueue;
+    private int hourEndTime;
+    private int minuteEndTime;
 
     public AutopilotCommand(){
         this.manualQueue = new ArrayList<>();
         this.id = "NULL";
+        this.hourEndTime = 0;
+        this.minuteEndTime = 0;
     }
     public String getId() {
         return id;
@@ -23,5 +27,21 @@ abstract public class AutopilotCommand {
     }
     public void addToManualQueue(String command){
         this.manualQueue.add(command);
+    }
+
+    public void setHourEndTime(int hourEndTime) {
+        this.hourEndTime = hourEndTime;
+    }
+
+    public void setMinuteEndTime(int minuteEndTime) {
+        this.minuteEndTime = minuteEndTime;
+    }
+
+    public int getHourEndTime() {
+        return hourEndTime;
+    }
+
+    public int getMinuteEndTime() {
+        return minuteEndTime;
     }
 }

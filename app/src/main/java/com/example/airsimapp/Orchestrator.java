@@ -9,7 +9,7 @@ import okhttp3.WebSocket;
 public class Orchestrator {
     //TODO add websocket connection here instead of connecting to drone directly, THIS CODE CAN BE USED ON DRONE PHONE
     // TO CONNECT TO DRONE
-    private  Autopilot autopilot;
+    private Autopilot autopilot;
     public WebSocketClientTesting webSocket;
     //private final flightControllerInterface flightController;
     private String command;
