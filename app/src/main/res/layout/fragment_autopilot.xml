@@ -12,13 +12,13 @@
         android:id="@+id/patternTime"
         android:layout_width="81dp"
         android:layout_height="36dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="332dp"
         android:ems="10"
         android:hint="HHmm"
         android:inputType="number"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintHorizontal_bias="0.251"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,13 +40,13 @@
         android:id="@+id/headingTime"
         android:layout_width="81dp"
         android:layout_height="36dp"
-        android:layout_marginTop="212dp"
+        android:layout_marginTop="228dp"
         android:ems="10"
         android:hint="HHmm"
         android:inputType="number"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,12 +69,12 @@
         android:layout_width="126dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="208dp"
+        android:layout_marginTop="224dp"
         android:ems="10"
         android:hint="input here"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.011"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="340dp"
         android:hint="@string/patterns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -106,8 +106,8 @@
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="139dp"
-        android:layout_height="46dp"
+        android:layout_width="101dp"
+        android:layout_height="77dp"
         android:layout_marginTop="88dp"
         android:fontFamily="times"
         android:text="heading and speed"
@@ -219,11 +219,11 @@
         android:id="@+id/addGPS"
         android:layout_width="102dp"
         android:layout_height="40dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="132dp"
         android:text="ADD"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toEndOf="@+id/gpsCord"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -231,10 +231,10 @@
         android:id="@+id/addHeadingSpeed"
         android:layout_width="98dp"
         android:layout_height="41dp"
-        android:layout_marginTop="212dp"
+        android:layout_marginTop="228dp"
         android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -242,10 +242,10 @@
         android:id="@+id/addPattern"
         android:layout_width="99dp"
         android:layout_height="41dp"
-        android:layout_marginTop="288dp"
+        android:layout_marginTop="332dp"
         android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintHorizontal_bias="0.423"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="parent" />
 
