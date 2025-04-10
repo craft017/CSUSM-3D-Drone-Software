@@ -48,20 +48,40 @@ public class AutopilotFragment extends Fragment {
         EditText longitude = view.findViewById(R.id.gpsCord2);
         EditText altitude = view.findViewById(R.id.gpsCord3);
         EditText gpsTime = view.findViewById(R.id.gpsTime);
-        EditText headingSpeed = view.findViewById(R.id.headingSpeed);
+        EditText heading = view.findViewById(R.id.heading);
+        EditText speed = view.findViewById(R.id.Speed);
         EditText headingTime = view.findViewById(R.id.headingTime);
         EditText patternTime = view.findViewById(R.id.patternTime);
         Button addGPS = view.findViewById(R.id.addGPS);
         Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
         Button addPattern = view.findViewById(R.id.addPattern);
         addHeadingSpeed.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingSpeed.toString(), headingTime.toString());
+            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
+            heading.setText("");
+            speed.setText("");
+            headingTime.setText("");
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
         });
         addGPS.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.toString(), longitude.toString(), altitude.toString(), gpsTime.toString());
+            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
+            latitude.setText("");
+            longitude.setText("");
+            altitude.setText("");
+            gpsTime.setText("");
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
         });
         addPattern.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue();
+            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
+            patternTime.setText("");
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
         });
 
 
@@ -73,7 +93,7 @@ public class AutopilotFragment extends Fragment {
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getUserPhoneFragment());
             }
         });
-
+        // This will listen for messages from the drone websocket
         UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
             String[] strBreakup = message.split(",");
             if (Objects.equals(strBreakup[0], "getSpeed")) {

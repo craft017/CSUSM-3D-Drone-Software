@@ -9,6 +9,20 @@
     <!-- Add autopilot-specific controls here -->
 
     <EditText
+        android:id="@+id/Speed"
+        android:layout_width="61dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="224dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="2.0"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/headingTime"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/heading"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
         android:id="@+id/patternTime"
         android:layout_width="81dp"
         android:layout_height="36dp"
@@ -65,16 +79,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/headingSpeed"
-        android:layout_width="126dp"
+        android:id="@+id/heading"
+        android:layout_width="61dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="224dp"
         android:ems="10"
-        android:hint="input here"
+        android:hint="0-359"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.011"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
