@@ -20,15 +20,17 @@ import com.example.airsimapp.GPS;
 import com.example.airsimapp.R;
 
 import java.util.Objects;
-import java.util.Timer;
 
 public class AutopilotFragment extends Fragment {
     private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
+    private TextView headingTextView;
+    private TextView gpsTextView;
     private double currentSpeed = 0.0;
-    private Runnable speedUpdateRunnable;
+    private float currentHeading = 0.0F;
+    private Runnable uiUpdateRunnable;
     public GPS tempGPS;
-    private Handler speedUpdateHandler = new Handler(Looper.getMainLooper());
+    private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
     private static final long UPDATE_INTERVAL = 1000;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,30 +72,50 @@ public class AutopilotFragment extends Fragment {
 
         // Get a reference to the TextView
         speedTextView = view.findViewById(R.id.speedTextView);
+        headingTextView = view.findViewById(R.id.headingTextView);
+        gpsTextView = view.findViewById(R.id.gpsTextView);
         startSpeedUpdates();
     }
 
-    private void updateSpeedTextView() {
+    private void updateUI() {
         String speedText = getString(R.string.speed_display, currentSpeed);
         speedTextView.setText(speedText);
+        //update heading
+        String headingText = getString(R.string.heading_display, currentHeading);
+        speedTextView.setText(headingText);
+
+        //update GPS
+//        if(//currentGPS != null && get altitude from currentGPS)
+//        ){
+//            String gpsText = getString(R.string.gps_display, tempGPS.getLatitude(), tempGPS.getLongitude(), tempGPS.getAltitude());
+//            gpsTextView.setText(gpsText);
+//        }
     }
     private double getCurrentSpeed() {
         return (UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
     }
+    private GPS getCurrentGPS() {
+        return (UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+    }
+
+    private float getCurrentHeading() {
+        return (UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+    }
     private void startSpeedUpdates() {
-        speedUpdateRunnable = new Runnable() {
+        uiUpdateRunnable = new Runnable() {
             @Override
             public void run() {
                 currentSpeed = getCurrentSpeed();
-                updateSpeedTextView();
-                speedUpdateHandler.postDelayed(this, UPDATE_INTERVAL);
+                currentHeading = getCurrentHeading();
+                updateUI();
+                uiUpdateHandler.postDelayed(this, UPDATE_INTERVAL);
             }
         };
-        speedUpdateHandler.post(speedUpdateRunnable);
+        uiUpdateHandler.post(uiUpdateRunnable);
     }
     private void stopSpeedUpdates() {
-        if(speedUpdateHandler != null && speedUpdateRunnable != null) {
-            speedUpdateHandler.removeCallbacks(speedUpdateRunnable);
+        if(uiUpdateHandler != null && uiUpdateRunnable != null) {
+            uiUpdateHandler.removeCallbacks(uiUpdateRunnable);
         }
     }
     @Override
@@ -108,7 +130,7 @@ public class AutopilotFragment extends Fragment {
                 String[] parts = message.split(",");
                 if (parts.length == 2) {
                     currentSpeed = Double.parseDouble(parts[1]);
-                    requireActivity().runOnUiThread(this::updateSpeedTextView);
+                    requireActivity().runOnUiThread(this::updateUI);
                 }
             } catch (NumberFormatException e) {
                 Log.e("AutopilotFragment", "Failed to parse speed", e);

@@ -15,6 +15,6 @@
     <string name="speed">speed</string>
     <string name="patterns">patterns</string>
     <string name="speed_display">%1$.1f mph</string>
-    <string name="heading_display">heading_display</string>
-    <string name="gps_display">gps_display</string>
+    <string name="heading_display">%1$.1f deg</string>
+    <string name="gps_display">GPS: %1$.6f, %2$.6f, %3$.1f</string>
 </resources>

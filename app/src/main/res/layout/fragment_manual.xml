@@ -50,8 +50,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="895dp"
+        android:layout_height="238dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -61,55 +61,62 @@
         <!-- Forward Button -->
 
         <!-- Go Up Button -->
-        <Button
-            android:id="@+id/forward"
-            android:layout_width="60dp"
-            android:layout_height="63dp"
-            android:text="Forward"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.16"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.103" />
 
         <!-- Backward Button -->
 
         <!-- Go Down Button -->
 
+        <!-- Left Button -->
+
+        <Button
+            android:id="@+id/forward"
+            android:layout_width="74dp"
+            android:layout_height="75dp"
+            android:text="Forward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.159"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.092" />
+
         <Button
             android:id="@+id/go_up"
-            android:layout_width="66dp"
-            android:layout_height="68dp"
+            android:layout_width="73dp"
+            android:layout_height="75dp"
             android:text="Up"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.789"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.106" />
+            app:layout_constraintVertical_bias="0.097" />
 
         <Button
             android:id="@+id/backward"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginTop="56dp"
+            android:layout_width="75dp"
+            android:layout_height="71dp"
+            android:layout_marginTop="64dp"
             android:text="Backward"
             app:layout_constraintEnd_toStartOf="@+id/Rright"
-            app:layout_constraintHorizontal_bias="0.872"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/forward" />
 
+        <!-- Right Button -->
+
         <!-- Left Button -->
+
+        <!-- Right Button -->
 
         <Button
             android:id="@+id/go_down"
-            android:layout_width="63dp"
-            android:layout_height="66dp"
-            android:layout_marginTop="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="72dp"
             android:text="Down"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.141"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/left"
             app:layout_constraintTop_toBottomOf="@+id/go_up" />
 
@@ -117,46 +124,45 @@
             android:id="@+id/Rleft"
             android:layout_width="83dp"
             android:layout_height="68dp"
+            android:layout_marginTop="88dp"
             android:text="Left Turn"
             app:layout_constraintEnd_toStartOf="@+id/forward"
+            app:layout_constraintHorizontal_bias="0.979"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forward" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Right Button -->
-
-        <!-- Left Button -->
-
-        <!-- Right Button -->
         <Button
             android:id="@+id/Rright"
             android:layout_width="83dp"
             android:layout_height="68dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="84dp"
             android:text="Right Turn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.029"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/forward"
-            app:layout_constraintTop_toBottomOf="@+id/forward" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/left"
             android:layout_width="83dp"
             android:layout_height="68dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="92dp"
             android:text="Left"
             app:layout_constraintEnd_toStartOf="@+id/go_up"
-            app:layout_constraintHorizontal_bias="0.954"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/go_up" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/right"
             android:layout_width="83dp"
             android:layout_height="68dp"
+            android:layout_marginTop="96dp"
             android:text="Right"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/go_up"
-            app:layout_constraintTop_toBottomOf="@+id/go_up" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
