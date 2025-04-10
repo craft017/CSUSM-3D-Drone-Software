@@ -111,7 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="332dp"
         android:hint="@string/patterns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -136,8 +136,8 @@
         android:id="@+id/HeadingViewText"
         android:layout_width="87dp"
         android:layout_height="30dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="52dp"
         android:text="Heading:"
         app:layout_constraintStart_toEndOf="@+id/speedTextView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -248,7 +248,7 @@
         android:layout_marginTop="228dp"
         android:text="ADD"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintHorizontal_bias="0.453"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 

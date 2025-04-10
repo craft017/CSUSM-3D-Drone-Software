@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
 import com.example.airsimapp.GPS;
@@ -58,29 +59,44 @@ public class AutopilotFragment extends Fragment {
         Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
         Button addPattern = view.findViewById(R.id.addPattern);
         addHeadingSpeed.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
-            heading.setText("");
-            speed.setText("");
-            headingTime.setText("");
+            if (heading.getText().toString().isEmpty() || speed.getText().toString().isEmpty() || headingTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
+                heading.setText("");
+                speed.setText("");
+                headingTime.setText("");
+            }
+
+            // For loop is for testing
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
                 //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
                 Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
         addGPS.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
-            latitude.setText("");
-            longitude.setText("");
-            altitude.setText("");
-            gpsTime.setText("");
+            if (latitude.getText().toString().isEmpty() || longitude.getText().toString().isEmpty() || altitude.getText().toString().isEmpty() || gpsTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
+                latitude.setText("");
+                longitude.setText("");
+                altitude.setText("");
+                gpsTime.setText("");
+            }
+
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
                 //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
                 Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
         addPattern.setOnClickListener(v -> {
-            UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
-            patternTime.setText("");
+            if (patternTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
+                patternTime.setText("");
+            }
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
                 Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
@@ -117,7 +133,7 @@ public class AutopilotFragment extends Fragment {
 
         // Get a reference to the TextView
         speedTextView = view.findViewById(R.id.speedTextView);
-        headingTextView = view.findViewById(R.id.headingTextView);
+        headingTextView = view.findViewById(R.id.HeadingViewText);
         gpsTextView = view.findViewById(R.id.gpsTextView);
         startSpeedUpdates();
     }
