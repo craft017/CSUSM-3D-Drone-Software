@@ -11,7 +11,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_user">UserActivity</string>
     <string name="input_here" />
-    <string name="pattern">pattern</string>
+    <string name="pattern">Pattern</string>
     <string name="speed">speed</string>
     <string name="patterns">patterns</string>
     <string name="speed_display">%1$.1f mph</string>

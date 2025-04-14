@@ -16,12 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.AutopilotCommand;
 import com.example.airsimapp.CommandAdapter;
 import com.example.airsimapp.GPS;
+import com.example.airsimapp.GPSCommand;
+import com.example.airsimapp.HeadingAndSpeed;
 import com.example.airsimapp.R;
 
 import java.util.Calendar;
@@ -72,28 +76,75 @@ public class AutopilotFragment extends Fragment {
         Button addGPS = view.findViewById(R.id.addGPS);
         Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
         Button addPattern = view.findViewById(R.id.addPattern);
+        Button startButton = view.findViewById(R.id.startautoflight);
+
+
+        startButton.setOnClickListener(v -> {
+
+            for (int i =0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                AutopilotCommand command = UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i);
+                String commandID = command.getId();
+
+                switch (commandID) {
+                    case "heading&speed":
+                        if (command instanceof HeadingAndSpeed) {
+                            ((HeadingAndSpeed) command).calculateCommand(
+                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+                                    calendar
+                            );
+                        }
+                    case "gps":
+                        if (command instanceof GPSCommand) {
+                            ((GPSCommand) command).calculateCommand();
+                        }
+                }
+            }
+        });
+
+
+
         addHeadingSpeed.setOnClickListener(v -> {
-            if (heading.getText().toString().isEmpty() || speed.getText().toString().isEmpty() || headingTime.getText().toString().isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            if (heading.getText().toString().isEmpty() || speed.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in heading and speed", Toast.LENGTH_SHORT).show();
             } else {
-                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
+                String headingStr = heading.getText().toString().trim();
+                String speedStr = speed.getText().toString().trim();
+                String timeStr = headingTime.getText().toString().trim();
+
+                // If time is optional, we can pass null or default
+                if (timeStr.isEmpty()) {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingStr, speedStr, "0000");
+                } else {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingStr, speedStr, timeStr);
+                }
+
                 commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
                 heading.setText("");
                 speed.setText("");
                 headingTime.setText("");
             }
-
-            // For loop is for testing
+            // This is for testing, is out queue being tracked correctly.
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
                 Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
         addGPS.setOnClickListener(v -> {
-            if (latitude.getText().toString().isEmpty() || longitude.getText().toString().isEmpty() || altitude.getText().toString().isEmpty() || gpsTime.getText().toString().isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            if (latitude.getText().toString().isEmpty() || longitude.getText().toString().isEmpty() || altitude.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in latitude, longitude, and altitude", Toast.LENGTH_SHORT).show();
             } else {
-                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
+                String latStr = latitude.getText().toString().trim();
+                String lonStr = longitude.getText().toString().trim();
+                String altStr = altitude.getText().toString().trim();
+                String gpsTimeStr = gpsTime.getText().toString().trim();
+
+                if (gpsTimeStr.isEmpty()) {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latStr, lonStr, altStr, "0000");
+                } else {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latStr, lonStr, altStr, gpsTimeStr);
+                }
+
                 commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
                 latitude.setText("");
                 longitude.setText("");
@@ -102,7 +153,6 @@ public class AutopilotFragment extends Fragment {
             }
 
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
                 Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
@@ -128,6 +178,8 @@ public class AutopilotFragment extends Fragment {
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getUserPhoneFragment());
             }
         });
+
+
 
         // This will listen for messages from the drone websocket
         UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
