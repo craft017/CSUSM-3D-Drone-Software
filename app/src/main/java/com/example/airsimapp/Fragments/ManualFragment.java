@@ -33,9 +33,12 @@ import com.example.airsimapp.Activities.UserActivity;
 import com.example.airsimapp.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +59,11 @@ public class ManualFragment extends Fragment  {
 // These help us loop the commands being sent
     private static final long COMMAND_INTERVAL = 100;
     private final Handler commandHandler = new Handler(Looper.getMainLooper());
+    public Date date = Calendar.getInstance().getTime();
+    public Calendar calendar = Calendar.getInstance();
+
+
+    String currentTime;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -183,7 +191,12 @@ public class ManualFragment extends Fragment  {
         }, ContextCompat.getMainExecutor(requireContext()));
     }
     private void sendCommand(String command) {
+        calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        currentTime = (Calendar.getInstance().getTime().toString());
         Log.d(TAG, "Sending command: " + command);
+        Log.e(TAG, "Current Time: " + hour+  " , " + minute);
     }
     @Override
     public void onDestroy() {

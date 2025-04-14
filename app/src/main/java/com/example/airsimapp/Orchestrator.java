@@ -46,12 +46,6 @@ public class Orchestrator {
 
     }
     public void processCommand(String userAction, CommandCallback callback) {
-
-        command = autopilot.getManual().translateCommand(userAction, autopilot.getYawRate(), autopilot.getVelocity(), autopilot.getCommandTime());
-        webSocket.sendMessage(command);
-        callback.onCommandReady(command);
-        //flightController.sendToDrone(command); // Send to websocket -> Drone Phone
-
         String[] message = userAction.split(",");
         switch(message[0]){ //Use action identifier for each type of message
             case "manual":

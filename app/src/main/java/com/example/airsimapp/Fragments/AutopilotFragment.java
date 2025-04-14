@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -13,31 +15,109 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.CommandAdapter;
 import com.example.airsimapp.GPS;
 import com.example.airsimapp.R;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
-import java.util.Timer;
 
 public class AutopilotFragment extends Fragment {
     private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
+    private TextView headingTextView;
+    private RecyclerView commandRecyclerView;
+    private CommandAdapter commandAdapter;
+    private TextView gpsTextView;
     private double currentSpeed = 0.0;
-    private Runnable speedUpdateRunnable;
+    private float currentHeading = 0.0F;
+    private Runnable uiUpdateRunnable;
     public GPS tempGPS;
-    private Handler speedUpdateHandler = new Handler(Looper.getMainLooper());
+    private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
     private static final long UPDATE_INTERVAL = 1000;
+    public Date date = Calendar.getInstance().getTime();
+    public Calendar calendar = Calendar.getInstance();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_autopilot, container, false);
 
+        commandRecyclerView = view.findViewById(R.id.commandRecyclerView);
+        commandRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        commandAdapter = new CommandAdapter(UserActivity.getOrchestrator().getAutopilot().getCommandQueue(),
+                position -> {
+                    UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(position);
+                    commandAdapter.notifyItemRemoved(position);
+                }
+        );
+        commandRecyclerView.setAdapter(commandAdapter);
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
+        EditText latitude = view.findViewById(R.id.gpsCord);
+        EditText longitude = view.findViewById(R.id.gpsCord2);
+        EditText altitude = view.findViewById(R.id.gpsCord3);
+        EditText gpsTime = view.findViewById(R.id.gpsTime);
+        EditText heading = view.findViewById(R.id.heading);
+        EditText speed = view.findViewById(R.id.Speed);
+        EditText headingTime = view.findViewById(R.id.headingTime);
+        EditText patternTime = view.findViewById(R.id.patternTime);
+        Button addGPS = view.findViewById(R.id.addGPS);
+        Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
+        Button addPattern = view.findViewById(R.id.addPattern);
+        addHeadingSpeed.setOnClickListener(v -> {
+            if (heading.getText().toString().isEmpty() || speed.getText().toString().isEmpty() || headingTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                heading.setText("");
+                speed.setText("");
+                headingTime.setText("");
+            }
+
+            // For loop is for testing
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
+        addGPS.setOnClickListener(v -> {
+            if (latitude.getText().toString().isEmpty() || longitude.getText().toString().isEmpty() || altitude.getText().toString().isEmpty() || gpsTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                latitude.setText("");
+                longitude.setText("");
+                altitude.setText("");
+                gpsTime.setText("");
+            }
+
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                //Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).toString());
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
+        addPattern.setOnClickListener(v -> {
+            if (patternTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
+                patternTime.setText("");
+            }
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
 
 
         // Set the button's click listener to return to the UserPhoneFragment
@@ -49,6 +129,7 @@ public class AutopilotFragment extends Fragment {
             }
         });
 
+        // This will listen for messages from the drone websocket
         UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
             String[] strBreakup = message.split(",");
             if (Objects.equals(strBreakup[0], "getSpeed")) {
@@ -70,50 +151,56 @@ public class AutopilotFragment extends Fragment {
 
         // Get a reference to the TextView
         speedTextView = view.findViewById(R.id.speedTextView);
+        headingTextView = view.findViewById(R.id.HeadingViewText);
+        gpsTextView = view.findViewById(R.id.gpsTextView);
         startSpeedUpdates();
     }
 
-    private void updateSpeedTextView() {
+    private void updateUI() {
         String speedText = getString(R.string.speed_display, currentSpeed);
         speedTextView.setText(speedText);
+        //update heading
+        String headingText = getString(R.string.heading_display, currentHeading);
+        speedTextView.setText(headingText);
+
+        //update GPS
+//        if(//currentGPS != null && get altitude from currentGPS)
+//        ){
+//            String gpsText = getString(R.string.gps_display, tempGPS.getLatitude(), tempGPS.getLongitude(), tempGPS.getAltitude());
+//            gpsTextView.setText(gpsText);
+//        }
     }
     private double getCurrentSpeed() {
         return (UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
     }
+    private GPS getCurrentGPS() {
+        return (UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+    }
+
+    private float getCurrentHeading() {
+        return (UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+    }
     private void startSpeedUpdates() {
-        speedUpdateRunnable = new Runnable() {
+        uiUpdateRunnable = new Runnable() {
             @Override
             public void run() {
                 currentSpeed = getCurrentSpeed();
-                updateSpeedTextView();
-                speedUpdateHandler.postDelayed(this, UPDATE_INTERVAL);
+                currentHeading = getCurrentHeading();
+                updateUI();
+                uiUpdateHandler.postDelayed(this, UPDATE_INTERVAL);
             }
         };
-        speedUpdateHandler.post(speedUpdateRunnable);
+        uiUpdateHandler.post(uiUpdateRunnable);
     }
     private void stopSpeedUpdates() {
-        if(speedUpdateHandler != null && speedUpdateRunnable != null) {
-            speedUpdateHandler.removeCallbacks(speedUpdateRunnable);
+        if(uiUpdateHandler != null && uiUpdateRunnable != null) {
+            uiUpdateHandler.removeCallbacks(uiUpdateRunnable);
         }
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         stopSpeedUpdates();
-    }
-
-    public void onFlightControllerMessage(String message) {
-        if (message.startsWith("getSpeed,")) {
-            try {
-                String[] parts = message.split(",");
-                if (parts.length == 2) {
-                    currentSpeed = Double.parseDouble(parts[1]);
-                    requireActivity().runOnUiThread(this::updateSpeedTextView);
-                }
-            } catch (NumberFormatException e) {
-                Log.e("AutopilotFragment", "Failed to parse speed", e);
-            }
-        }
     }
 
 }
