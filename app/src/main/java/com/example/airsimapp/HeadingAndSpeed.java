@@ -22,28 +22,23 @@ public class HeadingAndSpeed extends AutopilotCommand{
         return desiredSpeed;
     }
 
-    public void calculateCommand(float currentHeading, float yawRate, Calendar startTime ){
-        String commandMessage;
-        float headingDifference = Math.abs(desiredHeading - currentHeading);
-        float turnDuration = (headingDifference/yawRate);
-
-        float startMinutes = startTime.HOUR * 60 + startTime.MINUTE;
-        float endMinutes = this.getHourEndTime() * 60 + this.getMinuteEndTime();
-        float totalTime = Math.abs(endMinutes - startMinutes);
-        float straightDuration = totalTime - turnDuration;
-
-        float distanceToRight = (currentHeading - desiredHeading + 360) % 360;
-        float distanceToLeft = (desiredHeading - currentHeading + 360) % 360;
-        if(distanceToRight < distanceToLeft || distanceToRight == distanceToLeft){
-            //Turning right
-            commandMessage = "manual,right_turn," + yawRate + "," + desiredSpeed + "," + turnDuration;
-            this.addToManualQueue(commandMessage);
+    public void calculateCommand(float currentHeading, float yawRate, float commandTime, Calendar startTime){
+        float lower = (currentHeading-this.getHeadingTolerance()%360);
+        float upper = (currentHeading+this.getHeadingTolerance()%360);
+        if(currentHeading >= upper || currentHeading <= lower){
+            float distanceToRight = (currentHeading - desiredHeading + 360) % 360;
+            float distanceToLeft = (desiredHeading - currentHeading + 360) % 360;
+            if(distanceToRight < distanceToLeft || distanceToRight == distanceToLeft){
+                //Turning right
+                this.setCommandMessage("manual,right_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
+            }
+            else if(distanceToRight > distanceToLeft){
+                //Turning left
+                this.setCommandMessage("manual,left_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
+            }
         }
-        else if(distanceToRight > distanceToLeft){
-            //Turning left
-            commandMessage = "manual,left_turn," + yawRate + "," + desiredSpeed + "," + turnDuration;
-            this.addToManualQueue(commandMessage);
+        else{
+            this.setCommandMessage("manual,forward," + yawRate + "," + desiredSpeed + "," + commandTime);
         }
-        commandMessage = "manual,forward," + yawRate + "," + desiredSpeed + "," + straightDuration;
     }
 }
