@@ -206,6 +206,7 @@
         app:layout_constraintTop_toBottomOf="@+id/manualButton" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commandRecyclerView"
         android:layout_width="281dp"
         android:layout_height="275dp"
         android:layout_marginTop="16dp"

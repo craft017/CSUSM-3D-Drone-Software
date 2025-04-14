@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.CommandAdapter;
 import com.example.airsimapp.GPS;
 import com.example.airsimapp.R;
 
@@ -29,6 +32,8 @@ public class AutopilotFragment extends Fragment {
     private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
     private TextView headingTextView;
+    private RecyclerView commandRecyclerView;
+    private CommandAdapter commandAdapter;
     private TextView gpsTextView;
     private double currentSpeed = 0.0;
     private float currentHeading = 0.0F;
@@ -45,6 +50,15 @@ public class AutopilotFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_autopilot, container, false);
 
+        commandRecyclerView = view.findViewById(R.id.commandRecyclerView);
+        commandRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        commandAdapter = new CommandAdapter(UserActivity.getOrchestrator().getAutopilot().getCommandQueue(),
+                position -> {
+                    UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(position);
+                    commandAdapter.notifyItemRemoved(position);
+                }
+        );
+        commandRecyclerView.setAdapter(commandAdapter);
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
         EditText latitude = view.findViewById(R.id.gpsCord);
@@ -63,6 +77,7 @@ public class AutopilotFragment extends Fragment {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
                 UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(heading.getText().toString().trim(), speed.getText().toString().trim(), headingTime.getText().toString().trim());
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
                 heading.setText("");
                 speed.setText("");
                 headingTime.setText("");
@@ -79,6 +94,7 @@ public class AutopilotFragment extends Fragment {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
                 UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latitude.getText().toString().trim(), longitude.getText().toString().trim(), altitude.getText().toString().trim(), gpsTime.getText().toString().trim());
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
                 latitude.setText("");
                 longitude.setText("");
                 altitude.setText("");
@@ -94,6 +110,7 @@ public class AutopilotFragment extends Fragment {
             if (patternTime.getText().toString().isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
                 UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
                 patternTime.setText("");
             }
@@ -111,6 +128,7 @@ public class AutopilotFragment extends Fragment {
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getUserPhoneFragment());
             }
         });
+
         // This will listen for messages from the drone websocket
         UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
             String[] strBreakup = message.split(",");
@@ -183,20 +201,6 @@ public class AutopilotFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         stopSpeedUpdates();
-    }
-
-    public void onFlightControllerMessage(String message) {
-        if (message.startsWith("getSpeed,")) {
-            try {
-                String[] parts = message.split(",");
-                if (parts.length == 2) {
-                    currentSpeed = Double.parseDouble(parts[1]);
-                    requireActivity().runOnUiThread(this::updateUI);
-                }
-            } catch (NumberFormatException e) {
-                Log.e("AutopilotFragment", "Failed to parse speed", e);
-            }
-        }
     }
 
 }
