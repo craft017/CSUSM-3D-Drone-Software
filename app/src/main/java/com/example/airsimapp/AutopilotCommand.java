@@ -4,15 +4,16 @@ import java.util.ArrayList;
 
 abstract public class AutopilotCommand {
     private String id;
-    private ArrayList<String> manualQueue;
     private int hourEndTime;
     private int minuteEndTime;
+    private String commandMessage;
+    private float headingTolerance;
 
     public AutopilotCommand(){
-        this.manualQueue = new ArrayList<>();
         this.id = "NULL";
         this.hourEndTime = 0;
         this.minuteEndTime = 0;
+        this.headingTolerance = 2;
     }
     public String getId() {
         return id;
@@ -24,9 +25,6 @@ abstract public class AutopilotCommand {
 
     public void calculateCommand(){
         //Generic calculateCommand function
-    }
-    public void addToManualQueue(String command){
-        this.manualQueue.add(command);
     }
 
     public void setHourEndTime(int hourEndTime) {
@@ -43,5 +41,17 @@ abstract public class AutopilotCommand {
 
     public int getMinuteEndTime() {
         return minuteEndTime;
+    }
+
+    public String getCommandMessage() {
+        return commandMessage;
+    }
+
+    public void setCommandMessage(String commandMessage) {
+        this.commandMessage = commandMessage;
+    }
+
+    public float getHeadingTolerance() {
+        return headingTolerance;
     }
 }
