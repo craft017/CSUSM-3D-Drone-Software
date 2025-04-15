@@ -8,12 +8,16 @@ abstract public class AutopilotCommand {
     private int minuteEndTime;
     private String commandMessage;
     private float headingTolerance;
+    private float gpsTolerance;
+    private float altitudeTolerance;
 
     public AutopilotCommand(){
         this.id = "NULL";
         this.hourEndTime = 0;
         this.minuteEndTime = 0;
         this.headingTolerance = 2;
+        this.gpsTolerance = 0.00008983f;    //About 10 meters tolerance at the equator, used for latitude & longitude
+        this.altitudeTolerance = 10;        //Tolerance of altitude in meters
     }
     public String getId() {
         return id;
@@ -53,5 +57,13 @@ abstract public class AutopilotCommand {
 
     public float getHeadingTolerance() {
         return headingTolerance;
+    }
+
+    public float getAltitudeTolerance() {
+        return altitudeTolerance;
+    }
+
+    public float getGpsTolerance() {
+        return gpsTolerance;
     }
 }
