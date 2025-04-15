@@ -22,7 +22,7 @@ public class  Autopilot  {
         this.currentGPS = new GPS(0, 0, 0);
         this.currentHeading = 0;
         this.currentSpeed = 0;
-        this.yawRate = 15;
+        this.yawRate = 10;
         this.velocity = 2;
         this.commandTime = 0.2F;
     }

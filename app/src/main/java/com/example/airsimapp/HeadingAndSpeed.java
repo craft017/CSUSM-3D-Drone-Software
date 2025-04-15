@@ -23,22 +23,22 @@ public class HeadingAndSpeed extends AutopilotCommand{
     }
 
     public void calculateCommand(float currentHeading, float yawRate, float commandTime, Calendar startTime){
-        float lower = (currentHeading-this.getHeadingTolerance()%360);
-        float upper = (currentHeading+this.getHeadingTolerance()%360);
-        if(currentHeading >= upper || currentHeading <= lower){
+        float lower = ((desiredHeading-this.getHeadingTolerance())%360);
+        float upper = ((desiredHeading+this.getHeadingTolerance())%360);
+        if(currentHeading >= upper || currentHeading <= lower){ // possible bug here, we never go into this loop
             float distanceToRight = (currentHeading - desiredHeading + 360) % 360;
             float distanceToLeft = (desiredHeading - currentHeading + 360) % 360;
-            if(distanceToRight < distanceToLeft || distanceToRight == distanceToLeft){
+            if(distanceToRight > distanceToLeft || distanceToRight == distanceToLeft){
                 //Turning right
-                this.setCommandMessage("manual,right_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
+                this.setCommandMessage("autopilot,right_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
             }
-            else if(distanceToRight > distanceToLeft){
+            else if(distanceToRight < distanceToLeft){
                 //Turning left
-                this.setCommandMessage("manual,left_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
+                this.setCommandMessage("autopilot,left_turn," + yawRate + "," + desiredSpeed + "," + commandTime);
             }
         }
         else{
-            this.setCommandMessage("manual,forward," + yawRate + "," + desiredSpeed + "," + commandTime);
+            this.setCommandMessage("autopilot,forward," + yawRate + "," + desiredSpeed + "," + commandTime);
         }
     }
 }

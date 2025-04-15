@@ -85,7 +85,7 @@ public class DronePhoneFragment extends Fragment {
         });
         // Default Spinner selection
 
-        // Sends messages recieved from the user phone directly to the drone
+        // Sends messages received from the user phone directly to the drone
         webSocket.setWebSocketMessageListener(message -> {
             if (output != null) {
 

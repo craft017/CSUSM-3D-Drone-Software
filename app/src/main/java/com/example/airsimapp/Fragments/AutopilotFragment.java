@@ -30,6 +30,7 @@ import com.example.airsimapp.R;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class AutopilotFragment extends Fragment {
@@ -44,7 +45,9 @@ public class AutopilotFragment extends Fragment {
     private Runnable uiUpdateRunnable;
     public GPS tempGPS;
     private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
-    private static final long UPDATE_INTERVAL = 1000;
+    Handler handler = new Handler();
+    int index = 0;
+    private static final long UPDATE_INTERVAL = 250;
     public Date date = Calendar.getInstance().getTime();
     public Calendar calendar = Calendar.getInstance();
 
@@ -81,26 +84,30 @@ public class AutopilotFragment extends Fragment {
 
         startButton.setOnClickListener(v -> {
 
-            for (int i =0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                AutopilotCommand command = UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i);
-                String commandID = command.getId();
-
-                switch (commandID) {
-                    case "heading&speed":
-                        if (command instanceof HeadingAndSpeed) {
-                            ((HeadingAndSpeed) command).calculateCommand(
-                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
-                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
-                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
-                                    calendar
-                            );
-                        }
-                    case "gps":
-                        if (command instanceof GPSCommand) {
-                            ((GPSCommand) command).calculateCommand();
-                        }
-                }
-            }
+//            for (int i =0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+//                AutopilotCommand command = UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i);
+//                String commandID = command.getId();
+//
+//                switch (commandID) {
+//                    case "heading&speed":
+//                        if (command instanceof HeadingAndSpeed) {
+//                            ((HeadingAndSpeed) command).calculateCommand(
+//                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+//                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+//                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+//                                    calendar
+//                            );
+//                        }
+//                        break;
+//                    case "gps":
+//                        if (command instanceof GPSCommand) {
+//                            ((GPSCommand) command).calculateCommand();
+//                        }
+//                        break;
+//                }
+//                handler.post(commandSenderRunnable); // start sending
+//            }
+            handler.post(commandSenderRunnable); // start sending
         });
 
 
@@ -113,7 +120,7 @@ public class AutopilotFragment extends Fragment {
                 String speedStr = speed.getText().toString().trim();
                 String timeStr = headingTime.getText().toString().trim();
 
-                // If time is optional, we can pass null or default
+                // If time is optional, we can pass default
                 if (timeStr.isEmpty()) {
                     UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingStr, speedStr, "0000");
                 } else {
@@ -186,12 +193,14 @@ public class AutopilotFragment extends Fragment {
             String[] strBreakup = message.split(",");
             if (Objects.equals(strBreakup[0], "getSpeed")) {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
-                //Log.e(TAG, "TESTING1: ", UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1])));
+               // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
             } else if (Objects.equals(strBreakup[0], "getHeading")) {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+               // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
             } else if (Objects.equals(strBreakup[0], "getGPS")){
                 tempGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
                 UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(tempGPS);
+               // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
             }
         });
 
@@ -213,7 +222,7 @@ public class AutopilotFragment extends Fragment {
         speedTextView.setText(speedText);
         //update heading
         String headingText = getString(R.string.heading_display, currentHeading);
-        speedTextView.setText(headingText);
+        headingTextView.setText(headingText);
 
         //update GPS
 //        if(//currentGPS != null && get altitude from currentGPS)
@@ -236,6 +245,11 @@ public class AutopilotFragment extends Fragment {
         uiUpdateRunnable = new Runnable() {
             @Override
             public void run() {
+                UserActivity.getOrchestrator().webSocket.sendMessage("getGPS");
+                UserActivity.getOrchestrator().webSocket.sendMessage("getSpeed");
+                UserActivity.getOrchestrator().webSocket.sendMessage("getHeading");
+                //Log.d(TAG, "THIS SHOULD BE SPEED: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+
                 currentSpeed = getCurrentSpeed();
                 currentHeading = getCurrentHeading();
                 updateUI();
@@ -255,4 +269,54 @@ public class AutopilotFragment extends Fragment {
         stopSpeedUpdates();
     }
 
+    Runnable commandSenderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            List<AutopilotCommand> queue = UserActivity.getOrchestrator().getAutopilot().getCommandQueue();
+
+            if (index < queue.size()) {
+                AutopilotCommand command = queue.get(index);
+
+                // Recalculate command before sending
+                if (command instanceof HeadingAndSpeed) {
+                    ((HeadingAndSpeed) command).calculateCommand(
+                            UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+                            UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+                            UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+                            calendar
+                    );
+                } else if (command instanceof GPSCommand) {
+                    ((GPSCommand) command).calculateCommand();
+                }
+
+                String msg = command.getCommandMessage();
+                if (msg != null && !msg.isEmpty()) {
+                    UserActivity.getOrchestrator().processCommand(msg, AutopilotFragment.this::sendCommand);
+                    Log.d(TAG, "Sent: " + msg);
+                }
+
+                index++;
+            } else {
+                index = 0; // Reset to loop through commands again
+            }
+
+            handler.postDelayed(this, 100); // Repeat every 200ms (5 times per second)
+        }
+    };
+
+    private void sendCommand(String s) {
+       // Log.d(TAG, "Sending autopilot command");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startSpeedUpdates();  // start updates when fragment is visible again
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopSpeedUpdates();   // stop updates when fragment is no longer visible
+    }
 }
