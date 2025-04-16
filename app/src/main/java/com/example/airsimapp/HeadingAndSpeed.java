@@ -7,7 +7,7 @@ public class HeadingAndSpeed extends AutopilotCommand{
     private float desiredSpeed;
 
     public HeadingAndSpeed(float heading, float speed, int hour, int minute){
-        this.setId("heading&speed");
+        this.setId("Heading&Speed");
         this.desiredHeading = heading;
         this.desiredSpeed = speed;
         this.setHourEndTime(hour);
