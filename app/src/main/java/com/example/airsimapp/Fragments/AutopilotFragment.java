@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -41,7 +42,6 @@ public class AutopilotFragment extends Fragment {
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
 
-
         // Set the button's click listener to return to the UserPhoneFragment
         manualButton.setOnClickListener(v -> {
             // Ensure the activity is of type UserActivity
@@ -58,7 +58,7 @@ public class AutopilotFragment extends Fragment {
                 //Log.e(TAG, "TESTING1: ", UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1])));
             } else if (Objects.equals(strBreakup[0], "getHeading")) {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
-            } else if (Objects.equals(strBreakup[0], "getGPS")){
+            } else if (Objects.equals(strBreakup[0], "getGPS")) {
                 tempGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
                 UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(tempGPS);
             }
@@ -82,7 +82,7 @@ public class AutopilotFragment extends Fragment {
         speedTextView.setText(speedText);
         //update heading
         String headingText = getString(R.string.heading_display, currentHeading);
-        speedTextView.setText(headingText);
+        headingTextView.setText(headingText);
 
         //update GPS
 //        if(//currentGPS != null && get altitude from currentGPS)
@@ -137,5 +137,6 @@ public class AutopilotFragment extends Fragment {
             }
         }
     }
+
 
 }
