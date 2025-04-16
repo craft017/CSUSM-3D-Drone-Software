@@ -31,4 +31,19 @@
     <color name="gray_500">#FF9E9E9E</color>
     <color name="gray_700">#FF616161</color>
     <color name="gray_900">#FF212121</color>
+    <!-- Backgrounds -->
+    <color name="background_dark">#1E1E1E</color>
+    <color name="container_gray">#4F4F4F</color>
+    <!-- Text -->
+    <color name="text_muted">#6C757D</color>
+    <!-- Buttons -->
+    <color name="button_primary">#D2B48C</color> <!-- Forest tan -->
+    <color name="button_critical">#FF3B30</color> <!-- Marine Red -->
+    <color name="button_warning">#FF9500</color> <!-- Amber -->
+    <color name="purpledeep">#6A1B9A</color> <!-- deep purple -->
+    <color name="gold">#B8860B</color> <!-- gold -->
+    <!-- Status -->
+    <color name="status_ok">#28A745</color> <!-- Green -->
+    <color name="status_warning">#FFC107</color> <!-- Yellow -->
+    <color name="status_error">#DC3545</color> <!-- Red -->
 </resources>

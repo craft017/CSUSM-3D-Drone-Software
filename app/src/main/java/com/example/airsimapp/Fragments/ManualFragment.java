@@ -83,7 +83,7 @@ public class ManualFragment extends Fragment  {
         Button rright = rootView.findViewById(R.id.Rright);
         Button autoPilotButton = rootView.findViewById(R.id.autoPilotButton);
 
-        previewView = rootView.findViewById(R.id.previewView);
+        //previewView = rootView.findViewById(R.id.previewView);
         // flightControllerSpinner may need to be in dronePhoneFragment
 
         // Set up listeners, this is what the buttons do when clicked/held.
