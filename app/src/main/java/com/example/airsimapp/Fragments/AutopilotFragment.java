@@ -4,8 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -14,33 +15,167 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.AutopilotCommand;
+import com.example.airsimapp.CommandAdapter;
 import com.example.airsimapp.GPS;
+import com.example.airsimapp.GPSCommand;
+import com.example.airsimapp.HeadingAndSpeed;
 import com.example.airsimapp.R;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class AutopilotFragment extends Fragment {
     private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
     private TextView headingTextView;
+    private RecyclerView commandRecyclerView;
+    private CommandAdapter commandAdapter;
     private TextView gpsTextView;
     private double currentSpeed = 0.0;
     private float currentHeading = 0.0F;
     private Runnable uiUpdateRunnable;
     public GPS tempGPS;
     private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
-    private static final long UPDATE_INTERVAL = 1000;
+    Handler handler = new Handler();
+    int index = 0;
+    private static final long UPDATE_INTERVAL = 250;
+    public Date date = Calendar.getInstance().getTime();
+    public Calendar calendar = Calendar.getInstance();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_autopilot, container, false);
 
+        commandRecyclerView = view.findViewById(R.id.commandRecyclerView);
+        commandRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        commandAdapter = new CommandAdapter(UserActivity.getOrchestrator().getAutopilot().getCommandQueue(),
+                position -> {
+                    UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(position);
+                    commandAdapter.notifyItemRemoved(position);
+                }
+        );
+        commandRecyclerView.setAdapter(commandAdapter);
         // Get the button from the layout
         Button manualButton = view.findViewById(R.id.manualButton);
+        EditText latitude = view.findViewById(R.id.gpsCord);
+        EditText longitude = view.findViewById(R.id.gpsCord2);
+        EditText altitude = view.findViewById(R.id.gpsCord3);
+        EditText gpsTime = view.findViewById(R.id.gpsTime);
+        EditText heading = view.findViewById(R.id.heading);
+        EditText speed = view.findViewById(R.id.Speed);
+        EditText headingTime = view.findViewById(R.id.headingTime);
+        EditText patternTime = view.findViewById(R.id.patternTime);
+        Button addGPS = view.findViewById(R.id.addGPS);
+        Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
+        Button addPattern = view.findViewById(R.id.addPattern);
+        Button startButton = view.findViewById(R.id.startautoflight);
+
+
+        startButton.setOnClickListener(v -> {
+
+//            for (int i =0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+//                AutopilotCommand command = UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i);
+//                String commandID = command.getId();
+//
+//                switch (commandID) {
+//                    case "heading&speed":
+//                        if (command instanceof HeadingAndSpeed) {
+//                            ((HeadingAndSpeed) command).calculateCommand(
+//                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+//                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+//                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+//                                    calendar
+//                            );
+//                        }
+//                        break;
+//                    case "gps":
+//                        if (command instanceof GPSCommand) {
+//                            ((GPSCommand) command).calculateCommand();
+//                        }
+//                        break;
+//                }
+//                handler.post(commandSenderRunnable); // start sending
+//            }
+            handler.post(commandSenderRunnable); // start sending
+        });
+
+
+
+        addHeadingSpeed.setOnClickListener(v -> {
+            if (heading.getText().toString().isEmpty() || speed.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in heading and speed", Toast.LENGTH_SHORT).show();
+            } else {
+                String headingStr = heading.getText().toString().trim();
+                String speedStr = speed.getText().toString().trim();
+                String timeStr = headingTime.getText().toString().trim();
+
+                // If time is optional, we can pass default
+                if (timeStr.isEmpty()) {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingStr, speedStr, "0000");
+                } else {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(headingStr, speedStr, timeStr);
+                }
+
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                heading.setText("");
+                speed.setText("");
+                headingTime.setText("");
+            }
+            // This is for testing, is out queue being tracked correctly.
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
+        addGPS.setOnClickListener(v -> {
+            if (latitude.getText().toString().isEmpty() || longitude.getText().toString().isEmpty() || altitude.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in latitude, longitude, and altitude", Toast.LENGTH_SHORT).show();
+            } else {
+                String latStr = latitude.getText().toString().trim();
+                String lonStr = longitude.getText().toString().trim();
+                String altStr = altitude.getText().toString().trim();
+                String gpsTimeStr = gpsTime.getText().toString().trim();
+
+                if (gpsTimeStr.isEmpty()) {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latStr, lonStr, altStr, "0000");
+                } else {
+                    UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(latStr, lonStr, altStr, gpsTimeStr);
+                }
+
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                latitude.setText("");
+                longitude.setText("");
+                altitude.setText("");
+                gpsTime.setText("");
+            }
+
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
+        addPattern.setOnClickListener(v -> {
+            if (patternTime.getText().toString().isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
+                patternTime.setText("");
+            }
+            for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
+                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+            }
+        });
+
 
         // Set the button's click listener to return to the UserPhoneFragment
         manualButton.setOnClickListener(v -> {
@@ -51,16 +186,21 @@ public class AutopilotFragment extends Fragment {
             }
         });
 
+
+
+        // This will listen for messages from the drone websocket
         UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
             String[] strBreakup = message.split(",");
             if (Objects.equals(strBreakup[0], "getSpeed")) {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
-                //Log.e(TAG, "TESTING1: ", UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1])));
+               // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
             } else if (Objects.equals(strBreakup[0], "getHeading")) {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
-            } else if (Objects.equals(strBreakup[0], "getGPS")) {
+               // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+            } else if (Objects.equals(strBreakup[0], "getGPS")){
                 tempGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
                 UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(tempGPS);
+               // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
             }
         });
 
@@ -72,7 +212,7 @@ public class AutopilotFragment extends Fragment {
 
         // Get a reference to the TextView
         speedTextView = view.findViewById(R.id.speedTextView);
-        headingTextView = view.findViewById(R.id.headingTextView);
+        headingTextView = view.findViewById(R.id.HeadingViewText);
         gpsTextView = view.findViewById(R.id.gpsTextView);
         startSpeedUpdates();
     }
@@ -105,6 +245,11 @@ public class AutopilotFragment extends Fragment {
         uiUpdateRunnable = new Runnable() {
             @Override
             public void run() {
+                UserActivity.getOrchestrator().webSocket.sendMessage("getGPS");
+                UserActivity.getOrchestrator().webSocket.sendMessage("getSpeed");
+                UserActivity.getOrchestrator().webSocket.sendMessage("getHeading");
+                //Log.d(TAG, "THIS SHOULD BE SPEED: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+
                 currentSpeed = getCurrentSpeed();
                 currentHeading = getCurrentHeading();
                 updateUI();
@@ -124,19 +269,54 @@ public class AutopilotFragment extends Fragment {
         stopSpeedUpdates();
     }
 
-    public void onFlightControllerMessage(String message) {
-        if (message.startsWith("getSpeed,")) {
-            try {
-                String[] parts = message.split(",");
-                if (parts.length == 2) {
-                    currentSpeed = Double.parseDouble(parts[1]);
-                    requireActivity().runOnUiThread(this::updateUI);
+    Runnable commandSenderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            List<AutopilotCommand> queue = UserActivity.getOrchestrator().getAutopilot().getCommandQueue();
+
+            if (index < queue.size()) {
+                AutopilotCommand command = queue.get(index);
+
+                // Recalculate command before sending
+                if (command instanceof HeadingAndSpeed) {
+                    ((HeadingAndSpeed) command).calculateCommand(
+                            UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+                            UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+                            UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+                            calendar
+                    );
+                } else if (command instanceof GPSCommand) {
+                    ((GPSCommand) command).calculateCommand();
                 }
-            } catch (NumberFormatException e) {
-                Log.e("AutopilotFragment", "Failed to parse speed", e);
+
+                String msg = command.getCommandMessage();
+                if (msg != null && !msg.isEmpty()) {
+                    UserActivity.getOrchestrator().processCommand(msg, AutopilotFragment.this::sendCommand);
+                    Log.d(TAG, "Sent: " + msg);
+                }
+
+                index++;
+            } else {
+                index = 0; // Reset to loop through commands again
             }
+
+            handler.postDelayed(this, 100); // Repeat every 200ms (5 times per second)
         }
+    };
+
+    private void sendCommand(String s) {
+       // Log.d(TAG, "Sending autopilot command");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        startSpeedUpdates();  // start updates when fragment is visible again
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopSpeedUpdates();   // stop updates when fragment is no longer visible
+    }
 }

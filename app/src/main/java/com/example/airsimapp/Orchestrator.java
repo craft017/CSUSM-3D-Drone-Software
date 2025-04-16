@@ -7,9 +7,8 @@ import com.example.airsimapp.Activities.UserActivity;
 import okhttp3.WebSocket;
 
 public class Orchestrator {
-    //TODO add websocket connection here instead of connecting to drone directly, THIS CODE CAN BE USED ON DRONE PHONE
-    // TO CONNECT TO DRONE
-    private  Autopilot autopilot;
+
+    private Autopilot autopilot;
     public WebSocketClientTesting webSocket;
     //private final flightControllerInterface flightController;
     private String command;
@@ -42,16 +41,7 @@ public class Orchestrator {
        // flightController.connect();
     } // This can connect to websockets instead of drone directly
 
-    public void recieveCommand(){
-
-    }
     public void processCommand(String userAction, CommandCallback callback) {
-
-        command = autopilot.getManual().translateCommand(userAction, autopilot.getYawRate(), autopilot.getVelocity(), autopilot.getCommandTime());
-        webSocket.sendMessage(command);
-        callback.onCommandReady(command);
-        //flightController.sendToDrone(command); // Send to websocket -> Drone Phone
-
         String[] message = userAction.split(",");
         switch(message[0]){ //Use action identifier for each type of message
             case "manual":
@@ -59,17 +49,18 @@ public class Orchestrator {
                 callback.onCommandReady(command);
                 webSocket.sendMessage(command); // Send to websocket -> Drone Phone
                 break;
-            case "getGPS":
-                GPS gps = new GPS(message[1], message[2], message[3]);
-                autopilot.setCurrentGPS(gps);
-                break;
-            case "getSpeed":
-                Float speed = Float.parseFloat(message[1]);
-                autopilot.setCurrentSpeed(speed);
-                break;
-            case "getHeading":
-                Float heading = Float.parseFloat(message[1]);
-                autopilot.setCurrentHeading(heading);
+            case "autopilot":
+                StringBuilder autopilotCommand = new StringBuilder();
+                for (int i = 1; i < message.length; i++) {
+                    autopilotCommand.append(message[i]);
+                    if (i != message.length - 1) {
+                        autopilotCommand.append(",");
+                    }
+                }
+
+                String commandStr = autopilotCommand.toString();
+                callback.onCommandReady(commandStr);
+                webSocket.sendMessage(commandStr);
                 break;
             default:
                 Log.e("Orchestrator", "Unknown Message Received, Cannot Process Command");

@@ -1,8 +1,9 @@
 package com.example.airsimapp;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class  Autopilot  {
     private final Manual manual;
@@ -21,7 +22,7 @@ public class  Autopilot  {
         this.currentGPS = new GPS(0, 0, 0);
         this.currentHeading = 0;
         this.currentSpeed = 0;
-        this.yawRate = 15;
+        this.yawRate = 10;
         this.velocity = 2;
         this.commandTime = 0.2F;
     }
@@ -29,6 +30,64 @@ public class  Autopilot  {
     public Manual getManual() {return manual;}
 
     public ArrayList<AutopilotCommand> getCommandQueue() {return commandQueue;}
+
+    public void addToCommandQueue(String lat, String lon, String alt, String time){
+        if (time == null || time.length() < 4 || time.length() > 5) {
+            Log.e("Autopilot", "Invalid time format: " + time);
+            return; // or handle error appropriately
+        }
+
+        try {
+            float latitude = Float.parseFloat(lat);
+            float longitude = Float.parseFloat(lon);
+            float altitude = Float.parseFloat(alt);
+            int hour = Integer.parseInt(time.substring(0, 2));
+            int minute = Integer.parseInt(time.substring(2));
+            GPSCommand gps = new GPSCommand(latitude, longitude, altitude, hour, minute);
+            this.commandQueue.add(gps);
+        } catch (NumberFormatException e) {
+            Log.e("Autopilot", "Invalid number format in input", e);
+            // Optional: show a message or skip
+        }
+    }
+    public void addToCommandQueue(String heading, String speed, String time){
+        if (time == null || time.length() < 4 || time.length() > 5) {
+            Log.e("Autopilot", "Invalid time format: " + time);
+            return;
+        }
+
+        try {
+            float desiredHeading = Float.parseFloat(heading);
+            float desiredSpeed = Float.parseFloat(speed);
+            int hour = Integer.parseInt(time.substring(0, 2));
+            int minute = Integer.parseInt(time.substring(2));
+
+            HeadingAndSpeed headingAndSpeed = new HeadingAndSpeed(desiredHeading, desiredSpeed, hour, minute);
+            this.commandQueue.add(headingAndSpeed);
+        } catch (NumberFormatException e) {
+            Log.e("Autopilot", "Failed to parse heading/speed/time: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e("Autopilot", "Unexpected error: " + e.getMessage());
+        }
+    }
+    public void addToCommandQueue(String loiterPattern, String time){
+        if (time == null || time.length() < 4 || time.length() > 5) {
+            Log.e("Autopilot", "Invalid time format: " + time);
+            return;
+        }
+
+        try {
+            int hour = Integer.parseInt(time.substring(0, 2));
+            int minute = Integer.parseInt(time.substring(2));
+
+            LoiterPattern pattern = new LoiterPattern(loiterPattern, hour, minute);
+            this.commandQueue.add(pattern);
+        } catch (NumberFormatException e) {
+            Log.e("Autopilot", "Failed to parse time: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e("Autopilot", "Unexpected error: " + e.getMessage());
+        }
+    }
 
     public float getCurrentHeading() {
         return currentHeading;

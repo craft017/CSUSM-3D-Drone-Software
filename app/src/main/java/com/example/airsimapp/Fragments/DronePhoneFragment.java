@@ -75,7 +75,7 @@ public class DronePhoneFragment extends Fragment {
                             //requireActivity().runOnUiThread(() -> output.setText("Response from drone: " + message));
                         }
                     });
-                }
+                } // add more flightControllers here
             }
 
             @Override
@@ -85,6 +85,7 @@ public class DronePhoneFragment extends Fragment {
         });
         // Default Spinner selection
 
+        // Sends messages received from the user phone directly to the drone
         webSocket.setWebSocketMessageListener(message -> {
             if (output != null) {
 
