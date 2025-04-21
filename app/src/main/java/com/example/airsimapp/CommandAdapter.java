@@ -3,6 +3,7 @@ package com.example.airsimapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,11 +27,13 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
 
     public static class CommandViewHolder extends RecyclerView.ViewHolder {
         TextView commandText;
+        ImageView commandIcon;
 
         public CommandViewHolder(View itemView, OnItemClickListener listener) {
 
             super(itemView);
             commandText = itemView.findViewById(R.id.commandTextView);
+            commandIcon = itemView.findViewById(R.id.commandImageView);
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if (listener != null && position != RecyclerView.NO_POSITION) {
@@ -57,7 +60,22 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
     public void onBindViewHolder(@NonNull CommandViewHolder holder, int position) {
         AutopilotCommand command = commandList.get(position);
 
-        holder.commandText.setText(command.toString()); // Or customize this
+        holder.commandText.setText(command.getId()); // Or customize this
+
+        switch (command.getId()) {
+            case "Heading&Speed":
+                holder.commandIcon.setImageResource(R.drawable.heading);
+                break;
+            case "GPS":
+                holder.commandIcon.setImageResource(R.drawable.gps);
+                break;
+            case "LoiterPattern":
+                holder.commandIcon.setImageResource(R.drawable.loiter);
+                break;
+            default:
+                holder.commandIcon.setImageResource(R.drawable.gps);
+                break;
+        }
     }
 
     @Override
