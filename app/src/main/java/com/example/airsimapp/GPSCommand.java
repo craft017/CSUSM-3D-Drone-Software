@@ -1,4 +1,6 @@
 package com.example.airsimapp;
+import com.example.airsimapp.Activities.UserActivity;
+
 import java.util.Calendar;
 
 public class GPSCommand extends AutopilotCommand{
@@ -35,7 +37,8 @@ public class GPSCommand extends AutopilotCommand{
         if (degreeDifference < 0) {
             degreeDifference += 360;
         }
-        float desiredHeading = (currentHeading + degreeDifference) % 360;
+        //float desiredHeading = (currentHeading + degreeDifference) % 360;
+        float desiredHeading = degreeDifference; // This may fix turning forever
         float lowerHeading = ((desiredHeading-this.getHeadingTolerance())%360);
         float upperHeading = ((desiredHeading+this.getHeadingTolerance())%360);
 
@@ -62,5 +65,9 @@ public class GPSCommand extends AutopilotCommand{
         else if(currentGPS.getLatitude() >= latitude + this.getGpsTolerance() || currentGPS.getLatitude() <= latitude - this.getGpsTolerance() || currentGPS.getLongitude() >= longitude + this.getGpsTolerance() || currentGPS.getLongitude() <= longitude - this.getGpsTolerance()){
             this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
         }
+        else if(currentGPS.getLatitude() <= latitude + this.getGpsTolerance() && currentGPS.getLatitude() >= latitude - this.getGpsTolerance() && currentGPS.getLongitude() <= longitude + this.getGpsTolerance() && currentGPS.getLongitude() >= longitude - this.getGpsTolerance()) {
+            this.setCommandComplete(true);
+
+        }
+        }
     }
-}

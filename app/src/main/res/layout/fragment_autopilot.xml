@@ -32,7 +32,7 @@
         android:inputType="number"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.251"
+        app:layout_constraintHorizontal_bias="0.238"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +60,7 @@
         android:inputType="number"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.238"
+        app:layout_constraintHorizontal_bias="0.278"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -96,7 +96,7 @@
         android:id="@+id/textView12"
         android:layout_width="139dp"
         android:layout_height="46dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="times"
         android:text="@string/pattern"
         android:textSize="25sp"
@@ -111,7 +111,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
-        android:layout_marginTop="348dp"
+        android:layout_marginTop="332dp"
         android:hint="@string/patterns"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -162,7 +162,7 @@
         android:layout_marginTop="316dp"
         android:text="start"
         android:background="@drawable/outline_solid"
-        android:backgroundTint="@color/gold"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.795"
         app:layout_constraintStart_toEndOf="@+id/pattern"

@@ -41,7 +41,7 @@
     <color name="button_critical">#FF3B30</color> <!-- Marine Red -->
     <color name="button_warning">#FF9500</color> <!-- Amber -->
     <color name="purpledeep">#6A1B9A</color> <!-- deep purple -->
-    <color name="gold">#B8860B</color> <!-- gold -->
+    <color name="gold">#FEC107</color> <!-- gold -->
     <!-- Status -->
     <color name="status_ok">#28A745</color> <!-- Green -->
     <color name="status_warning">#FFC107</color> <!-- Yellow -->

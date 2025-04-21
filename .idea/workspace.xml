@@ -35,6 +35,7 @@
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml">
         <config>
+          <state>landscape</state>
           <theme>@style/Theme.AirSimApp</theme>
         </config>
       </layout>
@@ -50,19 +51,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Added error checking to prevent crashes when user inputs values">
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gps.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/heading.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/loiter.png" afterDir="false" />
+    <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Improved recycler view GUI">
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonFiles/AirSimClass.py" beforeDir="false" afterPath="$PROJECT_DIR$/PythonFiles/AirSimClass.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PythonFiles/PythonWebsocket.py" beforeDir="false" afterPath="$PROJECT_DIR$/PythonFiles/PythonWebsocket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/AutopilotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/AutopilotCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/GPSCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/GPSCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/HeadingAndSpeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/HeadingAndSpeed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/recyclerview_border.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/recyclerview_border.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_autopilot.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_autopilot.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_command.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_command.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +74,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\jay03\.android\avd\Medium_Phone_API_35.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\jay03\.android\avd\Copy_of_Medium_Phone_API_35.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

@@ -275,8 +275,14 @@ public class AutopilotFragment extends Fragment {
         public void run() {
             List<AutopilotCommand> queue = UserActivity.getOrchestrator().getAutopilot().getCommandQueue();
 
-            if (index < queue.size()) {
-                AutopilotCommand command = queue.get(index);
+            if (!queue.isEmpty()) {
+                AutopilotCommand command = queue.get(0);
+                if (command.getCommandComplete()){
+                    UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(command);
+                    requireActivity().runOnUiThread(() -> {
+                        commandAdapter.notifyDataSetChanged();
+                    });
+                }
 
                 // Recalculate command before sending
                 if (command instanceof HeadingAndSpeed) {
@@ -301,9 +307,8 @@ public class AutopilotFragment extends Fragment {
                    // Log.d(TAG, "Sent: " + msg);
                 }
 
-                index++;
             } else {
-                index = 0; // Reset to loop through commands again
+                handler.removeCallbacks(this);
             }
 
             handler.postDelayed(this, 100); // Repeat every 200ms (5 times per second)
