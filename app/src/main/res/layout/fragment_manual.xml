@@ -5,29 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Camera Preview as Background -->
+    Camera Preview as Background
         <androidx.camera.view.PreviewView
             android:id="@+id/previewView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     <!-- Start Button -->
+
+    <!-- Takeoff Button -->
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/outline"
+        android:backgroundTint="@color/button_primary"
         android:text="Start WebSocket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Takeoff Button -->
     <Button
         android:id="@+id/takeoff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Takeoff"
+        android:background="@drawable/outline"
+        android:backgroundTint="@color/button_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.382"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,6 +47,8 @@
         android:layout_width="89dp"
         android:layout_height="44dp"
         android:text="Land"
+        android:background="@drawable/outline"
+        android:backgroundTint="@color/button_critical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.232"
         app:layout_constraintStart_toEndOf="@+id/takeoff"
@@ -50,8 +58,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/button_layout"
-        android:layout_width="895dp"
-        android:layout_height="238dp"
+        android:layout_width="877dp"
+        android:layout_height="271dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -70,38 +78,16 @@
 
         <Button
             android:id="@+id/forward"
-            android:layout_width="74dp"
-            android:layout_height="75dp"
-            android:text="Forward"
+            android:layout_width="79dp"
+            android:layout_height="83dp"
+            android:background="@drawable/arrow"
+            android:rotation="180"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.159"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.092" />
-
-        <Button
-            android:id="@+id/go_up"
-            android:layout_width="73dp"
-            android:layout_height="75dp"
-            android:text="Up"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.789"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.097" />
-
-        <Button
-            android:id="@+id/backward"
-            android:layout_width="75dp"
-            android:layout_height="71dp"
-            android:layout_marginTop="64dp"
-            android:text="Backward"
-            app:layout_constraintEnd_toStartOf="@+id/Rright"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forward" />
+            app:layout_constraintVertical_bias="0.062" />
 
         <!-- Right Button -->
 
@@ -110,11 +96,35 @@
         <!-- Right Button -->
 
         <Button
+            android:id="@+id/go_up"
+            android:layout_width="79dp"
+            android:layout_height="83dp"
+            android:background="@drawable/uparrow"
+            android:text="Up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.837"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.063" />
+
+        <Button
+            android:id="@+id/backward"
+            android:layout_width="79dp"
+            android:layout_height="83dp"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/arrow"
+            app:layout_constraintEnd_toStartOf="@+id/Rright"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/forward" />
+
+        <Button
             android:id="@+id/go_down"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="72dp"
-            android:text="Down"
+            android:layout_width="79dp"
+            android:layout_height="83dp"
+            android:layout_marginTop="76dp"
+            android:background="@drawable/arrow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/left"
@@ -123,20 +133,20 @@
         <Button
             android:id="@+id/Rleft"
             android:layout_width="83dp"
-            android:layout_height="68dp"
-            android:layout_marginTop="88dp"
-            android:text="Left Turn"
+            android:layout_height="79dp"
+            android:layout_marginTop="96dp"
+            android:background="@drawable/leftrotate"
             app:layout_constraintEnd_toStartOf="@+id/forward"
-            app:layout_constraintHorizontal_bias="0.979"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/Rright"
             android:layout_width="83dp"
-            android:layout_height="68dp"
-            android:layout_marginTop="84dp"
-            android:text="Right Turn"
+            android:layout_height="79dp"
+            android:layout_marginTop="96dp"
+            android:background="@drawable/rightrotate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/forward"
@@ -145,9 +155,10 @@
         <Button
             android:id="@+id/left"
             android:layout_width="83dp"
-            android:layout_height="68dp"
-            android:layout_marginTop="92dp"
-            android:text="Left"
+            android:layout_height="79dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/arrow"
+            android:rotation="90"
             app:layout_constraintEnd_toStartOf="@+id/go_up"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -156,9 +167,10 @@
         <Button
             android:id="@+id/right"
             android:layout_width="83dp"
-            android:layout_height="68dp"
-            android:layout_marginTop="96dp"
-            android:text="Right"
+            android:layout_height="79dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/arrow"
+            android:rotation="-90"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/go_up"
@@ -179,21 +191,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Flight Controller Spinner -->
-    <Spinner
-        android:id="@+id/flight_controller_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/output" />
+
 
     <!-- Switch Screens Button -->
     <Button
         android:id="@+id/autoPilotButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/outline"
+        android:backgroundTint="@color/button_primary"
         android:text="Autopilot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

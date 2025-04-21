@@ -43,7 +43,7 @@ public class AutopilotFragment extends Fragment {
     private double currentSpeed = 0.0;
     private float currentHeading = 0.0F;
     private Runnable uiUpdateRunnable;
-    public GPS tempGPS;
+    public GPS currentGPS;
     private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
     Handler handler = new Handler();
     int index = 0;
@@ -134,7 +134,7 @@ public class AutopilotFragment extends Fragment {
             }
             // This is for testing, is out queue being tracked correctly.
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+               //log .e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
         addGPS.setOnClickListener(v -> {
@@ -160,7 +160,7 @@ public class AutopilotFragment extends Fragment {
             }
 
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+               // Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
         addPattern.setOnClickListener(v -> {
@@ -172,7 +172,7 @@ public class AutopilotFragment extends Fragment {
                 patternTime.setText("");
             }
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-                Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
+              //  Log.e(TAG, UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i).getId());
             }
         });
 
@@ -198,8 +198,8 @@ public class AutopilotFragment extends Fragment {
                 UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
                // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
             } else if (Objects.equals(strBreakup[0], "getGPS")){
-                tempGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
-                UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(tempGPS);
+                currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+                UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
                // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
             }
         });
@@ -218,18 +218,18 @@ public class AutopilotFragment extends Fragment {
     }
 
     private void updateUI() {
-        String speedText = getString(R.string.speed_display, currentSpeed);
+        String speedText = getString(R.string.speed_display, getCurrentSpeed());
         speedTextView.setText(speedText);
         //update heading
-        String headingText = getString(R.string.heading_display, currentHeading);
+        String headingText = getString(R.string.heading_display, getCurrentHeading());
         headingTextView.setText(headingText);
 
         //update GPS
-//        if(//currentGPS != null && get altitude from currentGPS)
-//        ){
-//            String gpsText = getString(R.string.gps_display, tempGPS.getLatitude(), tempGPS.getLongitude(), tempGPS.getAltitude());
-//            gpsTextView.setText(gpsText);
-//        }
+        if(currentGPS != null)
+        {
+            String gpsText = getString(R.string.gps_display, getCurrentGPS().getLatitude(), getCurrentGPS().getLongitude(), getCurrentGPS().getAltitude());
+            gpsTextView.setText(gpsText);
+        }
     }
     private double getCurrentSpeed() {
         return (UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
@@ -252,6 +252,7 @@ public class AutopilotFragment extends Fragment {
 
                 currentSpeed = getCurrentSpeed();
                 currentHeading = getCurrentHeading();
+                currentGPS = getCurrentGPS();
                 updateUI();
                 uiUpdateHandler.postDelayed(this, UPDATE_INTERVAL);
             }
@@ -274,8 +275,14 @@ public class AutopilotFragment extends Fragment {
         public void run() {
             List<AutopilotCommand> queue = UserActivity.getOrchestrator().getAutopilot().getCommandQueue();
 
-            if (index < queue.size()) {
-                AutopilotCommand command = queue.get(index);
+            if (!queue.isEmpty()) {
+                AutopilotCommand command = queue.get(0);
+                if (command.getCommandComplete()){
+                    UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(command);
+                    requireActivity().runOnUiThread(() -> {
+                        commandAdapter.notifyDataSetChanged();
+                    });
+                }
 
                 // Recalculate command before sending
                 if (command instanceof HeadingAndSpeed) {
@@ -286,18 +293,22 @@ public class AutopilotFragment extends Fragment {
                             calendar
                     );
                 } else if (command instanceof GPSCommand) {
-                    ((GPSCommand) command).calculateCommand();
+                    ((GPSCommand) command).calculateCommand(UserActivity.getOrchestrator().getAutopilot().getCurrentGPS(),
+                            UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
+                            UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+                            UserActivity.getOrchestrator().getAutopilot().getVelocity(),
+                            UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
+                            calendar);
                 }
 
                 String msg = command.getCommandMessage();
                 if (msg != null && !msg.isEmpty()) {
                     UserActivity.getOrchestrator().processCommand(msg, AutopilotFragment.this::sendCommand);
-                    Log.d(TAG, "Sent: " + msg);
+                   // Log.d(TAG, "Sent: " + msg);
                 }
 
-                index++;
             } else {
-                index = 0; // Reset to loop through commands again
+                handler.removeCallbacks(this);
             }
 
             handler.postDelayed(this, 100); // Repeat every 200ms (5 times per second)

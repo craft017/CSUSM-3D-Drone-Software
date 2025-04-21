@@ -7,7 +7,7 @@ public class LoiterPattern extends AutopilotCommand{
     private ArrayList<String> commands = new ArrayList<String>();
     private int commandCounter;
     public LoiterPattern(String Pattern, int hour, int minute){
-        this.setId("loiterPattern");
+        this.setId("LoiterPattern");
         this.pattern = Pattern;
         this.commandCounter = 0;
         this.setHourEndTime(hour);
