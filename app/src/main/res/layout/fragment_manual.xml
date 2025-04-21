@@ -14,13 +14,13 @@
     <!-- Start Button -->
 
     <!-- Takeoff Button -->
+
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/outline"
-        android:backgroundTint="@color/button_primary"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/outline_t"
         android:text="Start WebSocket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
@@ -32,8 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Takeoff"
-        android:background="@drawable/outline"
-        android:backgroundTint="@color/button_primary"
+        android:background="@drawable/outline_t"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.382"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +46,7 @@
         android:layout_width="89dp"
         android:layout_height="44dp"
         android:text="Land"
-        android:background="@drawable/outline"
+        android:background="@drawable/outline_t"
         android:backgroundTint="@color/button_critical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.232"
@@ -178,18 +177,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:gravity="start"
-        android:maxLines="5"
-        android:padding="16dp"
-        android:scrollbars="vertical"
-        android:text="Output will appear here"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 
@@ -198,9 +185,8 @@
         android:id="@+id/autoPilotButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/outline"
-        android:backgroundTint="@color/button_primary"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/outline_t"
         android:text="Autopilot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

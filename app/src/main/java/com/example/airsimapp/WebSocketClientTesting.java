@@ -26,6 +26,12 @@ public class WebSocketClientTesting {
           //  void onByteReceived(Bitmap bitmap);
             // void onByteReceived(Bitmap bitmap);
         }
+        public interface WebSocketStateListener {
+            void onOpen();
+            void onFailure(Throwable t, Response response);
+        }
+        private WebSocketStateListener stateListener;
+
 
         public void setWebSocketMessageListener(WebSocketMessageListener listener) {
             this.messageListener = listener;
@@ -35,11 +41,13 @@ public class WebSocketClientTesting {
         public WebSocketClientTesting() {
             this.client = new OkHttpClient(  );
         }
-
+        public void setWebSocketStateListener(WebSocketStateListener listener) {
+            this.stateListener = listener;
+        }
 
         public void connect(String url) {
             Request request = new Request.Builder().url(url).build();
-            webSocket = client.newWebSocket(request, new EchoWebSocketListener(messageListener));
+            webSocket = client.newWebSocket(request, new EchoWebSocketListener(messageListener, stateListener));
         }
 
         public void sendMessage(String message) {
@@ -63,21 +71,24 @@ public class WebSocketClientTesting {
         public static class EchoWebSocketListener extends WebSocketListener {
 
             private final WebSocketMessageListener listener;
-
-            public EchoWebSocketListener(WebSocketMessageListener listener) {
+            private final WebSocketStateListener stateListener;
+            public EchoWebSocketListener(WebSocketMessageListener listener, WebSocketStateListener stateL) {
                 this.listener = listener;
+                this.stateListener = stateL;
             }
 
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 Log.d(TAG, "WebSocket opened");
+                if (stateListener != null) {
+                    postToMainThread(stateListener::onOpen);
+                }
             }
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
                 Log.d(TAG, "Message received: " + text);
                 if (listener != null) {
-
                     postToMainThread(() -> listener.onMessageReceived(text));
                 }
             }
@@ -108,7 +119,9 @@ public class WebSocketClientTesting {
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
                 Log.e(TAG, "WebSocket error", t);
-
+                if (stateListener != null) {
+                    postToMainThread(() -> stateListener.onFailure(t, response));
+                }
             }
 
             private void postToMainThread(Runnable runnable) {
