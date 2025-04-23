@@ -80,7 +80,6 @@ public class DronePhoneFragment extends Fragment {
                 ).show();
             }
         });
-        connectUserButton.setOnClickListener(v -> webSocket.connect("ws://10.0.2.2:8766"));
         // Set up Spinner (dropdown)
         String[] controllers = {"AirSim"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
@@ -129,7 +128,6 @@ public class DronePhoneFragment extends Fragment {
 
     private void connectToUser(){
         webSocket.connect("ws://10.0.2.2:8766");
-        webSocket.sendMessage("This is from the drone phone!");
     }
 
     private void connectToDrone(){

@@ -17,7 +17,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,19 +24,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 
 import com.example.airsimapp.Activities.UserActivity;
 import com.example.airsimapp.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -94,7 +88,7 @@ public class ManualFragment extends Fragment  {
                 ((UserActivity) getActivity()).switchFragment(UserActivity.getAutopilotFragment());
             }
         });
-        start.setOnClickListener(v -> UserActivity.getOrchestrator().connectToDrone());
+        start.setOnClickListener(v -> UserActivity.getOrchestrator().connectToPhone());
         takeoff.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("manual,takeoff", this::sendCommand));
         land.setOnClickListener(v -> UserActivity.getOrchestrator().processCommand("manual,land", this::sendCommand));
         setMovementListener(forward, "manual,forward");

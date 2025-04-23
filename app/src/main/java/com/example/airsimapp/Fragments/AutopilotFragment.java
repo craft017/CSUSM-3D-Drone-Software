@@ -245,9 +245,12 @@ public class AutopilotFragment extends Fragment {
         uiUpdateRunnable = new Runnable() {
             @Override
             public void run() {
-                UserActivity.getOrchestrator().webSocket.sendMessage("getGPS");
-                UserActivity.getOrchestrator().webSocket.sendMessage("getSpeed");
-                UserActivity.getOrchestrator().webSocket.sendMessage("getHeading");
+//                UserActivity.getOrchestrator().webSocket.sendMessage("getGPS");
+//                UserActivity.getOrchestrator().webSocket.sendMessage("getSpeed");
+//                UserActivity.getOrchestrator().webSocket.sendMessage("getHeading");
+                UserActivity.getOrchestrator().processCommand("getGPS", AutopilotFragment.this::sendCommand);
+                UserActivity.getOrchestrator().processCommand("getSpeed", AutopilotFragment.this::sendCommand);
+                UserActivity.getOrchestrator().processCommand("getHeading", AutopilotFragment.this::sendCommand);
                 //Log.d(TAG, "THIS SHOULD BE SPEED: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
 
                 currentSpeed = getCurrentSpeed();
@@ -275,17 +278,23 @@ public class AutopilotFragment extends Fragment {
         public void run() {
             List<AutopilotCommand> queue = UserActivity.getOrchestrator().getAutopilot().getCommandQueue();
 
-            if (!queue.isEmpty()) {
-                AutopilotCommand command = queue.get(0);
+            if (queue.isEmpty()) {
+                handler.removeCallbacks(this); // Stop the loop
+                return;
+            }
+            AutopilotCommand command = queue.get(0);
+
+                //AutopilotCommand command = queue.get(0);
                 if (command.getCommandComplete()){
                     UserActivity.getOrchestrator().getAutopilot().getCommandQueue().remove(command);
                     requireActivity().runOnUiThread(() -> {
-                        commandAdapter.notifyDataSetChanged();
+                        commandAdapter.notifyDataSetChanged(); // Updates the command queue if command is complete
                     });
-                }
+                } else {
 
                 // Recalculate command before sending
                 if (command instanceof HeadingAndSpeed) {
+
                     ((HeadingAndSpeed) command).calculateCommand(
                             UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
                             UserActivity.getOrchestrator().getAutopilot().getYawRate(),
@@ -307,11 +316,9 @@ public class AutopilotFragment extends Fragment {
                    // Log.d(TAG, "Sent: " + msg);
                 }
 
-            } else {
-                handler.removeCallbacks(this);
             }
 
-            handler.postDelayed(this, 100); // Repeat every 200ms (5 times per second)
+            handler.postDelayed(this, 100); // Repeat every 100ms (10 times per second)
         }
     };
 
