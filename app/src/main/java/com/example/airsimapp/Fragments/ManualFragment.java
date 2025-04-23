@@ -27,11 +27,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.airsimapp.Activities.UserActivity;
+import com.example.airsimapp.AirSimFlightController;
 import com.example.airsimapp.R;
+import com.example.airsimapp.WebSocketClientTesting;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.example.airsimapp.flightControllerInterface;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,7 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-
+import okhttp3.Response;
 
 public class ManualFragment extends Fragment  {
     private static final String TAG = "ManualFragment";
@@ -61,7 +65,6 @@ public class ManualFragment extends Fragment  {
     private final Handler commandHandler = new Handler(Looper.getMainLooper());
     public Date date = Calendar.getInstance().getTime();
     public Calendar calendar = Calendar.getInstance();
-
 
     String currentTime;
 
@@ -82,7 +85,29 @@ public class ManualFragment extends Fragment  {
         Button rleft = rootView.findViewById(R.id.Rleft);
         Button rright = rootView.findViewById(R.id.Rright);
         Button autoPilotButton = rootView.findViewById(R.id.autoPilotButton);
+        WebSocketClientTesting socket = UserActivity.getOrchestrator().webSocket;
+        socket.setWebSocketStateListener(new WebSocketClientTesting.WebSocketStateListener() {
+            @Override
+            public void onOpen() {
+                // runs on main thread for you (because WebSocketClientTesting posts there)
+                start.setBackgroundTintList(
+                        ContextCompat.getColorStateList(requireContext(), R.color.status_okt)
+                );
+                start.setText("WebSocket CONNECTED");
+            }
 
+            @Override
+            public void onFailure(Throwable t, Response response) {
+                start.setBackgroundTintList(
+                        ContextCompat.getColorStateList(requireContext(), R.color.button_primary)
+                );
+                start.setText("Start");
+                Toast.makeText(requireContext(),
+                        "Failed to connect: " + t.getMessage(),
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
         //previewView = rootView.findViewById(R.id.previewView);
         // flightControllerSpinner may need to be in dronePhoneFragment
 
