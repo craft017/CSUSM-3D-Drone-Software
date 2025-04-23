@@ -44,6 +44,7 @@
     <color name="gold">#FBBF07</color> <!-- gold -->
     <!-- Status -->
     <color name="status_ok">#28A745</color> <!-- Green -->
+    <color name="status_okt">#8028A745</color> <!-- Green -->
     <color name="status_warning">#FFC107</color> <!-- Yellow -->
     <color name="status_error">#DC3545</color> <!-- Red -->
 </resources>
