@@ -2,10 +2,6 @@ package com.example.airsimapp;
 
 import android.util.Log;
 
-import com.example.airsimapp.Activities.UserActivity;
-
-import okhttp3.WebSocket;
-
 public class Orchestrator {
 
     private Autopilot autopilot;
@@ -29,9 +25,8 @@ public class Orchestrator {
         return autopilot;
     }
 
-    public void connectToDrone() {
+    public void connectToPhone() {
         webSocket.connect("ws://10.0.2.2:8766");
-        webSocket.sendMessage("CONNECTION FROM USER PHONE!");
 //        webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
 //            @Override
 //            public void onMessageReceived(String message) {
@@ -61,6 +56,11 @@ public class Orchestrator {
                 String commandStr = autopilotCommand.toString();
                 callback.onCommandReady(commandStr);
                 webSocket.sendMessage(commandStr);
+                break;
+            case "getGPS":
+            case "getSpeed":
+            case "getHeading":
+                webSocket.sendMessage(userAction);
                 break;
             default:
                 Log.e("Orchestrator", "Unknown Message Received, Cannot Process Command");

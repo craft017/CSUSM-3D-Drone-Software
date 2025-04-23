@@ -4,6 +4,7 @@ package com.example.airsimapp.Fragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
@@ -23,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.airsimapp.Activities.UserActivity;
 import com.example.airsimapp.AirSimFlightController;
@@ -34,7 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
 import okhttp3.WebSocket;
-
+import okhttp3.Response;
 
 public class DronePhoneFragment extends Fragment {
 
@@ -44,18 +46,40 @@ public class DronePhoneFragment extends Fragment {
     private TextView output;
     private flightControllerInterface flightController;
     private String command;
+    private Button connectUserButton;
+    private Button connectDroneButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_drone_phone, container, false);
-        Button connectDroneButton = rootView.findViewById(R.id.connectDroneButton);
-        Button connectUserButton = rootView.findViewById(R.id.connectUserButton);
+        connectDroneButton = rootView.findViewById(R.id.connectDroneButton);
+        connectUserButton = rootView.findViewById(R.id.connectUserButton);
         output = rootView.findViewById(R.id.droneActivityTextView);
         Spinner flightControllerSpinner = rootView.findViewById(R.id.flightControllerSpinner);
         connectUserButton.setOnClickListener(v -> connectToUser());
         connectDroneButton.setOnClickListener(v -> connectToDrone());
+        webSocket.setWebSocketStateListener(new WebSocketClientTesting.WebSocketStateListener() {
+            @Override
+            public void onOpen() {
+                // already on main thread thanks to your listener
+                connectUserButton.setBackgroundTintList(
+                        ContextCompat.getColorStateList(requireContext(), R.color.status_ok)
+                );
+                connectUserButton.setText("CONNECTED");
+            }
 
+            @Override
+            public void onFailure(Throwable t, Response response) {
+                connectUserButton.setBackgroundTintList(
+                        ContextCompat.getColorStateList(requireContext(), R.color.button_primary)
+                );
+                connectUserButton.setText("Connect To User Phone");
+                Toast.makeText(requireContext(),
+                        "Failed: " + t.getMessage(), Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
         // Set up Spinner (dropdown)
         String[] controllers = {"AirSim"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, controllers);
@@ -99,16 +123,11 @@ public class DronePhoneFragment extends Fragment {
                 }
             }
         });
-
-
-
-
         return rootView;
     }
 
     private void connectToUser(){
         webSocket.connect("ws://10.0.2.2:8766");
-        webSocket.sendMessage("This is from the drone phone!");
     }
 
     private void connectToDrone(){
