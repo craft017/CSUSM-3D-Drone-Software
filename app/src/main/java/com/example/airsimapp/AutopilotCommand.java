@@ -10,7 +10,6 @@ abstract public class AutopilotCommand {
     private float headingTolerance;
     private float gpsTolerance;
     private float altitudeTolerance;
-
     private boolean commandComplete;
 
 
