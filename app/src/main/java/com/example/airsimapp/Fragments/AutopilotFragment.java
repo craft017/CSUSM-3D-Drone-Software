@@ -1,5 +1,6 @@
 package com.example.airsimapp.Fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.example.airsimapp.GPS;
 import com.example.airsimapp.GPSCommand;
 import com.example.airsimapp.HeadingAndSpeed;
 import com.example.airsimapp.R;
+import com.example.airsimapp.WebSocketClientTesting;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -37,6 +40,7 @@ public class AutopilotFragment extends Fragment {
     private static final String TAG = "AutopilotFragment";
     private TextView speedTextView;
     private TextView headingTextView;
+    private ImageView remoteView;
     private RecyclerView commandRecyclerView;
     private CommandAdapter commandAdapter;
     private TextView gpsTextView;
@@ -56,6 +60,7 @@ public class AutopilotFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_autopilot, container, false);
+
 
         commandRecyclerView = view.findViewById(R.id.commandRecyclerView);
         commandRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -80,6 +85,7 @@ public class AutopilotFragment extends Fragment {
         Button addHeadingSpeed = view.findViewById(R.id.addHeadingSpeed);
         Button addPattern = view.findViewById(R.id.addPattern);
         Button startButton = view.findViewById(R.id.startautoflight);
+        remoteView = view.findViewById(R.id.autopilotPreviewView);
 
 
         startButton.setOnClickListener(v -> {
@@ -189,20 +195,21 @@ public class AutopilotFragment extends Fragment {
 
 
         // This will listen for messages from the drone websocket
-        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
-            String[] strBreakup = message.split(",");
-            if (Objects.equals(strBreakup[0], "getSpeed")) {
-                UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
-               // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
-            } else if (Objects.equals(strBreakup[0], "getHeading")) {
-                UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
-               // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
-            } else if (Objects.equals(strBreakup[0], "getGPS")){
-                currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
-                UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
-               // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
-            }
-        });
+//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(message -> {
+//            String[] strBreakup = message.split(",");
+//            if (Objects.equals(strBreakup[0], "getSpeed")) {
+//                UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
+//               // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+//            } else if (Objects.equals(strBreakup[0], "getHeading")) {
+//                UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+//               // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+//            } else if (Objects.equals(strBreakup[0], "getGPS")){
+//                currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+//                UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
+//               // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+//            }
+//        });
+
 
         return view;
     }
@@ -326,15 +333,81 @@ public class AutopilotFragment extends Fragment {
        // Log.d(TAG, "Sending autopilot command");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        startSpeedUpdates();  // start updates when fragment is visible again
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
+//            @Override
+//            public void onMessageReceived(String msg) {
+//                String[] strBreakup = msg.split(",");
+//                if (Objects.equals(strBreakup[0], "getSpeed")) {
+//                    UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
+//                    // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+//                } else if (Objects.equals(strBreakup[0], "getHeading")) {
+//                    UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+//                    // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+//                } else if (Objects.equals(strBreakup[0], "getGPS")){
+//                    currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+//                    UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
+//                    // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+//                }
+//            }
+//
+//            @Override
+//            public void onByteReceived(Bitmap bitmap) {
+//                // run on UI thread and paint into the ImageView
+//                requireActivity().runOnUiThread(() -> {
+//
+//                    remoteView.setImageBitmap(bitmap);
+//                });
+//            }
+//        });
+//        startSpeedUpdates();  // start updates when fragment is visible again
+//    }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        stopSpeedUpdates();   // stop updates when fragment is no longer visible
+//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(null);
+//    }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        stopSpeedUpdates();   // stop updates when fragment is no longer visible
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            // this fragment is now visible
+            UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
+                @Override
+                public void onMessageReceived(String msg) {
+                    String[] strBreakup = msg.split(",");
+                    if (Objects.equals(strBreakup[0], "getSpeed")) {
+                        UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
+                        // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+                    } else if (Objects.equals(strBreakup[0], "getHeading")) {
+                        UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+                        // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+                    } else if (Objects.equals(strBreakup[0], "getGPS")){
+                        currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+                        UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
+                        // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+                    }
+                }
+
+                @Override
+                public void onByteReceived(Bitmap bitmap) {
+                    // run on UI thread and paint into the ImageView
+                    requireActivity().runOnUiThread(() -> {
+
+                        remoteView.setImageBitmap(bitmap);
+                    });
+                }
+            });
+            startSpeedUpdates();
+        } else {
+            // fragment is now hidden
+            UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(null);
+            stopSpeedUpdates();
+        }
     }
 }

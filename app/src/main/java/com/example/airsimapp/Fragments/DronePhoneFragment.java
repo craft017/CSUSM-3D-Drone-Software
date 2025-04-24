@@ -4,12 +4,22 @@ package com.example.airsimapp.Fragments;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.annotation.OptIn;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -31,6 +41,7 @@ import com.example.airsimapp.AirSimFlightController;
 import com.example.airsimapp.R;
 import com.example.airsimapp.WebSocketClientTesting;
 import com.example.airsimapp.flightControllerInterface;
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -48,11 +59,14 @@ public class DronePhoneFragment extends Fragment {
     private String command;
     private Button connectUserButton;
     private Button connectDroneButton;
+    private PreviewView previewView;
+    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_drone_phone, container, false);
+        previewView = rootView.findViewById(R.id.previewView);
         connectDroneButton = rootView.findViewById(R.id.connectDroneButton);
         connectUserButton = rootView.findViewById(R.id.connectUserButton);
         output = rootView.findViewById(R.id.droneActivityTextView);
@@ -110,20 +124,99 @@ public class DronePhoneFragment extends Fragment {
         // Default Spinner selection
 
         // Sends messages received from the user phone directly to the drone
-        webSocket.setWebSocketMessageListener(message -> {
-            if (output != null) {
+//        webSocket.setWebSocketMessageListener(message -> {
+//            if (output != null) {
+//
+//                command = message;
+//
+//                requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
+//                if (flightController != null) {
+//                    flightController.sendToDrone(command);
+//                } else {
+//                    Log.e("DronePhoneFragment", "flightController is null!");
+//                }
+//            }
+//        });
 
-                command = message;
+        webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
+            @Override
+            public void onMessageReceived(String msg) {
+                if (output != null) {
 
-                requireActivity().runOnUiThread(() -> output.setText(message)); // UI update
-                if (flightController != null) {
-                    flightController.sendToDrone(command);
-                } else {
-                    Log.e("DronePhoneFragment", "flightController is null!");
+                    command = msg;
+
+                    requireActivity().runOnUiThread(() -> output.setText(msg)); // UI update
+                    if (flightController != null) {
+                        flightController.sendToDrone(command);
+                    } else {
+                        Log.e("DronePhoneFragment", "flightController is null!");
+                    }
                 }
             }
+            @Override
+            public void onByteReceived(Bitmap bitmap) {
+                // update the ImageView on the main thread:
+//                requireActivity().runOnUiThread(() -> {
+//                    previewView.setImageBitmap(bitmap);
+//                });
+            }
         });
+
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // after you’ve inflated and found previewView:
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        cameraProviderFuture.addListener(this::bindCameraUseCases,
+                ContextCompat.getMainExecutor(requireContext()));
+    }
+
+    @OptIn(markerClass = ExperimentalGetImage.class)
+    private void bindCameraUseCases() {
+        try {
+            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+            // 1) Preview (optional—if you just want to send frames, you can omit this)
+            Preview preview = new Preview.Builder().build();
+            preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+            // 2) ImageAnalysis to get frames
+            ImageAnalysis analysis = new ImageAnalysis.Builder()
+                    .setBackpressureStrategy(
+                            ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
+                    )
+                    .build();
+
+            analysis.setAnalyzer(
+                    ContextCompat.getMainExecutor(requireContext()),
+                    imageProxy -> {
+                        Image mediaImage = imageProxy.getImage();
+                        if (mediaImage != null) {
+                            // send over your websocket
+                            sendFrame(mediaImage);
+                            //webSocket.sendMessage("Sending a frame");
+                        }
+                        imageProxy.close();
+                    }
+            );
+
+            // Unbind any previous use-cases before rebinding
+            cameraProvider.unbindAll();
+
+            // Bind to lifecycle, so it automatically starts/stops with the fragment
+            cameraProvider.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview,
+                    analysis
+            );
+
+        } catch (Exception e) {
+            Log.e("DronePhoneFragment", "camera init failed", e);
+        }
     }
 
     private void connectToUser(){
@@ -135,26 +228,46 @@ public class DronePhoneFragment extends Fragment {
     }
 
     public void sendFrame(Image image) {
-        if (webSocket == null) return;
+        if (webSocket == null || image == null) return;
 
-        Bitmap bitmap = imageToBitmap(image);
-        if (bitmap != null) {
-            byte[] compressedData = compressBitmap(bitmap);
-            //webSocket.send(compressedData); // Send raw bytes
-        }
+        // Convert YUV_420_888 → JPEG in one shot
+        byte[] jpeg = yuvToJpeg(image, 50);
+        webSocket.sendByte(jpeg);
     }
 
-    private Bitmap imageToBitmap(Image image) {
-        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[buffer.remaining()];
-        buffer.get(bytes);
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-    }
+//    private Bitmap imageToBitmap(Image image) {
+//        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+//        byte[] bytes = new byte[buffer.remaining()];
+//        buffer.get(bytes);
+//        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//    }
 
-    private byte[] compressBitmap(Bitmap bitmap) {
+    private byte[] yuvToJpeg(Image image, int quality) {
+        // 1) Grab all three planes
+        Image.Plane[] planes = image.getPlanes();
+        ByteBuffer y = planes[0].getBuffer();
+        ByteBuffer u = planes[1].getBuffer();
+        ByteBuffer v = planes[2].getBuffer();
+
+        int width  = image.getWidth();
+        int height = image.getHeight();
+        int ySize  = y.remaining();
+        int uSize  = u.remaining();
+        int vSize  = v.remaining();
+
+        // 2) Pack into NV21 byte array
+        byte[] nv21 = new byte[ySize + uSize + vSize];
+        y.get(nv21,   0,       ySize);
+        v.get(nv21,   ySize,   vSize);  // V comes before U in NV21
+        u.get(nv21,   ySize+vSize, uSize);
+
+        // 3) Compress to JPEG
+        YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, width, height, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos); // Compress to reduce size
+        yuvImage.compressToJpeg(new Rect(0, 0, width, height), quality, baos);
         return baos.toByteArray();
     }
+
+
 
 }

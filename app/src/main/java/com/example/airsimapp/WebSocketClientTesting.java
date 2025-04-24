@@ -23,7 +23,7 @@ public class WebSocketClientTesting {
         public interface WebSocketMessageListener {
             void onMessageReceived(String message);
 
-          //  void onByteReceived(Bitmap bitmap);
+            void onByteReceived(Bitmap bitmap);
             // void onByteReceived(Bitmap bitmap);
         }
         public interface WebSocketStateListener {
@@ -98,7 +98,7 @@ public class WebSocketClientTesting {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes.toByteArray(), 0, bytes.size());
                 //imageView.post(() -> imageView.setImageBitmap(bitmap)); // Update UI
                 if (listener != null) {
-                  //  postToMainThread(() -> listener.onByteReceived(bitmap));
+                    postToMainThread(() -> listener.onByteReceived(bitmap));
                 }
             }
 

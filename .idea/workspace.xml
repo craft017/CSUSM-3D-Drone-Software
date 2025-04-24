@@ -56,13 +56,14 @@
     <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Improved autopilot commands and queue reading">
       <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/DronePhoneFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/DronePhoneFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Orchestrator.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Orchestrator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_command.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_command.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/WebSocketClientTesting.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/WebSocketClientTesting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_autopilot.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_autopilot.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_drone_phone.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_drone_phone.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +73,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\jay03\.android\avd\Copy_of_Medium_Phone_API_35.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\jay03\.android\avd\Medium_Phone_API_35.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -137,7 +138,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "dev",
+    "git-widget-placeholder": "dev__jayden",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/solis/AndroidStudioProjects/CSUSM-3D-Drone-Software/app/src/main/res/drawable"
   }
@@ -285,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744664420086</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Updated autopilot command display, now shows data instead of name.">
+      <option name="closed" value="true" />
+      <created>1745438740077</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1745438740077</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -310,19 +319,20 @@
     <MESSAGE value="saving" />
     <MESSAGE value="Added error checking to prevent crashes when user inputs values" />
     <MESSAGE value="Added GUI recycler view functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added GUI recycler view functionality" />
+    <MESSAGE value="Updated autopilot command display, now shows data instead of name." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated autopilot command display, now shows data instead of name." />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.example.airsimapp">
           <value>
-            <CheckInfo lastCheckTimestamp="1745267702246" />
+            <CheckInfo lastCheckTimestamp="1745444096023" />
           </value>
         </entry>
         <entry key="com.example.airsimapp.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1745267702277" />
+            <CheckInfo lastCheckTimestamp="1745444096030" />
           </value>
         </entry>
       </map>

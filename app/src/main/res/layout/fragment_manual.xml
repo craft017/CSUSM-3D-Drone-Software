@@ -5,12 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    Camera Preview as Background
-        <androidx.camera.view.PreviewView
-            android:id="@+id/previewView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
     <!-- Start Button -->
 
     <!-- Takeoff Button -->
@@ -175,10 +169,19 @@
             app:layout_constraintStart_toEndOf="@+id/go_up"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
+    <ImageView
+        android:id="@+id/remoteCameraView"
+        android:layout_width="562dp"
+        android:layout_height="156dp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_layout"
+        app:layout_constraintEnd_toEndOf="@+id/button_layout"
+        app:layout_constraintStart_toStartOf="@+id/button_layout"
+        app:layout_constraintTop_toTopOf="@+id/button_layout" />
 
     <!-- Switch Screens Button -->
     <Button
