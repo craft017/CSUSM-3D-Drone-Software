@@ -13,7 +13,7 @@ abstract public class Pattern {
     public void setAllFlags(boolean value){
         this.firstTurn = value;
         this.secondTurn = value;
-        this.firstStraight = value;
+        this.firstStraight = value;     //resets booleans
         this.secondStraight = value;
     }
     private void calculateStraightDistance(){

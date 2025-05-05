@@ -43,7 +43,7 @@ public class LoiterPattern extends AutopilotCommand{
     private void resetDesiredGPS(){
         this.firstDesiredLatitude = 0;
         this.firstDesiredLongitude = 0;
-        float secondDesiredLongitude = 0;
+        float secondDesiredLongitude = 0;   //resets gps
         float secondDesiredLatitude = 0;
     }
 
