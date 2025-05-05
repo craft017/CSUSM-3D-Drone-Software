@@ -7,4 +7,45 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
+    <!-- Reds -->
+    <color name="red_50">#FFFFEBEE</color>
+    <color name="red_200">#FFEF9A9A</color>
+    <color name="red_500">#FFF44336</color>
+    <color name="red_700">#FFD32F2F</color>
+    <color name="red_A400">#FFFF1744</color>
+
+    <!-- Blacks -->
+    <color name="black_87">#DD000000</color>
+    <color name="black_54">#8A000000</color>
+    <color name="black_38">#61000000</color>
+
+
+    <!-- Grays -->
+    <color name="gray_50">#FFFAFAFA</color>
+    <color name="gray_200">#FFEEEEEE</color>
+    <color name="gray_500">#FF9E9E9E</color>
+    <color name="gray_700">#FF616161</color>
+    <color name="gray_900">#FF212121</color>
+    <!-- Backgrounds -->
+    <color name="background_dark">#1E1E1E</color>
+    <color name="container_gray">#4F4F4F</color>
+    <!-- Text -->
+    <color name="text_muted">#6C757D</color>
+    <!-- Buttons -->
+    <color name="button_primary">#D2B48C</color> <!-- Forest tan -->
+    <color name="button_primaryt">#80D2B48C</color> <!-- Forest tan -->
+    <color name="button_critical">#FF3B30</color> <!-- Marine Red -->
+    <color name="button_warning">#FF9500</color> <!-- Amber -->
+    <color name="purpledeep">#6A1B9A</color> <!-- deep purple -->
+    <color name="gold">#FBBF07</color> <!-- gold -->
+    <!-- Status -->
+    <color name="status_ok">#28A745</color> <!-- Green -->
+    <color name="status_okt">#8028A745</color> <!-- Green -->
+    <color name="status_warning">#FFC107</color> <!-- Yellow -->
+    <color name="status_error">#DC3545</color> <!-- Red -->
 </resources>

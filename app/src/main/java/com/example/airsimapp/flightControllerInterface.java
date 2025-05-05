@@ -1,4 +1,9 @@
 package com.example.airsimapp;
 
-public class flightControllerInterface {
+public interface flightControllerInterface {
+    void connect();
+    void sendToDrone(String jsonCommand);
+
+    void setMessageListener(MessageListener listener);
+
 }

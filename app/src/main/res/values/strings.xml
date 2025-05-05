@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">AirSimApp</string>
+    <string name="forward">forward</string>
+    <string name="backward">backward</string>
+    <string name="lturn">lturn</string>
+    <string name="rturn">rturn</string>
+    <string name="up">up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_user">UserActivity</string>
+    <string name="input_here" />
+    <string name="pattern">Pattern</string>
+    <string name="speed">speed</string>
+    <string name="patterns">patterns</string>
+    <string name="speed_display">%1$.1f mph</string>
+    <string name="heading_display">%1$.1f deg</string>
+    <string name="gps_display">GPS: %1$.6f, %2$.6f, %3$.1f</string>
 </resources>
