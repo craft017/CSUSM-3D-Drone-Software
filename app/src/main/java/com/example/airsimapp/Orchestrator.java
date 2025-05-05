@@ -8,6 +8,7 @@ public class Orchestrator {
     public WebSocketClientTesting webSocket;
     //private final flightControllerInterface flightController;
     private String command;
+    private boolean isConnected = false;
 
     public Orchestrator(flightControllerInterface flightController) {
         //this.flightController = flightController;
@@ -26,7 +27,10 @@ public class Orchestrator {
     }
 
     public void connectToPhone() {
-        webSocket.connect("ws://10.0.2.2:8766");
+        if (!isConnected) {
+            webSocket.connect("ws://10.0.2.2:8766");
+            isConnected = true;
+        }
 //        webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
 //            @Override
 //            public void onMessageReceived(String message) {

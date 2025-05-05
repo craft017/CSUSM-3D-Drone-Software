@@ -20,7 +20,6 @@ import okhttp3.WebSocket;
 public class DroneActivity extends AppCompatActivity {
     private DronePhoneFragment dronePhoneFragment;
     private FragmentTransaction fragmentTransaction;
-    public WebSocket WebSocketClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

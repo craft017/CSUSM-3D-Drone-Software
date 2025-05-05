@@ -63,6 +63,26 @@ public class GPSCommand extends AutopilotCommand{
             }
         }
         else if(currentGPS.getLatitude() >= latitude + this.getGpsTolerance() || currentGPS.getLatitude() <= latitude - this.getGpsTolerance() || currentGPS.getLongitude() >= longitude + this.getGpsTolerance() || currentGPS.getLongitude() <= longitude - this.getGpsTolerance()){
+            Calendar now = Calendar.getInstance();
+            int currentHour = now.get(Calendar.HOUR_OF_DAY);
+            int currentMinute = now.get(Calendar.MINUTE);
+
+// Convert all time to minutes
+            int currentTotalSeconds = (currentHour * 60 + currentMinute) * 60;
+            int endTotalSeconds = (getHourEndTime() * 60 + getMinuteEndTime()) * 60;
+
+            int remainingSeconds = endTotalSeconds - currentTotalSeconds;
+
+// Prevent divide-by-zero and negative values
+            if (remainingSeconds > 0) {
+                // Estimate remaining distance (very rough)
+                float latDiff = Math.abs(latitude - currentGPS.getLatitude());
+                float lonDiff = Math.abs(longitude - currentGPS.getLongitude());
+                float estimatedDistance = (float) Math.sqrt(latDiff * latDiff + lonDiff * lonDiff); // degrees
+                // Optional: convert to meters if you want (1 degree ~ 111,000 meters)
+
+                speed = estimatedDistance / (remainingSeconds * 60.0f); // m/s if distance converted, else degrees/min to degrees/sec
+            }
             this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
         }
         else if(currentGPS.getLatitude() <= latitude + this.getGpsTolerance() && currentGPS.getLatitude() >= latitude - this.getGpsTolerance() && currentGPS.getLongitude() <= longitude + this.getGpsTolerance() && currentGPS.getLongitude() >= longitude - this.getGpsTolerance()) {
