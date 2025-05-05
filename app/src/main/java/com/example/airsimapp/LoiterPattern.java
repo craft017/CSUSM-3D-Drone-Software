@@ -6,6 +6,9 @@ public class LoiterPattern extends AutopilotCommand{
     private int commandCounter;
     private int timeForCommand = 200;   //Default 200 ms
     private Pattern pattern;
+
+
+
     private String patternType;
     public LoiterPattern(String Pattern, int hour, int minute){
         this.setId("LoiterPattern");
@@ -22,7 +25,7 @@ public void calculateCommand(float yawRate, float speed, Calendar startTime){
     if(this.commandCounter >= this.pattern.getCommandLimit()){
         this.commandCounter = 0;
     }
-    else{
+    else {
         this.commandCounter++;
     }
 }
@@ -42,5 +45,9 @@ public void calculateCommand(float yawRate, float speed, Calendar startTime){
     }
     public int getTimeForCommand() {
         return timeForCommand;
+    }
+
+    public String getPatternType() {
+        return patternType;
     }
 }

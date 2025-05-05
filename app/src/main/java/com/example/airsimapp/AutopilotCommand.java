@@ -17,7 +17,7 @@ abstract public class AutopilotCommand {
         this.id = "NULL";
         this.hourEndTime = 0;
         this.minuteEndTime = 0;
-        this.headingTolerance = 2;
+        this.headingTolerance = 3;
         this.gpsTolerance = 0.00008983f;    //About 10 meters tolerance at the equator, used for latitude & longitude
         this.altitudeTolerance = 2;        //Tolerance of altitude in meters
         this.commandComplete = false;

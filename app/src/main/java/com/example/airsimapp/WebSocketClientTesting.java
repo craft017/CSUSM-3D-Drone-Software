@@ -12,6 +12,9 @@ import okio.ByteString;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WebSocketClientTesting {
 
         private static final String TAG = "WebSocketClient";
@@ -30,7 +33,19 @@ public class WebSocketClientTesting {
             void onOpen();
             void onFailure(Throwable t, Response response);
         }
-        private WebSocketStateListener stateListener;
+    private WebSocketStateListener stateListener;
+        public interface WebSocketImageListener {
+            void onImageReceived(Bitmap bitmap);
+        }
+        private static final List<WebSocketImageListener> imageListeners = new ArrayList<>();
+    public void addImageListener(WebSocketImageListener listener) {
+        imageListeners.add(listener);
+    }
+
+    public void removeImageListener(WebSocketImageListener listener) {
+        imageListeners.remove(listener);
+    }
+
 
 
         public void setWebSocketMessageListener(WebSocketMessageListener listener) {
@@ -72,6 +87,7 @@ public class WebSocketClientTesting {
 
             private final WebSocketMessageListener listener;
             private final WebSocketStateListener stateListener;
+
             public EchoWebSocketListener(WebSocketMessageListener listener, WebSocketStateListener stateL) {
                 this.listener = listener;
                 this.stateListener = stateL;
@@ -87,7 +103,7 @@ public class WebSocketClientTesting {
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
-                Log.d(TAG, "Message received: " + text);
+                //Log.d(TAG, "Message received: " + text);
                 if (listener != null) {
                     postToMainThread(() -> listener.onMessageReceived(text));
                 }
@@ -97,8 +113,8 @@ public class WebSocketClientTesting {
             public void onMessage(WebSocket webSocket, final ByteString bytes) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes.toByteArray(), 0, bytes.size());
                 //imageView.post(() -> imageView.setImageBitmap(bitmap)); // Update UI
-                if (listener != null) {
-                    postToMainThread(() -> listener.onByteReceived(bitmap));
+                for (WebSocketImageListener listener : imageListeners) {
+                    new Handler(Looper.getMainLooper()).post(() -> listener.onImageReceived(bitmap));
                 }
             }
 

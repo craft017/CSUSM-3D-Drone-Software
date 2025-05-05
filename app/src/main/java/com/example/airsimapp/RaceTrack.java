@@ -2,7 +2,7 @@ package com.example.airsimapp;
 
 public class RaceTrack extends Pattern{
     public RaceTrack(float yawRate, float speed){
-        this.setCommandLimit(4);
+        this.setCommandLimit(3);
         this.loadCommands(yawRate, speed);
     }
     public void loadCommands(float yawRate, float speed){

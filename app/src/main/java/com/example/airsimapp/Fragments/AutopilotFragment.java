@@ -1,6 +1,8 @@
 package com.example.airsimapp.Fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,7 @@ import com.example.airsimapp.CommandAdapter;
 import com.example.airsimapp.GPS;
 import com.example.airsimapp.GPSCommand;
 import com.example.airsimapp.HeadingAndSpeed;
+import com.example.airsimapp.LoiterPattern;
 import com.example.airsimapp.R;
 import com.example.airsimapp.WebSocketClientTesting;
 
@@ -51,7 +54,7 @@ public class AutopilotFragment extends Fragment {
     private Handler uiUpdateHandler = new Handler(Looper.getMainLooper());
     Handler handler = new Handler();
     int index = 0;
-    private static final long UPDATE_INTERVAL = 250;
+    private static final long UPDATE_INTERVAL = 100;
     public Date date = Calendar.getInstance().getTime();
     public Calendar calendar = Calendar.getInstance();
 
@@ -174,7 +177,7 @@ public class AutopilotFragment extends Fragment {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
                 commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
-                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("Temp pattern", patternTime.getText().toString().trim());
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("RaceTrack", patternTime.getText().toString().trim());
                 patternTime.setText("");
             }
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
@@ -297,6 +300,11 @@ public class AutopilotFragment extends Fragment {
                     requireActivity().runOnUiThread(() -> {
                         commandAdapter.notifyDataSetChanged(); // Updates the command queue if command is complete
                     });
+
+                    if (!queue.isEmpty()) {
+                        handler.postDelayed(this, 100);
+                    }
+                    return;
                 } else {
 
                 // Recalculate command before sending
@@ -315,62 +323,74 @@ public class AutopilotFragment extends Fragment {
                             UserActivity.getOrchestrator().getAutopilot().getVelocity(),
                             UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
                             calendar);
+                } else if (command instanceof LoiterPattern) {
+                    long delay = ((LoiterPattern) command).getTimeForCommand();
+
+                    // Schedule the calculateCommand() to run after `delay` milliseconds:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        handler.postDelayed(() -> {
+                            ((LoiterPattern) command).calculateCommand(
+                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
+                                    UserActivity.getOrchestrator().getAutopilot().getVelocity(),
+                                    calendar
+                            );
+                        }, delay);
+                    } else {
+                        Log.e("AutopilotFragment", "UPGRADE YOUR DAME PHONE");
+                    }
                 }
-
-                String msg = command.getCommandMessage();
-                if (msg != null && !msg.isEmpty()) {
-                    UserActivity.getOrchestrator().processCommand(msg, AutopilotFragment.this::sendCommand);
-                   // Log.d(TAG, "Sent: " + msg);
+                    String msg = command.getCommandMessage();
+                    if (msg != null && !msg.isEmpty()) {
+                        UserActivity.getOrchestrator().processCommand(msg, AutopilotFragment.this::sendCommand);
+                       // Log.d(TAG, "Sent: " + msg);
+                    }
+                handler.postDelayed(this, 100); // Repeat every 100ms (10 times per second)
+                    }
                 }
-
-            }
-
-            handler.postDelayed(this, 100); // Repeat every 100ms (10 times per second)
-        }
     };
 
     private void sendCommand(String s) {
-       // Log.d(TAG, "Sending autopilot command");
+        //Log.d(TAG, "Sending autopilot command");
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
-//            @Override
-//            public void onMessageReceived(String msg) {
-//                String[] strBreakup = msg.split(",");
-//                if (Objects.equals(strBreakup[0], "getSpeed")) {
-//                    UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
-//                    // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
-//                } else if (Objects.equals(strBreakup[0], "getHeading")) {
-//                    UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
-//                    // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
-//                } else if (Objects.equals(strBreakup[0], "getGPS")){
-//                    currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
-//                    UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
-//                    // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
-//                }
-//            }
-//
-//            @Override
-//            public void onByteReceived(Bitmap bitmap) {
-//                // run on UI thread and paint into the ImageView
+    @Override
+    public void onResume() {
+        super.onResume();
+        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(new WebSocketClientTesting.WebSocketMessageListener() {
+            @Override
+            public void onMessageReceived(String msg) {
+                String[] strBreakup = msg.split(",");
+                if (Objects.equals(strBreakup[0], "getSpeed")) {
+                    UserActivity.getOrchestrator().getAutopilot().setCurrentSpeed(Float.parseFloat(strBreakup[1]));
+                    // Log.d(TAG, "TESTING speed: " + UserActivity.getOrchestrator().getAutopilot().getCurrentSpeed());
+                } else if (Objects.equals(strBreakup[0], "getHeading")) {
+                    UserActivity.getOrchestrator().getAutopilot().setCurrentHeading(Float.parseFloat(strBreakup[1]));
+                    // Log.d(TAG, "TESTING heading: " + UserActivity.getOrchestrator().getAutopilot().getCurrentHeading());
+                } else if (Objects.equals(strBreakup[0], "getGPS")){
+                    currentGPS = new GPS(strBreakup[1], strBreakup[2], strBreakup[3]);
+                    UserActivity.getOrchestrator().getAutopilot().setCurrentGPS(currentGPS);
+                    // Log.d(TAG, "TESTING gps: " + UserActivity.getOrchestrator().getAutopilot().getCurrentGPS());
+                }
+            }
+
+            @Override
+            public void onByteReceived(Bitmap bitmap) {
+                // run on UI thread and paint into the ImageView
 //                requireActivity().runOnUiThread(() -> {
 //
 //                    remoteView.setImageBitmap(bitmap);
 //                });
-//            }
-//        });
-//        startSpeedUpdates();  // start updates when fragment is visible again
-//    }
+            }
+        });
+        startSpeedUpdates();  // start updates when fragment is visible again
+    }
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        stopSpeedUpdates();   // stop updates when fragment is no longer visible
-//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(null);
-//    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopSpeedUpdates();   // stop updates when fragment is no longer visible
+        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(null);
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -398,8 +418,16 @@ public class AutopilotFragment extends Fragment {
                 public void onByteReceived(Bitmap bitmap) {
                     // run on UI thread and paint into the ImageView
                     requireActivity().runOnUiThread(() -> {
+                        if (bitmap != null) {
+                            // Rotate the bitmap 90 degrees
+                            Matrix matrix = new Matrix();
+                            matrix.postRotate(180); // or -90 depending on your camera orientation
+                            Bitmap rotatedBitmap = Bitmap.createBitmap(
+                                    bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true
+                            );
 
-                        remoteView.setImageBitmap(bitmap);
+                            remoteView.setImageBitmap(rotatedBitmap);
+                        }
                     });
                 }
             });

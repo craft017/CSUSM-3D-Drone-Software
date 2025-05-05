@@ -6,7 +6,16 @@
     android:layout_height="match_parent">
 
     <!-- Start Button -->
-
+    <ImageView
+        android:id="@+id/remoteCameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
     <!-- Takeoff Button -->
 
     <Button
@@ -171,17 +180,9 @@
 
 
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <ImageView
-        android:id="@+id/remoteCameraView"
-        android:layout_width="562dp"
-        android:layout_height="156dp"
-        app:layout_constraintBottom_toBottomOf="@+id/button_layout"
-        app:layout_constraintEnd_toEndOf="@+id/button_layout"
-        app:layout_constraintStart_toStartOf="@+id/button_layout"
-        app:layout_constraintTop_toTopOf="@+id/button_layout" />
 
     <!-- Switch Screens Button -->
     <Button
@@ -195,5 +196,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

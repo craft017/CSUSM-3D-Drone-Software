@@ -243,28 +243,43 @@ public class DronePhoneFragment extends Fragment {
 //    }
 
     private byte[] yuvToJpeg(Image image, int quality) {
-        // 1) Grab all three planes
-        Image.Plane[] planes = image.getPlanes();
-        ByteBuffer y = planes[0].getBuffer();
-        ByteBuffer u = planes[1].getBuffer();
-        ByteBuffer v = planes[2].getBuffer();
-
-        int width  = image.getWidth();
+        int width = image.getWidth();
         int height = image.getHeight();
-        int ySize  = y.remaining();
-        int uSize  = u.remaining();
-        int vSize  = v.remaining();
+        ByteBuffer yBuffer = image.getPlanes()[0].getBuffer(); // Y
+        ByteBuffer uBuffer = image.getPlanes()[1].getBuffer(); // U
+        ByteBuffer vBuffer = image.getPlanes()[2].getBuffer(); // V
 
-        // 2) Pack into NV21 byte array
-        byte[] nv21 = new byte[ySize + uSize + vSize];
-        y.get(nv21,   0,       ySize);
-        v.get(nv21,   ySize,   vSize);  // V comes before U in NV21
-        u.get(nv21,   ySize+vSize, uSize);
+        int ySize = yBuffer.remaining();
+        int uSize = uBuffer.remaining();
+        int vSize = vBuffer.remaining();
 
-        // 3) Compress to JPEG
+        byte[] nv21 = new byte[width * height * 3 / 2];
+
+        // Copy Y values
+        yBuffer.get(nv21, 0, ySize);
+
+        // Interleave U and V values correctly
+        int uvPixelStride = image.getPlanes()[1].getPixelStride();
+        int uvRowStride = image.getPlanes()[1].getRowStride();
+        byte[] uBytes = new byte[uBuffer.remaining()];
+        byte[] vBytes = new byte[vBuffer.remaining()];
+        uBuffer.get(uBytes);
+        vBuffer.get(vBytes);
+
+        int uvPos = ySize;
+        for (int row = 0; row < height / 2; row++) {
+            for (int col = 0; col < width / 2; col++) {
+                int uvIndex = row * uvRowStride + col * uvPixelStride;
+                nv21[uvPos++] = vBytes[uvIndex]; // V first in NV21
+                nv21[uvPos++] = uBytes[uvIndex]; // Then U
+            }
+        }
+
+        // Now compress
         YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, width, height, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         yuvImage.compressToJpeg(new Rect(0, 0, width, height), quality, baos);
+
         return baos.toByteArray();
     }
 

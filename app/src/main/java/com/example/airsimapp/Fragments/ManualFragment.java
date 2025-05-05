@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -237,77 +238,49 @@ public class ManualFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
-
-        // Re-register the Manual‐fragment listener
-        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(
-                new WebSocketClientTesting.WebSocketMessageListener() {
-                    @Override
-                    public void onMessageReceived(String msg) { /* … */ }
-
-                    @Override
-                    public void onByteReceived(Bitmap bitmap) {
-                        requireActivity().runOnUiThread(() -> remoteView.setImageBitmap(bitmap));
-                    }
-                }
-        );
+        UserActivity.getOrchestrator().webSocket.addImageListener(imageListener);
+//
+//        // Re-register the Manual‐fragment listener
+//        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(
+//                new WebSocketClientTesting.WebSocketMessageListener() {
+//                    @Override
+//                    public void onMessageReceived(String msg) { /* … */ }
+//
+//                    @Override
+//                    public void onByteReceived(Bitmap bitmap) {
+//                        requireActivity().runOnUiThread(() -> {
+//                            if (bitmap != null) {
+//                                // Rotate the bitmap 90 degrees
+//                                Matrix matrix = new Matrix();
+//                                matrix.postRotate(180); // or -90 depending on your camera orientation
+//                                Bitmap rotatedBitmap = Bitmap.createBitmap(
+//                                        bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true
+//                                );
+//
+//                                remoteView.setImageBitmap(rotatedBitmap);
+//                            }
+//                        });
+//                    }
+//                }
+//        );
     }
 
     @Override
     public void onPause() {
         super.onPause();
         // Optionally clear it so you don’t leak or double-fire:
-        UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(null);
+        UserActivity.getOrchestrator().webSocket.removeImageListener(imageListener);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            // this fragment is now visible
-            UserActivity.getOrchestrator().webSocket.setWebSocketMessageListener(
-                    new WebSocketClientTesting.WebSocketMessageListener() {
-                        @Override
-                        public void onMessageReceived(String msg) { /* … */ }
+    private final WebSocketClientTesting.WebSocketImageListener imageListener = bitmap -> {
+        requireActivity().runOnUiThread(() -> {
+            if (bitmap != null) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(180);
+                Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                remoteView.setImageBitmap(rotatedBitmap);
+            }
+        });
+    };
 
-                        @Override
-                        public void onByteReceived(Bitmap bitmap) {
-                            requireActivity().runOnUiThread(() -> remoteView.setImageBitmap(bitmap));
-                        }
-                    }
-            );
-        } else {
-            // fragment is now hidden
-            UserActivity.getOrchestrator()
-                    .webSocket
-                    .setWebSocketMessageListener(null);
-
-        }
-    }
-    // Function to check if camera permissions have been granted by user
-//    private boolean allPermissionsGranted() {
-//        for (String permission : REQUIRED_PERMISSIONS) {
-//            if (ContextCompat.checkSelfPermission(requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-//            if (allPermissionsGranted()) {
-//                Log.d(TAG, "Starting camera?");
-//                startCamera();
-//            } else {
-//                // Handle permission denial
-//                Log.e(TAG, "Permissions not granted by the user.");
-//                if (getActivity() != null) {
-//                    Log.d(TAG, "Here?");
-//                    getActivity().finish(); // Close the activity containing the fragment
-//            }
-//        }
-//    }
-//    }
 }

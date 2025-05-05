@@ -92,7 +92,7 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
 
                 // Field 4 = end time HH:mm
                 holder.commandText4.setText(
-                        String.format(Locale.getDefault(), "%02d:%02d",
+                        String.format(Locale.getDefault(), "%02d%02d",
                                 hs.getHourEndTime(), hs.getMinuteEndTime())
                 );
                 holder.commandText4.setVisibility(View.VISIBLE);
@@ -133,11 +133,11 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
                 holder.commandIcon.setImageResource(R.drawable.loiter);
 
                 // Field 1 = pattern name
-                holder.commandText.setText(lp.getPattern());
+                holder.commandText.setText(lp.getPatternType());
                 holder.commandText.setVisibility(View.VISIBLE);
 
-                // Field 4 = end time HH:mm
-                holder.commandText4.setText(
+                // Field 4 = end time HHmm
+                holder.commandText2.setText(
                         String.format(Locale.getDefault(), "%02d:%02d",
                                 lp.getHourEndTime(), lp.getMinuteEndTime())
                 );
