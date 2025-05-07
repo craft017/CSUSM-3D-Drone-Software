@@ -196,8 +196,10 @@ public class AutopilotFragment extends Fragment {
             if (patternTime.getText().toString().isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
+                float patternYaw = UserActivity.getOrchestrator().getAutopilot().getYawRate();
+                float patternSpeed = UserActivity.getOrchestrator().getAutopilot().getVelocity();
                 commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
-                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(selectedPattern, patternTime.getText().toString().trim());
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(selectedPattern, patternYaw, patternSpeed, patternTime.getText().toString().trim());
                 patternTime.setText("");
             }
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
@@ -344,20 +346,14 @@ public class AutopilotFragment extends Fragment {
                             UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
                             calendar);
                 } else if (command instanceof LoiterPattern) {
-                    long delay = ((LoiterPattern) command).getTimeForCommand();
-
-                    // Schedule the calculateCommand() to run after `delay` milliseconds:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        handler.postDelayed(() -> {
                             ((LoiterPattern) command).calculateCommand(
+                                    UserActivity.getOrchestrator().getAutopilot().getCurrentGPS(),
+                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
                                     UserActivity.getOrchestrator().getAutopilot().getYawRate(),
                                     UserActivity.getOrchestrator().getAutopilot().getVelocity(),
+                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
                                     calendar
                             );
-                        }, delay);
-                    } else {
-                        Log.e("AutopilotFragment", "UPGRADE YOUR DAME PHONE");
-                    }
                 }
                     String msg = command.getCommandMessage();
                     if (msg != null && !msg.isEmpty()) {

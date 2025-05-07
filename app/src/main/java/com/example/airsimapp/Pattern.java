@@ -7,6 +7,15 @@ abstract public class Pattern {
     protected boolean secondTurn;
     protected boolean firstStraight;
     protected boolean secondStraight;
+
+    protected boolean gotHeading;
+
+    public Pattern (){
+        this.straightDistance = 0;
+        this.degrees = 0;
+        setAllFlags(false);
+    }
+
     protected float calculateRadius(float yawRate, float speed){
         return (float) ((180 * speed)/(Math.PI * yawRate));
     }
@@ -15,6 +24,7 @@ abstract public class Pattern {
         this.secondTurn = value;
         this.firstStraight = value;     //resets booleans
         this.secondStraight = value;
+        this.gotHeading = value;
     }
     private void calculateStraightDistance(){
         //Generic function to be overloaded
@@ -43,4 +53,7 @@ abstract public class Pattern {
     public void setSecondTurn(boolean secondTurn) {
         this.secondTurn = secondTurn;
     }
+
+    public void setGotHeading(boolean gotHeading){ this.gotHeading = gotHeading;}
+    public float getRadius(float yaw, float speed){return this.calculateRadius(yaw, speed);}
 }

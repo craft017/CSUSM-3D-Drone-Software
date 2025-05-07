@@ -6,25 +6,21 @@ import java.util.Calendar;
 public class LoiterPattern extends AutopilotCommand{
     private Pattern pattern;
     private final String patternType;
-    private float firstDesiredLongitude;
-    private float firstDesiredLatitude;
-    private float secondDesiredLongitude;
-    private float secondDesiredLatitude;
-    public LoiterPattern(String Pattern, int hour, int minute){
+    private float desiredFirstTurn = 0;
+    private float desiredSecondTurn = 0;
+    private float firstLowerHeading = 0;
+    private float firstUpperHeading = 0;
+    private float secondLowerHeading = 0;
+    private float secondUpperHeading = 0;
+    private int forwardCounter = 0;
+    public LoiterPattern(String Pattern,float yawRate, float speed, int hour, int minute){
         this.setId("LoiterPattern");
         this.setHourEndTime(hour);
         this.setMinuteEndTime(minute);
         this.patternType = Pattern;
-        this.firstDesiredLatitude = 0;
-        this.firstDesiredLongitude = 0;
-        float secondDesiredLongitude = 0;
-        float secondDesiredLatitude = 0;
+        this.loadPattern(this.patternType, yawRate, speed);
     }
     private void loadPattern(String pattern, float yawRate, float speed){
-        if(this.pattern == null){
-            //Do nothing
-        }
-        else{
             switch(pattern){
                 case "RaceTrack":
                     this.pattern = new RaceTrack(yawRate, speed);
@@ -35,77 +31,55 @@ public class LoiterPattern extends AutopilotCommand{
                 default:
                     Log.e("LoiterPattern", "Unknown pattern type");
             }
-        }
-    }
-    private float meterToGPSCoordinate(float meters){
-        return meters*0.00001f;
-    }
-    private void resetDesiredGPS(){
-        this.firstDesiredLatitude = 0;
-        this.firstDesiredLongitude = 0;
-        float secondDesiredLongitude = 0;   //resets gps
-        float secondDesiredLatitude = 0;
     }
 
     public void calculateCommand(GPS currentGPS, float currentHeading, float yawRate, float speed, float commandTime, Calendar startTime){
-        this.loadPattern(this.patternType, yawRate, speed);
-        float desiredFirstTurn = (currentHeading + this.pattern.getDegrees()) % 360;
-        float desiredSecondTurn = (currentHeading + this.pattern.getDegrees()) % 360;
-        float firstLowerHeading = ((desiredFirstTurn-this.getHeadingTolerance())%360);
-        float firstUpperHeading = ((desiredSecondTurn+this.getHeadingTolerance())%360);
-        float secondLowerHeading = ((desiredFirstTurn-this.getHeadingTolerance())%360);
-        float secondUpperHeading = ((desiredSecondTurn+this.getHeadingTolerance())%360);
-        float headingQuadrant;
-        if(currentHeading >= 0 && currentHeading <= 90){
-            headingQuadrant = currentHeading;
-        }
-        else if(currentHeading >= 91 && currentHeading <= 180){
-            headingQuadrant = currentHeading-90;
-        }
-        else if(currentHeading >= 181 && currentHeading <= 270){
-            headingQuadrant = currentHeading-180;
-        }
-        else if(currentHeading >= 271 && currentHeading <= 360){
-            headingQuadrant = currentHeading-270;
+        if (!pattern.gotHeading) {
+            desiredFirstTurn = (currentHeading + this.pattern.getDegrees()) % 360;
+            desiredSecondTurn = (desiredFirstTurn + 180) % 360;
+            firstLowerHeading = ((desiredFirstTurn - this.getHeadingTolerance()) % 360);
+            firstUpperHeading = ((desiredFirstTurn + this.getHeadingTolerance()) % 360);
+            pattern.setGotHeading(true);
         }
 
-        if(this.firstDesiredLongitude == 0 && this.firstDesiredLatitude == 0){
-            firstDesiredLongitude = currentGPS.getLongitude() + meterToGPSCoordinate((float) (this.pattern.straightDistance * Math.sin(headingQuadrant)));
-            firstDesiredLatitude = currentGPS.getLatitude() + meterToGPSCoordinate((float) (this.pattern.straightDistance * Math.cos(headingQuadrant)));
-        }
 
-        if(!this.pattern.firstTurn && currentHeading >= firstUpperHeading && currentHeading <= firstLowerHeading){
+        if(!this.pattern.firstTurn && (currentHeading >= firstUpperHeading || currentHeading <= firstLowerHeading)){
             this.setCommandMessage("autopilot,forward_left," + yawRate + "," + speed + "," + commandTime);
         }
-        else if(currentHeading <= firstUpperHeading || currentHeading >= firstLowerHeading){
+        else if(!this.pattern.firstTurn && (currentHeading <= firstUpperHeading || currentHeading >= firstLowerHeading)){
             this.pattern.setFirstTurn(true);
         }
-        else if(!this.pattern.firstStraight && currentGPS.getLongitude() >= firstDesiredLongitude + this.getGpsTolerance() && currentGPS.getLongitude() <= firstDesiredLongitude - this.getGpsTolerance() && currentGPS.getLatitude() >= firstDesiredLatitude + this.getGpsTolerance() && currentGPS.getLatitude() <= firstDesiredLatitude - this.getGpsTolerance()){
+        else if(!this.pattern.firstStraight && forwardCounter < (this.pattern.getRadius(yawRate, speed)/speed) *10){
             this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
+            forwardCounter++;
         }
-        else if(currentGPS.getLongitude() <= firstDesiredLongitude + this.getGpsTolerance() && currentGPS.getLongitude() >= firstDesiredLongitude - this.getGpsTolerance() && currentGPS.getLatitude() <= firstDesiredLatitude + this.getGpsTolerance() && currentGPS.getLatitude() >= firstDesiredLatitude - this.getGpsTolerance()){
+        else if(!this.pattern.firstStraight && (forwardCounter >= (this.pattern.getRadius(yawRate, speed)/speed) *10)){
             this.pattern.setFirstStraight(true);
-            if(this.secondDesiredLatitude == 0 && this.secondDesiredLongitude == 0){
-                secondDesiredLongitude = currentGPS.getLongitude() + meterToGPSCoordinate((float) (this.pattern.straightDistance * Math.sin(headingQuadrant)));
-                secondDesiredLatitude = currentGPS.getLatitude() + meterToGPSCoordinate((float) (this.pattern.straightDistance * Math.cos(headingQuadrant)));
-            }
+            forwardCounter = 0;
+            secondLowerHeading = ((desiredSecondTurn - this.getHeadingTolerance()) % 360);
+            secondUpperHeading = ((desiredSecondTurn + this.getHeadingTolerance()) % 360);
         }
-        else if(!this.pattern.secondTurn && currentHeading >= secondUpperHeading && currentHeading <= secondLowerHeading){
+        else if(!this.pattern.secondTurn && (currentHeading >= secondUpperHeading || currentHeading <= secondLowerHeading)){
             this.setCommandMessage("autopilot,forward_left," + yawRate + "," + speed + "," + commandTime);
         }
-        else if(currentHeading <= secondUpperHeading || currentHeading >= secondLowerHeading){
+        else if(!this.pattern.secondTurn && (currentHeading <= secondUpperHeading || currentHeading >= secondLowerHeading)){
             this.pattern.setSecondTurn(true);
 
         }
-        else if(!this.pattern.secondStraight && currentGPS.getLongitude() >= secondDesiredLongitude + this.getGpsTolerance() && currentGPS.getLongitude() <= secondDesiredLongitude - this.getGpsTolerance() && currentGPS.getLatitude() >= secondDesiredLatitude + this.getGpsTolerance() && currentGPS.getLatitude() <= secondDesiredLatitude - this.getGpsTolerance()){
+        else if(!this.pattern.secondStraight && (forwardCounter < (this.pattern.getRadius(yawRate, speed)/speed) *10)){
             this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
+            forwardCounter++;
         }
-        else if(currentGPS.getLongitude() >= secondDesiredLongitude + this.getGpsTolerance() && currentGPS.getLongitude() <= secondDesiredLongitude - this.getGpsTolerance() && currentGPS.getLatitude() >= secondDesiredLatitude + this.getGpsTolerance() && currentGPS.getLatitude() <= secondDesiredLatitude - this.getGpsTolerance()){
+        else if(forwardCounter >= (this.pattern.getRadius(yawRate, speed)/speed) *10){
             this.pattern.setSecondStraight(true);
+            forwardCounter = 0;
         }
         else{
-            this.resetDesiredGPS();
             this.pattern.setAllFlags(false);
         }
+    }
+
+    public String getPatternType() {
+        return this.patternType;
     }
 }
