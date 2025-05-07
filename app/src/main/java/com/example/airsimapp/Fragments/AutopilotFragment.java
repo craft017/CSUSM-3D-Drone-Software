@@ -17,9 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +60,7 @@ public class AutopilotFragment extends Fragment {
     private static final long UPDATE_INTERVAL = 100;
     public Date date = Calendar.getInstance().getTime();
     public Calendar calendar = Calendar.getInstance();
+    private String selectedPattern = "Circle"; // default
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +93,23 @@ public class AutopilotFragment extends Fragment {
         Button addPattern = view.findViewById(R.id.addPattern);
         Button startButton = view.findViewById(R.id.startautoflight);
         remoteView = view.findViewById(R.id.autopilotPreviewView);
+        Spinner patternSpinner = view.findViewById(R.id.pattern);
+        String[] patternOptions = {"RaceTrack", "Circle", "Figure8"};
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, patternOptions);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        patternSpinner.setAdapter(spinnerAdapter);
 
+        patternSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedPattern = patternOptions[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedPattern = "RaceTrack";
+            }
+        });
 
         startButton.setOnClickListener(v -> {
 
@@ -176,8 +196,10 @@ public class AutopilotFragment extends Fragment {
             if (patternTime.getText().toString().isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
+                float patternYaw = UserActivity.getOrchestrator().getAutopilot().getYawRate();
+                float patternSpeed = UserActivity.getOrchestrator().getAutopilot().getVelocity();
                 commandAdapter.updateCommands(UserActivity.getOrchestrator().getAutopilot().getCommandQueue());
-                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue("RaceTrack", patternTime.getText().toString().trim());
+                UserActivity.getOrchestrator().getAutopilot().addToCommandQueue(selectedPattern, patternYaw, patternSpeed, patternTime.getText().toString().trim());
                 patternTime.setText("");
             }
             for (int i = 0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
@@ -324,20 +346,14 @@ public class AutopilotFragment extends Fragment {
                             UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
                             calendar);
                 } else if (command instanceof LoiterPattern) {
-                    long delay = ((LoiterPattern) command).getTimeForCommand();
-
-                    // Schedule the calculateCommand() to run after `delay` milliseconds:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        handler.postDelayed(() -> {
                             ((LoiterPattern) command).calculateCommand(
+                                    UserActivity.getOrchestrator().getAutopilot().getCurrentGPS(),
+                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
                                     UserActivity.getOrchestrator().getAutopilot().getYawRate(),
                                     UserActivity.getOrchestrator().getAutopilot().getVelocity(),
+                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
                                     calendar
                             );
-                        }, delay);
-                    } else {
-                        Log.e("AutopilotFragment", "UPGRADE YOUR DAME PHONE");
-                    }
                 }
                     String msg = command.getCommandMessage();
                     if (msg != null && !msg.isEmpty()) {
