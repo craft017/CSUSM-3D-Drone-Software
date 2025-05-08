@@ -52,13 +52,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Improved recycler view GUI">
-      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Circle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Autopilot.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Autopilot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Pattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Pattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/RaceTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/RaceTrack.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,15 +90,15 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="layoutResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev_jason" />
+        <entry key="$PROJECT_DIR$" value="dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

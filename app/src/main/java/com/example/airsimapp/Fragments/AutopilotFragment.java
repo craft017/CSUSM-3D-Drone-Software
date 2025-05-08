@@ -347,7 +347,6 @@ public class AutopilotFragment extends Fragment {
                             calendar);
                 } else if (command instanceof LoiterPattern) {
                             ((LoiterPattern) command).calculateCommand(
-                                    UserActivity.getOrchestrator().getAutopilot().getCurrentGPS(),
                                     UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
                                     UserActivity.getOrchestrator().getAutopilot().getYawRate(),
                                     UserActivity.getOrchestrator().getAutopilot().getVelocity(),
