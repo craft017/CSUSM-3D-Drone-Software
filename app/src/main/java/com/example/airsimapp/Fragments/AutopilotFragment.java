@@ -112,30 +112,6 @@ public class AutopilotFragment extends Fragment {
         });
 
         startButton.setOnClickListener(v -> {
-
-//            for (int i =0; i < UserActivity.getOrchestrator().getAutopilot().getCommandQueue().size(); i++) {
-//                AutopilotCommand command = UserActivity.getOrchestrator().getAutopilot().getCommandQueue().get(i);
-//                String commandID = command.getId();
-//
-//                switch (commandID) {
-//                    case "heading&speed":
-//                        if (command instanceof HeadingAndSpeed) {
-//                            ((HeadingAndSpeed) command).calculateCommand(
-//                                    UserActivity.getOrchestrator().getAutopilot().getCurrentHeading(),
-//                                    UserActivity.getOrchestrator().getAutopilot().getYawRate(),
-//                                    UserActivity.getOrchestrator().getAutopilot().getCommandTime(),
-//                                    calendar
-//                            );
-//                        }
-//                        break;
-//                    case "gps":
-//                        if (command instanceof GPSCommand) {
-//                            ((GPSCommand) command).calculateCommand();
-//                        }
-//                        break;
-//                }
-//                handler.post(commandSenderRunnable); // start sending
-//            }
             handler.post(commandSenderRunnable); // start sending
         });
 

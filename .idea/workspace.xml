@@ -53,12 +53,11 @@
   <component name="ChangeListManager">
     <list default="true" id="3887d5e6-7a42-4a03-8df1-5d1f962412b4" name="Changes" comment="Improved recycler view GUI">
       <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Autopilot.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Autopilot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/CommandAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/AutopilotFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/LoiterPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Pattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Pattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/airsimapp/Fragments/ManualFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_manual.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,18 +127,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Android App.App.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev__jayden&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.App.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="App" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="AirSimApp.app" />
@@ -278,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744664420086</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added circle Pattern">
+      <option name="closed" value="true" />
+      <created>1746678634623</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746678634623</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -303,19 +310,20 @@
     <MESSAGE value="saving" />
     <MESSAGE value="Added error checking to prevent crashes when user inputs values" />
     <MESSAGE value="Added GUI recycler view functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added GUI recycler view functionality" />
+    <MESSAGE value="Added circle Pattern" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added circle Pattern" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.example.airsimapp">
           <value>
-            <CheckInfo lastCheckTimestamp="1744761365593" />
+            <CheckInfo lastCheckTimestamp="1746763959598" />
           </value>
         </entry>
         <entry key="com.example.airsimapp.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1744761365594" />
+            <CheckInfo lastCheckTimestamp="1746763959599" />
           </value>
         </entry>
       </map>

@@ -141,7 +141,7 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
                         String.format(Locale.getDefault(), "%02d:%02d",
                                 lp.getHourEndTime(), lp.getMinuteEndTime())
                 );
-                holder.commandText4.setVisibility(View.VISIBLE);
+                holder.commandText2.setVisibility(View.VISIBLE);
                 break;
 
             default:
