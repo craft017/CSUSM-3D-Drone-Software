@@ -1,53 +1,58 @@
 package com.example.airsimapp;
+import android.util.Log;
+
 import java.util.Calendar;
-import java.util.Objects;
 
 public class LoiterPattern extends AutopilotCommand{
-    private int commandCounter;
-    private int timeForCommand = 200;   //Default 200 ms
     private Pattern pattern;
-
-
-
-    private String patternType;
-    public LoiterPattern(String Pattern, int hour, int minute){
+    private final String patternType;
+    private float desiredFirstTurn = 0;
+    private float desiredSecondTurn = 0;
+    private float firstLowerHeading = 0;
+    private float firstUpperHeading = 0;
+    private float secondLowerHeading = 0;
+    private float secondUpperHeading = 0;
+    private int forwardCounter = 0;
+    public LoiterPattern(String Pattern,float yawRate, float speed, int hour, int minute){
         this.setId("LoiterPattern");
-        this.commandCounter = 0;
         this.setHourEndTime(hour);
         this.setMinuteEndTime(minute);
         this.patternType = Pattern;
+        this.loadPattern(this.patternType, yawRate, speed);
+    }
+    private void loadPattern(String pattern, float yawRate, float speed){
+            switch(pattern){
+                case "RaceTrack":
+                    this.pattern = new RaceTrack(yawRate, speed);
+                    break;
+                case "FigureEight":
+                    this.pattern = new FigureEight(yawRate, speed);
+                    break;
+                case "Circle":
+                    this.pattern = new Circle(yawRate, speed);
+                    break;
+                default:
+                    Log.e("LoiterPattern", "Unknown pattern type");
+            }
     }
 
-public void calculateCommand(float yawRate, float speed, Calendar startTime){
-    this.setPattern(patternType, yawRate, speed);
-    this.timeForCommand = this.pattern.currentCommandTime(this.commandCounter, yawRate, speed);
-    this.setCommandMessage(this.pattern.getCommands().get(commandCounter));
-    if(this.commandCounter >= this.pattern.getCommandLimit()){
-        this.commandCounter = 0;
-    }
-    else {
-        this.commandCounter++;
-    }
-}
+    public void calculateCommand(float currentHeading, float yawRate, float speed, float commandTime, Calendar currentTime){
+        if (pattern instanceof RaceTrack) {
+            this.setCommandMessage(((RaceTrack) pattern).executePattern(currentHeading, yawRate, speed, commandTime, currentTime, getHeadingTolerance()));
+        } else if (pattern instanceof Circle){
+            this.setCommandMessage(((Circle) pattern).executePattern(yawRate, speed, commandTime, currentTime));
+        }
 
-    private void setPattern(String patternType, float yawRate, float speed) {
-        if(this.pattern == null){
-            if(Objects.equals(patternType, "RaceTrack")){
-                this.pattern = new RaceTrack(yawRate, speed);
-            }
-            else if(Objects.equals(patternType, "FigureEight")){
-                //TODO create figure eight pattern
-            }
+        currentTime = Calendar.getInstance();
+        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = currentTime.get(Calendar.MINUTE);
+        if (getHourEndTime() == currentHour && getMinuteEndTime() == currentMinute) {
+            this.setCommandMessage("autopilot,stop," + yawRate + "," + speed + "," + commandTime);
+            setCommandComplete(true);
         }
-        else{
-            //Pattern already made, do nothing
-        }
-    }
-    public int getTimeForCommand() {
-        return timeForCommand;
     }
 
     public String getPatternType() {
-        return patternType;
+        return this.patternType;
     }
 }

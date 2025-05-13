@@ -1,42 +1,68 @@
 package com.example.airsimapp;
 
-import java.util.ArrayList;
-
 abstract public class Pattern {
-    private int commandLimit;
-    protected ArrayList<String> commands = new ArrayList<String>();
+    protected float straightDistance;
+    protected float degrees;
+    protected boolean firstTurn;
+    protected boolean secondTurn;
+    protected boolean firstStraight;
+    protected boolean secondStraight;
 
-    private float straightTime(float radius, float speed){
-        return 0;
-    }
-    protected float rotationTime(float yawRate){
-        float rotationDegrees = 180;    //Make a half circle
-        int time = (int) ((rotationDegrees / yawRate)*1000);    //Duration in ms
-        return (float) time;
-    }
-    protected float radiusCalculation(float yawRate, float speed){
-        float yawRadians = (float) (yawRate * (Math.PI/180));   //Convert from degrees to radians
-        return (float) (speed / (yawRadians * (Math.PI/180)));
-    }
+    protected float desiredFirstTurn = 0;
+    protected float desiredSecondTurn = 0;
+    protected float firstLowerHeading = 0;
+    protected float firstUpperHeading = 0;
+    protected float secondLowerHeading = 0;
+    protected float secondUpperHeading = 0;
+    protected int forwardCounter = 0;
 
-    public void loadCommands(){
-        //Generic load command function
-    }
+    protected boolean gotHeading;
 
-    public int currentCommandTime(int index, float yawRate, float speed){
-        //Generic current command time function
-        return 0;
+    public Pattern (){
+        this.straightDistance = 0;
+        this.degrees = 0;
+        setAllFlags(false);
     }
 
-    public int getCommandLimit() {
-        return commandLimit;
+    protected float calculateRadius(float yawRate, float speed){
+        return (float) ((180 * speed)/(Math.PI * yawRate));
+    }
+    public void setAllFlags(boolean value){
+        this.firstTurn = value;
+        this.secondTurn = value;
+        this.firstStraight = value;     //resets booleans
+        this.secondStraight = value;
+        this.gotHeading = value;
+    }
+    private void calculateStraightDistance(){
+        //Generic function to be overloaded
     }
 
-    public void setCommandLimit(int commandLimit) {
-        this.commandLimit = commandLimit;
+
+    public float getStraightDistance() {
+        return straightDistance;
     }
 
-    public ArrayList<String> getCommands() {
-        return commands;
+    public float getDegrees() {
+        return degrees;
     }
+
+    public void setFirstStraight(boolean firstStraight) {
+        this.firstStraight = firstStraight;
+    }
+
+    public void setFirstTurn(boolean firstTurn) {
+        this.firstTurn = firstTurn;
+    }
+
+    public void setSecondStraight(boolean secondStraight) {
+        this.secondStraight = secondStraight;
+    }
+
+    public void setSecondTurn(boolean secondTurn) {
+        this.secondTurn = secondTurn;
+    }
+
+    public void setGotHeading(boolean gotHeading){ this.gotHeading = gotHeading;}
+    public float getRadius(float yaw, float speed){return this.calculateRadius(yaw, speed);}
 }

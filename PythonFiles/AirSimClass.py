@@ -78,6 +78,7 @@ class AirSimWebSocketServer:
             # Continuous movement: Forward
             elif action == "forward":
                 self.moveX(self.velocity, 0, 0, self.commandTime)
+
                 await websocket.send(json.dumps({"status": "success", "message": "Moving forward"}))
 
             # Continuous movement: Backward
@@ -113,6 +114,12 @@ class AirSimWebSocketServer:
 
             elif action == "stop":
                 print(self.client.getRotorStates())
+
+            elif action == "forward_left":
+                self.moveTurnLeft(self.velocity, 0, 0, self.commandTime, self.yawRate)
+
+            elif action == "forward_right":
+                self.moveTurnRight(self.velocity, 0, 0, self.commandTime, self.yawRate)
 
             #End movement commands ↑-------------------
             #Beginning GPS commands ↓-------------------
@@ -153,7 +160,7 @@ class AirSimWebSocketServer:
             await websocket.send(json.dumps({"status": "error", "message": str(e)}))
 
     #Moving in x axis relative to drone perspective
-    def moveX(self, vx, vy, vz, duration): 
+    def moveX(self, vx, vy, vz, duration):
         # Get drone orientation
         pose = self.client.simGetVehiclePose()
         #Convert quaternion to yaw angle
@@ -184,6 +191,36 @@ class AirSimWebSocketServer:
             self.client.moveByVelocityAsync(-newVX, -newVY, newVZ, duration)
         else:
             self.client.moveByVelocityAsync(newVX, newVY, newVZ, duration)
+    def moveTurnRight(self, vx, vy, vz, duration, yawRate):
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        #Convert quaternion to yaw angle
+        yaw = airsim.to_eularian_angles(pose.orientation)[2]
+        local_vx = self.velocity    #Velocity in x direction
+        local_vy = 0                #No movement in y direction
+        # Compute world frame velocity
+        newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
+        newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
+        newVZ = self.client.getMultirotorState().kinematics_estimated.position.z_val
+        if(vx<0):   #Check if going backwards
+            self.client.moveByVelocityZAsync(-newVX, -newVY, newVZ, duration, drivetrain=airsim.DrivetrainType.ForwardOnly, yaw_mode=airsim.YawMode(is_rate=True, yaw_or_rate=yawRate))
+        else:
+            self.client.moveByVelocityZAsync(newVX, newVY, newVZ, duration, drivetrain=airsim.DrivetrainType.ForwardOnly, yaw_mode=airsim.YawMode(is_rate=True, yaw_or_rate=yawRate))
+    def moveTurnLeft(self, vx, vy, vz, duration, yawRate):
+        # Get drone orientation
+        pose = self.client.simGetVehiclePose()
+        #Convert quaternion to yaw angle
+        yaw = airsim.to_eularian_angles(pose.orientation)[2]
+        local_vx = self.velocity    #Velocity in x direction
+        local_vy = 0                #No movement in y direction
+        # Compute world frame velocity
+        newVX = local_vx*math.cos(yaw)-local_vy*math.sin(yaw)
+        newVY = local_vx*math.sin(yaw)+local_vy*math.cos(yaw)
+        newVZ = self.client.getMultirotorState().kinematics_estimated.position.z_val
+        if(vx<0):   #Check if going backwards
+            self.client.moveByVelocityZAsync(-newVX, -newVY, newVZ, duration, drivetrain=airsim.DrivetrainType.ForwardOnly, yaw_mode=airsim.YawMode(is_rate=True, yaw_or_rate=-yawRate))
+        else:
+            self.client.moveByVelocityZAsync(newVX, newVY, newVZ, duration, drivetrain=airsim.DrivetrainType.ForwardOnly, yaw_mode=airsim.YawMode(is_rate=True, yaw_or_rate=-yawRate))
     def cleanup(self):
         """
         Perform cleanup when the server stops.

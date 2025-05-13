@@ -23,7 +23,7 @@ public class  Autopilot  {
         this.currentHeading = 0;
         this.currentSpeed = 0;
         this.yawRate = 20;
-        this.velocity = 2;
+        this.velocity = 10;
         this.commandTime = 0.2F;
     }
 
@@ -70,7 +70,7 @@ public class  Autopilot  {
             Log.e("Autopilot", "Unexpected error: " + e.getMessage());
         }
     }
-    public void addToCommandQueue(String loiterPattern, String time){
+    public void addToCommandQueue(String loiterPattern, float yawRate, float speed, String time){
         if (time == null || time.length() < 4 || time.length() > 5) {
             Log.e("Autopilot", "Invalid time format: " + time);
             return;
@@ -80,7 +80,7 @@ public class  Autopilot  {
             int hour = Integer.parseInt(time.substring(0, 2));
             int minute = Integer.parseInt(time.substring(2));
 
-            LoiterPattern pattern = new LoiterPattern(loiterPattern, hour, minute);
+            LoiterPattern pattern = new LoiterPattern(loiterPattern, yawRate, speed, hour, minute);
             this.commandQueue.add(pattern);
         } catch (NumberFormatException e) {
             Log.e("Autopilot", "Failed to parse time: " + e.getMessage());

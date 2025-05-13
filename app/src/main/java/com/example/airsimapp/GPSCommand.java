@@ -80,8 +80,8 @@ public class GPSCommand extends AutopilotCommand{
                 float lonDiff = Math.abs(longitude - currentGPS.getLongitude());
                 float estimatedDistance = (float) Math.sqrt(latDiff * latDiff + lonDiff * lonDiff); // degrees
                 // Optional: convert to meters if you want (1 degree ~ 111,000 meters)
-
-                speed = estimatedDistance / (remainingSeconds * 60.0f); // m/s if distance converted, else degrees/min to degrees/sec
+                estimatedDistance = estimatedDistance * 111000;
+                speed = estimatedDistance / (remainingSeconds - 45); // m/s if distance converted, else degrees/min to degrees/sec
             }
             this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
         }

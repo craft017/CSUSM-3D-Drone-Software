@@ -1,31 +1,54 @@
 package com.example.airsimapp;
 
+import java.util.Calendar;
+
 public class RaceTrack extends Pattern{
     public RaceTrack(float yawRate, float speed){
-        this.setCommandLimit(3);
-        this.loadCommands(yawRate, speed);
+        this.calculateStraightDistance(yawRate, speed);
+        this.degrees = 180;
+        this.setAllFlags(false);    //set flags to false by default
     }
-    public void loadCommands(float yawRate, float speed){
-        float radius = this.radiusCalculation(yawRate, speed);
-        float rotationTime = this.rotationTime(yawRate);
-        float straightTime = this.straightTime(radius, speed);
-        this.commands.add("autopilot,forward_left," + yawRate + "," + speed + "," + rotationTime);
-        this.commands.add("autopilot,forward," + yawRate + "," + speed + "," + straightTime);
-        this.commands.add("autopilot,forward_left," + yawRate + "," + speed + "," + rotationTime);
-        this.commands.add("autopilot,forward," + yawRate + "," + speed + "," + straightTime);
+    private void calculateStraightDistance(float yawRate, float speed){
+        float r = this.calculateRadius(yawRate, speed);
+        this.straightDistance = 2*r;
     }
-    public int currentCommandTime(int index, float yawRate, float speed){
-        if(index == 0 || index == 2){
-            return (int)this.rotationTime(yawRate);
+
+    public String executePattern(float currentHeading, float yawRate, float speed, float commandTime, Calendar startTime, float headingTolerance) {
+        if (!this.gotHeading) {
+            desiredFirstTurn = (currentHeading + this.getDegrees()) % 360;
+            desiredSecondTurn = (desiredFirstTurn + 180) % 360;
+            firstLowerHeading = ((desiredFirstTurn - headingTolerance) % 360);
+            firstUpperHeading = ((desiredFirstTurn + headingTolerance) % 360);
+            this.setGotHeading(true);
         }
-        else if(index == 1 || index == 3){
-            return (int)this.straightTime((this.radiusCalculation(yawRate, speed)), speed);
+
+
+        if (!this.firstTurn && (currentHeading >= firstUpperHeading || currentHeading <= firstLowerHeading)) {
+            return "autopilot,forward_left," + yawRate + "," + speed + "," + commandTime;
+        } else if (!this.firstTurn && (currentHeading <= firstUpperHeading || currentHeading >= firstLowerHeading)) {
+            this.setFirstTurn(true);
+        } else if (!this.firstStraight && forwardCounter < (this.getRadius(yawRate, speed) / speed) * 10) {
+            forwardCounter++;
+            return "autopilot,forward," + yawRate + "," + speed + "," + commandTime;
+        } else if (!this.firstStraight && (forwardCounter >= (this.getRadius(yawRate, speed) / speed) * 10)) {
+            this.setFirstStraight(true);
+            forwardCounter = 0;
+            secondLowerHeading = ((desiredSecondTurn - headingTolerance) % 360);
+            secondUpperHeading = ((desiredSecondTurn + headingTolerance) % 360);
+        } else if (!this.secondTurn && (currentHeading >= secondUpperHeading || currentHeading <= secondLowerHeading)) {
+            return "autopilot,forward_left," + yawRate + "," + speed + "," + commandTime;
+        } else if (!this.secondTurn && (currentHeading <= secondUpperHeading || currentHeading >= secondLowerHeading)) {
+            this.setSecondTurn(true);
+        } else if (!this.secondStraight && (forwardCounter < (this.getRadius(yawRate, speed) / speed) * 10)) {
+            forwardCounter++;
+            return ("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
+        } else if (forwardCounter >= (this.getRadius(yawRate, speed) / speed) * 10) {
+            this.setSecondStraight(true);
+            forwardCounter = 0;
+        } else {
+            this.setAllFlags(false);
+
         }
-        else{
-            return 0;
-        }
-    }
-    private float straightTime(float radius, float speed){
-        return (float) (2*radius)/speed;
+        return("autopilot,stop," + yawRate + "," + speed + "," + commandTime);
     }
 }

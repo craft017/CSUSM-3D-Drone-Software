@@ -91,6 +91,9 @@ public class ManualFragment extends Fragment  {
         Button autoPilotButton = rootView.findViewById(R.id.autoPilotButton);
         remoteView = rootView.findViewById(R.id.remoteCameraView);
         WebSocketClientTesting socket = UserActivity.getOrchestrator().webSocket;
+        TextView speedTextView = rootView.findViewById(R.id.speedTextView);
+        TextView headingTextView = rootView.findViewById(R.id.HeadingViewText);
+        TextView gpsTextView = rootView.findViewById(R.id.gpsTextView);
         socket.setWebSocketStateListener(new WebSocketClientTesting.WebSocketStateListener() {
             @Override
             public void onOpen() {
