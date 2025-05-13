@@ -22,8 +22,8 @@ public class  Autopilot  {
         this.currentGPS = new GPS(0, 0, 0);
         this.currentHeading = 0;
         this.currentSpeed = 0;
-        this.yawRate = 5;
-        this.velocity = 2;
+        this.yawRate = 20;
+        this.velocity = 10;
         this.commandTime = 0.2F;
     }
 
