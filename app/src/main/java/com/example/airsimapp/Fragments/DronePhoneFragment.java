@@ -181,7 +181,7 @@ public class DronePhoneFragment extends Fragment {
 
             // 1) Preview (optional—if you just want to send frames, you can omit this)
             Preview preview = new Preview.Builder().build();
-            preview.setSurfaceProvider(previewView.getSurfaceProvider());
+//            preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
             // 2) ImageAnalysis to get frames
             ImageAnalysis analysis = new ImageAnalysis.Builder()

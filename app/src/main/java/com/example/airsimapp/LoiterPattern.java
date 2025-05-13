@@ -28,54 +28,27 @@ public class LoiterPattern extends AutopilotCommand{
                 case "FigureEight":
                     this.pattern = new FigureEight(yawRate, speed);
                     break;
+                case "Circle":
+                    this.pattern = new Circle(yawRate, speed);
+                    break;
                 default:
                     Log.e("LoiterPattern", "Unknown pattern type");
             }
     }
 
-    public void calculateCommand(GPS currentGPS, float currentHeading, float yawRate, float speed, float commandTime, Calendar startTime){
-        if (!pattern.gotHeading) {
-            desiredFirstTurn = (currentHeading + this.pattern.getDegrees()) % 360;
-            desiredSecondTurn = (desiredFirstTurn + 180) % 360;
-            firstLowerHeading = ((desiredFirstTurn - this.getHeadingTolerance()) % 360);
-            firstUpperHeading = ((desiredFirstTurn + this.getHeadingTolerance()) % 360);
-            pattern.setGotHeading(true);
+    public void calculateCommand(float currentHeading, float yawRate, float speed, float commandTime, Calendar currentTime){
+        if (pattern instanceof RaceTrack) {
+            this.setCommandMessage(((RaceTrack) pattern).executePattern(currentHeading, yawRate, speed, commandTime, currentTime, getHeadingTolerance()));
+        } else if (pattern instanceof Circle){
+            this.setCommandMessage(((Circle) pattern).executePattern(yawRate, speed, commandTime, currentTime));
         }
 
-
-        if(!this.pattern.firstTurn && (currentHeading >= firstUpperHeading || currentHeading <= firstLowerHeading)){
-            this.setCommandMessage("autopilot,forward_left," + yawRate + "," + speed + "," + commandTime);
-        }
-        else if(!this.pattern.firstTurn && (currentHeading <= firstUpperHeading || currentHeading >= firstLowerHeading)){
-            this.pattern.setFirstTurn(true);
-        }
-        else if(!this.pattern.firstStraight && forwardCounter < (this.pattern.getRadius(yawRate, speed)/speed) *10){
-            this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
-            forwardCounter++;
-        }
-        else if(!this.pattern.firstStraight && (forwardCounter >= (this.pattern.getRadius(yawRate, speed)/speed) *10)){
-            this.pattern.setFirstStraight(true);
-            forwardCounter = 0;
-            secondLowerHeading = ((desiredSecondTurn - this.getHeadingTolerance()) % 360);
-            secondUpperHeading = ((desiredSecondTurn + this.getHeadingTolerance()) % 360);
-        }
-        else if(!this.pattern.secondTurn && (currentHeading >= secondUpperHeading || currentHeading <= secondLowerHeading)){
-            this.setCommandMessage("autopilot,forward_left," + yawRate + "," + speed + "," + commandTime);
-        }
-        else if(!this.pattern.secondTurn && (currentHeading <= secondUpperHeading || currentHeading >= secondLowerHeading)){
-            this.pattern.setSecondTurn(true);
-
-        }
-        else if(!this.pattern.secondStraight && (forwardCounter < (this.pattern.getRadius(yawRate, speed)/speed) *10)){
-            this.setCommandMessage("autopilot,forward," + yawRate + "," + speed + "," + commandTime);
-            forwardCounter++;
-        }
-        else if(forwardCounter >= (this.pattern.getRadius(yawRate, speed)/speed) *10){
-            this.pattern.setSecondStraight(true);
-            forwardCounter = 0;
-        }
-        else{
-            this.pattern.setAllFlags(false);
+        currentTime = Calendar.getInstance();
+        int currentHour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = currentTime.get(Calendar.MINUTE);
+        if (getHourEndTime() == currentHour && getMinuteEndTime() == currentMinute) {
+            this.setCommandMessage("autopilot,stop," + yawRate + "," + speed + "," + commandTime);
+            setCommandComplete(true);
         }
     }
 

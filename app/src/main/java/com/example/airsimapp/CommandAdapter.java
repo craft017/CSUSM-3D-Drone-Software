@@ -136,7 +136,7 @@ public class CommandAdapter extends RecyclerView.Adapter<CommandAdapter.CommandV
                 holder.commandText.setText(lp.getPatternType());
                 holder.commandText.setVisibility(View.VISIBLE);
 
-                // Field 4 = end time HHmm
+                // Field 2 = end time HHmm
                 holder.commandText2.setText(
                         String.format(Locale.getDefault(), "%02d:%02d",
                                 lp.getHourEndTime(), lp.getMinuteEndTime())

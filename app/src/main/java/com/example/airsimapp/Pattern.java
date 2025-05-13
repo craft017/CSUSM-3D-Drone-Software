@@ -8,6 +8,14 @@ abstract public class Pattern {
     protected boolean firstStraight;
     protected boolean secondStraight;
 
+    protected float desiredFirstTurn = 0;
+    protected float desiredSecondTurn = 0;
+    protected float firstLowerHeading = 0;
+    protected float firstUpperHeading = 0;
+    protected float secondLowerHeading = 0;
+    protected float secondUpperHeading = 0;
+    protected int forwardCounter = 0;
+
     protected boolean gotHeading;
 
     public Pattern (){
@@ -29,6 +37,7 @@ abstract public class Pattern {
     private void calculateStraightDistance(){
         //Generic function to be overloaded
     }
+
 
     public float getStraightDistance() {
         return straightDistance;
